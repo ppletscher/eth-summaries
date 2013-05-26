@@ -1,0 +1,128 @@
+% thevenin_norton.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{ar 1495 1000 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 1.094in
+    \rlap{\kern 1.569in\lower\graphtemp\hbox to 0pt{b\hss}}%
+    \special{pa 1475 1000}%
+    \special{pa 975 1000}%
+    \special{fp}%
+    \special{pa 975 1000}%
+    \special{pa 225 1000}%
+    \special{fp}%
+    \special{pa 225 1000}%
+    \special{pa 225 750}%
+    \special{fp}%
+    \special{ar 225 625 125 125 0 6.28319}%
+    \special{pa 225 719}%
+    \special{pa 225 531}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 200 631}%
+    \special{pa 225 531}%
+    \special{pa 250 631}%
+    \special{pa 200 631}%
+    \special{fp}%
+    \special{pa 225 500}%
+    \special{pa 225 250}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.625in
+    \rlap{\kern 0.350in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$I_N$\hbox{$\:$}\hss}}%
+    \special{pa 225 250}%
+    \special{pa 413 250}%
+    \special{fp}%
+    \special{pa 713 438}%
+    \special{pa 413 438}%
+    \special{fp}%
+    \special{pa 413 438}%
+    \special{pa 413 63}%
+    \special{fp}%
+    \special{pa 413 63}%
+    \special{pa 1013 63}%
+    \special{fp}%
+    \special{pa 1013 63}%
+    \special{pa 1013 438}%
+    \special{fp}%
+    \special{pa 1013 438}%
+    \special{pa 713 438}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.188in
+    \rlap{\kern 0.463in\lower\graphtemp\hbox to 0pt{\scriptsize Beliebiges\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.312in
+    \rlap{\kern 0.484in\lower\graphtemp\hbox to 0pt{\scriptsize Netzwerk\hss}}%
+    \special{pa 1013 250}%
+    \special{pa 1475 250}%
+    \special{fp}%
+    \special{pa 1350 0}%
+    \special{pa 0 0}%
+    \special{fp}%
+    \special{pa 0 0}%
+    \special{pa 0 1094}%
+    \special{fp}%
+    \special{pa 0 1094}%
+    \special{pa 1350 1094}%
+    \special{fp}%
+    \special{pa 1350 1094}%
+    \special{pa 1350 0}%
+    \special{fp}%
+    \special{ar 1495 250 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.156in
+    \rlap{\kern 1.609in\lower\graphtemp\hbox to 0pt{a\hss}}%
+    \special{pa 1663 625}%
+    \special{pa 1913 625}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 1813 600}%
+    \special{pa 1913 625}%
+    \special{pa 1813 650}%
+    \special{pa 1813 600}%
+    \special{fp}%
+    \special{ar 2723 1000 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 1.094in
+    \rlap{\kern 2.796in\lower\graphtemp\hbox to 0pt{b\hss}}%
+    \special{pa 2703 1000}%
+    \special{pa 2203 1000}%
+    \special{fp}%
+    \special{pa 2203 1000}%
+    \special{pa 2203 750}%
+    \special{fp}%
+    \special{ar 2203 625 125 125 0 6.28319}%
+    \special{pa 2203 719}%
+    \special{pa 2203 531}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 2178 631}%
+    \special{pa 2203 531}%
+    \special{pa 2228 631}%
+    \special{pa 2178 631}%
+    \special{fp}%
+    \special{pa 2203 500}%
+    \special{pa 2203 250}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.625in
+    \rlap{\kern 2.328in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$I_N$\hbox{$\:$}\hss}}%
+    \special{pa 2203 250}%
+    \special{pa 2703 250}%
+    \special{fp}%
+    \special{ar 2723 250 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.156in
+    \rlap{\kern 2.836in\lower\graphtemp\hbox to 0pt{a\hss}}%
+    \special{pa 2578 156}%
+    \special{pa 2015 156}%
+    \special{fp}%
+    \special{pa 2015 156}%
+    \special{pa 2015 1094}%
+    \special{fp}%
+    \special{pa 2015 1094}%
+    \special{pa 2578 1094}%
+    \special{fp}%
+    \special{pa 2578 1094}%
+    \special{pa 2578 156}%
+    \special{fp}%
+    \hbox{\vrule depth1.094in width0pt height 0pt}%
+    \kern 2.836in
+  }%
+}%
+

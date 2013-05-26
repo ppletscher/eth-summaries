@@ -1,0 +1,1766 @@
+% Analysis Zusammenfassung aus dem Informatikstudium an der ETH Zuerich
+% basierend auf der Vorlesung von Prof. Dr. Max Albert Knus
+% Copyright (C) 2003  Patrick Pletscher
+
+%This program is free software; you can redistribute it and/or
+%modify it under the terms of the GNU General Public License
+%as published by the Free Software Foundation; either version 2
+%of the License, or (at your option) any later version.
+
+%This program is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
+
+%You should have received a copy of the GNU General Public License
+%along with this program; if not, write to the Free Software
+%Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\documentclass[10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{german}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage{multirow}
+
+\textwidth = 16.5 cm
+\textheight = 25 cm
+\oddsidemargin = 0.0 cm
+\evensidemargin = 0.0 cm
+\topmargin = 0.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0cm
+
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\title{Analysis I/II - Zusamenfassung}
+\author{Patrick Pletscher}
+\begin{document}
+
+\maketitle
+
+\section{Grundstrukturen}
+
+\subsection{Reelle Zahlen}
+$
+\mid x \mid := \left\{
+                 \begin{array}{ll}
+                    x    & \mbox{$x \geq 0$} \\
+            -x   & \mbox{$x < 0$} \\
+         \end{array}
+        \right.
+$\\
+$
+ sgn(x) := \left\{
+                 \begin{array}{lll}
+                    1    & \mbox{$x > 0$} \\
+            0    & \mbox{$x = 0$} \\
+            -1   & \mbox{$x < 0$}
+         \end{array}
+        \right.
+$
+
+\subsection{Koordinaten in der Ebene und im Raum}
+
+\subsubsection{Polarkoordinaten (in der Ebene)}
+\begin{tabular}[ht]{lc}
+$x=r\cos\phi$       &  $y=r\sin\phi$\\
+$r=\sqrt{x^2+y^2}$  &  $\tan\phi=\frac{y}{x}$\\
+\end{tabular}
+
+\subsubsection{Zylinderkoordinaten}
+\begin{tabular}[t]{p{3.2cm}l}
+
+ \begin{minipage}{3cm}
+  \begin{tabular}{ll}
+   $x=r\cos\varphi$ & 	$r=\sqrt{x^2+y^2}$\\
+   $y=r\sin\varphi$ & 	$\tan\varphi=\frac{y}{x}$\\
+   $z=z$ &		$z=z$\\
+   $0\leq\varphi\leq 2\pi$
+  \end{tabular}
+ \end{minipage}
+
+ &
+
+ \begin{minipage}{5cm}
+  \setlength{\unitlength}{5mm}
+  \begin{picture}(6,6)(0,0)
+   \put(3,3){\vector(-1,-1){1}}
+   \put(3,3){\vector(1,0){2}}
+   \put(3,3){\vector(0,1){2}}
+   \put(3,3){\line(1,-1){1}}
+   \put(2.7,2.5){$\varphi$}
+   \put(3.3,2){$r$}
+  \end{picture}
+ \end{minipage}
+
+\end{tabular}
+
+\subsubsection{Kugelkoordinaten}
+\begin{tabular}[t]{p{4.3cm}l}
+
+ \begin{minipage}{4.2cm}
+  \begin{tabular}{ll}
+   $x=r\cos\vartheta\cos\varphi$ & 	$r=\sqrt{x^2+y^2+z^2}$ \\
+   $y=r\cos\vartheta\sin\varphi$ & 	$\tan\varphi=\frac{y}{x}$ \\
+   $z=r\sin\vartheta$ &			$\sin\vartheta=\frac{z}{x^2+y^2+z^2}$\\
+  \end{tabular}
+  $0\leq\varphi\leq 2\pi,\:0\leq\vartheta\leq \pi$
+ \end{minipage}
+
+ &
+
+ \begin{minipage}{3.3cm}
+  \setlength{\unitlength}{5mm}
+  \begin{picture}(6,6)(0,0)
+   \put(3,3){\vector(-1,-1){1}}
+   \put(3,3){\vector(1,0){2}}
+   \put(3,3){\vector(0,1){2}}
+   \put(3,3){\line(1,-1){1}}
+   \put(3,3){\line(1,1){1}}
+   \put(3.3,4){r}
+   \put(2.7,2.5){$\varphi$}
+   \put(3.4,2.9){$\vartheta$}
+  \end{picture}
+ \end{minipage}
+
+\end{tabular}
+
+
+\subsection{Vektoralgebra}
+
+\subsubsection{Skalarprodukt}
+$\vec{a}\cdotp\vec{b}=|\vec{a}|\cdotp|\vec{b}|\cdotp\cos\varphi$\\
+$\vec{a}\cdotp\vec{b}=0$, dann $\vec{a}\perp\vec{b}$\\
+$\vec{a}\cdotp\vec{b}>0$, dann $\vec{a},\vec{b}$ spitzer Winkel\\
+$\vec{a}\cdotp\vec{b}<0$, dann $\vec{a},\vec{b}$ stumpfer Winkel
+
+\subsubsection{Vektorprodukt}
+(1) $\mid\vec{a}\times\vec{b}\mid=\mid\vec{a}\mid\mid\vec{b}\mid\sin\phi$\\
+(2) $\mid\vec{a}\times\vec{b}\mid\perp\vec{a}$ und $\mid\vec{a}\times\vec{b}\mid\perp\vec{b}$ \\
+(3) $\vec{a},\vec{b},\vec{a}\times\vec{b}$: Rechtsh"andiges System \\
+
+analytisch:\\
+$\vec{a}\times\vec{b}=(a_2b_3-a_3b_2,a_3b_1-a_1b_3,a_1b_2-a_2b_1)$\\
+
+Es gilt:\\
+$\vec{u}\times\vec{v}=-\vec{v}\times\vec{u}$\\
+$\vec{u}\times(\vec{v}+\vec{w})=\vec{u}\times\vec{v}+\vec{u}\times\vec{w}$
+
+\subsubsection{Diverses}
+
+Fl"ache eines Parallelogramms: $A=\mid\vec{a}\times\vec{b}\mid$\\
+Volumen eines Spates: $V=[\vec{a},\vec{b},\vec{c}]=(\vec{a}\times\vec{b})\cdotp\vec{c}$\\
+Ebene: $\vec{n}\cdotp r-\vec{n}\cdotp\vec{p}=0$\\
+Abst. von 2 Punkten:\\
+in $\mathbb{R}^2$: $r=\sqrt{(x_1-x_2)^2+(y_1-y_2)^2}$\\
+in $\mathbb{R}^3$: $r=\sqrt{(x_1-x_2)^2+(y_1-y_2)^2+(z_1-z_2)}$\\
+Abst. d zweier Geraden $\vec{r}_{1/2}+u/v\vec{a}_{1/2}$: $d=\frac{|\vec{a}_1\times\vec{a}_2(\vec{r}_2-\vec{r}_1)|}{|\vec{a}_1\times\vec{a_2}|}$ 
+
+
+\subsection{Komplexe Zahlen}
+
+\subsubsection{Grundlagen}
+
+$i^2=-1$,\ \ $\frac{-1}{i}=i$\\
+$z=x+iy$\\
+$z=r(\cos\phi+i\sin\phi),\:r=\sqrt{x^2+y^2},\:\tan(\phi)=\frac{y}{x}$\\
+$\cos\phi+i\sin\phi=:e^{i\phi}$\\
+$z_1\pm z_2=(x_1+iy_1)\pm(x_2+iy_2)=(x_1\pm x_2)+i(y_1\pm y_2)$\\
+
+$z_1\cdotp z_2=(x_1+iy_1)\cdotp(x_2+iy_2)=(x_1 x_2-y_1 y_2)+i(x_1 y_2 + x_2 y_1)$\\
+$z_1\cdotp z_2=[r_1(\cos\phi_1+i\sin\phi_1)]\cdotp[r_2(\cos\phi_2+i\sin\phi_2)]=(r_1 r_2)\cdotp[\cos(\phi_1 +\phi_2)+i\sin(\phi_1 + \phi_2)]$\\
+$z_1 \cdotp z_2=(r_1\cdotp e^{i\phi_1})\cdotp (r_2\cdotp e^{i\phi_2})=(r_1 r_2)\cdotp e^{i(\phi_1+\phi_2)}$\\
+
+$\frac{1}{z}=\frac{x}{x^2+y^2}-\frac{iy}{x^2+y^2}$\\
+$\frac{z_1}{z_2}=\frac{x_1 + iy_1}{x_2 + iy_2}=\frac{(x_1 +iy_1)\cdotp(x_2 - iy_2)}{(x_2 + iy_2)\cdotp(x_2 - iy_2)}$\\
+$\frac{z_1}{z_2}=(\frac{r_1}{r_2})\cdotp e^{i(\phi_1-\phi_2)}$\\
+
+$|z|=\sqrt{x^2+y^2}$, $|z_1\cdotp z_2|=|z_1|\cdotp|z_2|$\\
+
+$z^n=[r\cdotp e^{i\phi}]^n=r^n\cdotp e^{in\phi}$
+
+\subsubsection{Radizieren}
+Wurzeln der Gleichung $z^n=a=r\cdotp e^{i\phi}$\\
+$z_k=\sqrt[n]{r}[cos(\frac{\phi+k\cdotp 2\pi}{n})+i\cdotp \sin(\frac{\phi + k\cdotp 2\pi}{n})]\:\:(k=0,\ldots,n-1)$\\
+oder $z_k=\sqrt[n]{r}\cdotp e^{\frac{\phi+k\cdotp 2\pi}{n}}$
+
+\subsubsection{quadratische und h"ohere Gleichungen}
+
+Falls $x+iy$ eine NS eines Polynoms, so ist auch $x-iy$ eine NS davon.
+
+$z^2+pz+q=0\:\Rightarrow\:(z+\frac{p}{2})^2=\frac{p^2}{4}-q=:D$\\
+$z_{1,2}=-\frac{p}{2}\pm\sqrt{D}$\\
+\textit{Beispiel}: komplexe NS von $z^{57}-2z^{56}+z^55-z^2+2z=0$ bestimmen. $\Rightarrow(z^{55}-1)(z-1)^2=0$. Also ist die L"osungsmenge $z_k=e^{ik\frac{2\pi}{55}},\:k=0,\ldots,54$ und $z_0$ dreifache NS.
+
+\subsection{Kegelschnitte}
+
+Ellipsengleichung:\ $\frac{x^2}{a^2}+\frac{y^2}{b^2}=1$ a:x-Halbachse, b:y-Halbachse\\
+Parabelgleichung: \ $y^2=2px$ p:y-Halbachse\\
+Hyperbelgleichung: \ $\frac{x^2}{a^2}-\frac{y^2}{b^2}=1$ a:x-Halbachse, b:y-Halbachse\\
+
+
+\section{Funktionen}
+
+\subsubsection{Erscheinungsformen}
+
+$f:\:\:A\rightarrow B$, $x\mapsto y:=f(x)$\\
+$dom(f):=A$\\
+$im(f):=y\in B|\exists x \in A:\:y=f(x)$
+
+\subsection{Eigenschaften von Funktionen}
+
+\begin{itemize}
+ \item Injektivit"at: $f(x_1)=f(x_2)\Rightarrow x_1=x_2$ (eindeutige Abbildung)
+ \item Surjektivit"at: jedes $y\in im(f)$ wird angenommen
+ \item Bijektivit"at: gleichzeitig injektiv und surjektiv (d.h. es existiert ein $f^{-1}$)
+ \item Konvexit"at:
+  \begin{itemize}
+   \item konvex: Steigung der Tangente nimmt monoton zu (Linkskurve) $\Rightarrow f''(t)>0$
+   \item konkav: Steigung der Tangente nimmt monoton ab (Rechtskurve) $\Rightarrow f''(t)<0$
+  \end{itemize}
+\end{itemize}
+
+
+Eine Fkt f: $\mathbb{X}\to\mathbb{X}'$ heisst \textit{gerade}, wenn f(-x)=f(x) $\forall x \in dom(f)$\\
+Eine Fkt heisst \textit{ungerade}, wenn f(-x)=-f(x)
+
+\subsubsection{Stetigkeit}
+$f$ ist stetig, wenn sich zu noch so kleiner Toleranz $\epsilon > 0$ ein Schlupf $\delta > 0$ angeben l"asst, so dass $\forall x \in dom(f)$ gilt:\\
+Definition der Stetigkeit von $f$ in $x_0$:\\
+$\forall \epsilon > 0, \exists \delta > 0$ mit $\mid x - x_0 \mid < \delta \rightarrow \mid f(x)-f(x_0)\mid < \epsilon$
+
+\subsubsection{Zwischenwertsatz}
+$f[a,b]\rightarrow\mathbb{R}$, stetig\\
+$f(a) < 0, f(b) > 0$\\
+f besitzt in diesem Intervall wenigstens eine NS:\\
+$\exists\xi\in]a,b[$ mit $f(\xi)=0$
+
+\subsubsection{Minimumfunktion zweier Funktionen}
+
+$min\{x,y\}=\frac{1}{2}(x+y-|x-y|)$
+
+\subsection{Grenzwerte}
+
+\subsubsection{Bernoulli de l'Hopital}
+
+Wenn f"ur $\lim_{x\rightarrow x_0} \frac{f(x)}{g(x)}$ oder $\lim_{x\rightarrow \pm \infty}\frac{f(x)}{g(x)}$ ein unbestimmter Ausdruck wie ''$\frac{0}{0}$'' oder ''$\frac{\infty}{\infty}$'' entsteht und $f,g$ diff'bar sind, so gilt die Regel (auch mehrmals anwendbar):\\
+$\lim\limits_{x\rightarrow a}\frac{f(x)}{g(x)}=\lim\limits_{x\rightarrow a}\frac{f'(x)}{g'(x)}$\\
+
+Wenn BdH nicht anwendbar, k"onnen die folgenden Umformungen weiterhelfen, so dass nachher BdH anwendbar ist:\\
+
+\footnotesize
+\begin{tabular}{l|l|l}
+ Funktion $\varphi(x)$ &	$\lim_{x\rightarrow x_0} \varphi(x)$ &		Elementare Umformung \\ \hline\hline
+ $u(x)v(x)$ &			$0\cdotp \infty$ bzw. $\infty\cdotp 0$ &	$\frac{u(x)}{\frac{1}{v(x)}}$ bzw. $\frac{v(x)}{\frac{1}{u(x)}}$\\ \hline
+ $u(x)-v(x)$ &			$\infty-\infty$ &				$\frac{\frac{1}{v(x)}-\frac{1}{u(x)}}{\frac{1}{u(x)v(x)}}$\\ \hline
+ $u(x)^{v(x)}$ &		$0^0,\infty^\infty, 1^\infty$ &			$e^{v(x)\cdotp\ln u(x)}$
+\end{tabular}
+\normalsize\\
+
+\textit{Beispiel}\\
+$\lim_{n\to\infty}n^2\cdotp (\sin (\frac{2}{n^2})+\cos(\frac{1}{n})-1)=\lim_{n\to\infty}\frac{\sin(\frac{2}{n^2})+\cos(\frac{1}{n}-1)}{\frac{1}{n^2}}=\lim_{n\to 0}\frac{\sin(2x^2)+\cos(x)-1}{x^2}$ danach 2x BdH.
+
+\subsubsection{Rechenregeln}
+
+f"ur $x\rightarrow x_0$ und $x\rightarrow \pm\infty$\\
+\footnotesize
+\begin{tabular}{ll}
+ $\lim[cf(x)]=c(\lim f(x))$ &			$\lim\sqrt[n]{f(x)}=\sqrt[n]{\lim f(x)}$ \\
+ $\lim[f(x)]^n=[\lim f(x)]^n$ &			$\lim[a^{f(x)}]=a^{\lim f(x)}$\\
+ $\lim[\log_a f(x)]=\log_a [\lim f(x)]$ &	$\lim[f(x)\pm g(x)]=\lim f(x)\pm \lim g(x)$\\
+\end{tabular}
+\normalsize
+
+\subsubsection{Asymptoten}
+
+Eine Funktion $f(x)=\frac{a_0+a_1x+\ldots+a_nx^n}{b_0+b_1x+\ldots+b_mx^m}$ $(a_n,b_m\neq 0)$ hat folgende Asymptoten:
+\begin{description}
+ \item $n<m$: x-Achse ist die Asymptote
+ \item $n=m$: die Gerade $\frac{a_n}{b_m}$ ist die Asymptote
+ \item $n=m+1$: schiefe Asymptote (Polynomdivision machen und $\lim_{x\rightarrow \pm \infty}$ betrachten)
+\end{description}
+
+Berechnung der Asymptoten:\\
+$\lim_{t\rightarrow\infty}(f(t)-(pt+q))=0$ mit Asymptote $y=pt+q$\\
+$p=\lim_{t\rightarrow \infty}\frac{f(t)}{t}$\\
+$q=\lim_{t\rightarrow \infty}(f(t)-pt)$\\
+Die Asymptote existiert, wenn diese beiden Grenzwerte existieren.
+
+\subsubsection{Standardgrenzwerte}
+
+\footnotesize
+\begin{tabular}{ll}
+ $\lim_{x\to 0}\frac{\sin x}{x}=1$ &		$\lim_{x\to 0}\frac{e^x-1}{x}=1$\\
+ $\lim_{x\to 0}\frac{a^x-1}{x}=\ln a$ & 	$\lim_{x\to 1}\frac{\ln x}{x-1}=1$\\
+ $\lim_{x\to 0}\frac{\ln(1+x)}{x}=1$ &		$\lim_{x\to 0}\frac{\log_a(1+x)}{x}=\frac{1}{\ln a}$\\
+ $\lim_{x\to \infty}(x^m e^{-ax}=0),\:a>0$ &	$\lim_{x\to 0}(x^a\ln x)=0,\:a>0$\\
+ $\lim_{x\to \infty}(x^{-a}\ln x)=0,\:a>0$ &	$\lim_{x\to 0+}\frac{1}{x}=\infty$\\
+ $\lim_{x\to 0-}\frac{1}{x}=-\infty$ &		$\lim_{n \to \infty}(1 + \frac{x}{n})^n=e^x$\\
+ $\lim_{x\to 0}\frac{e^n-1}{n}=1$\\
+\end{tabular}
+\normalsize
+
+\subsection{Folgen und Reihen}
+
+Eine Zahlenfolge ist eine \textit{Folge} von Zahlen, die durch eine implizite Formel $a_n=f(n)$ oder durch eine rekursive Formel wie z.B. $a_{n+1}=2a_n$ bestimmt wird.\\
+
+Eine \textit{Reihe} ist dann eine \textit{Partialsumme} einer solchen Folge: $s_n:=\sum^n_{k=0}a_k=a_0+a_1+\ldots+a_n$. Falls $n=\infty$ so heisst die Folge unendliche Folge.\\
+
+Falls eine Reihe eine ungew"ohnliche Form hat, wie z.B. $\sum a_k x^{2n}$, kann man substituieren. In diesem Beispiel: $z=x^2:\:\sum a_k z^n$. Oder z.B. $\sum a_k x^{2n+1}\rightarrow \sqrt{z}\sum a_k z^n$.
+
+\subsubsection{verschiedene Reihen}
+
+\begin{description}
+ \item \textit{arithmetische Reihe}\\
+  $\sum^{n}_{k=0}k=1+2+\ldots=\frac{n(n+1)}{2}$
+ \item \textit{geometrische Reihe}\\
+  $\sum^{n}_{k=0}q^k=1+q+q^2+... = \frac{1-q^{n+1}}{1-q} $ falls $\mid q \mid < 1 $\\
+  und f"ur $n=\infty:\:\frac{1}{1-q}$
+ \item \textit{harmonische Reihe}\\
+  $\sum^{\infty}_{k=1}\frac{1}{k}=1+\frac{1}{2}+\frac{1}{3}+\frac{1}{4}+\ldots$ ist \textit{divergent}.\\
+ \item \textit{alternierende harmonische Reihe}\\
+  $\sum^{\infty}_{n=1}\frac{(-1)^{k-1}}{k}=1-\frac{1}{2}+\frac{1}{3}\ldots=\ln 2$\\
+ \item \textit{alternierende Reihe}\\
+  $\sum^{\infty}_{k=1}(-1)^{k-1}c_k$ konvergiert, wenn $c_k$ monoton fallend gegen 0 und $\lim_{k\rightarrow \infty} a_k=0$
+\end{description}
+
+\subsubsection{Konvergenzkriterien f"ur Folgen und Reihen}
+
+Eine Reihe heisst \textit{absolut konvergent}, wenn $\sum^\infty_{k=0}|a_k|$ konvergiert. Eine solche Folge konvergiert auch normal. Die Umkehrung gilt jedoch nicht.\\
+
+Eine notwendige Bedingung f"ur die Konvergenz einer Folge ist $\lim_{n\rightarrow \infty}a_n=0$\\
+Die folgenden Bedingungen sind hinreichend, aber nicht notwendig:
+\begin{description}
+ \item \textit{Quotientenkriterium}
+  $\lim_{k\rightarrow \infty}|\frac{a_{k+1}}{a_k}|=q < 1$\\
+ \item \textit{Wurzelkriterium}
+  $\lim_{k\rightarrow \infty}\sqrt[k]{|a_k|}=q < 1$
+\end{description}
+F"ur $q=1$ versagt das Kriterium und f"ur $q>1$ divergiert die Reihe.
+
+\subsubsection{Potenzreihen und ihr Konvergenzverhalten}
+
+$P(x)=\sum^\infty_{k=0}a_kx^k$\\
+
+F"ur jede Potenzreihe $\sum^{\infty}_{k=0}a_kx^k$ existiert ein wohlbestimmtes $\rho$, $0 \leq \rho \leq \infty$, so dass die Reihe f"ur $|x| < \rho$ konvergiert (absolut) und f"ur $|x| > \rho$ divergiert.\\
+
+$\rho=\lim_{k\rightarrow\infty}|\frac{a_k}{a_{k+1}}|$ oder $\rho=\frac{1}{\lim_{k\rightarrow \sqrt[k]{|a_k|}}}$\\\\
+
+Die Darstellung einer Funktion durch eine Potenzreihe ist stets auf ein bestimmtes Intervall (den Konvergenzbereich) beschr"ankt.\\
+Eine gerade Funktion (symm. zur y-Achse) enth"alt nur gerade Potenzen und eine ungerade Funktion nur ungerade Potenzen.\\
+
+Wichtige Eigenschaften der Potenzreihen:
+\begin{itemize}
+ \item Eine Potenzreihe konvergiert innerhalb des Konvergenzbereiches absolut.
+ \item Eine Potenzreihe darf innerhalb ihres Konvergenzbereiches gliedweise differenziert und integriert werden (Integration ist nur dann m"oglich, wenn der Integrationsbereich im Konvergenzbereich liegt). Die neuen Potenzreihen besitzen dabei den selben Konvergenzradius wie die urspr"ungliche Reihe.
+ \item Zwei Potenzreihen d"urfen im gemeinsamen Konvergenzbereich der Reihen gliedweise addiert, subtrahiert und miteinander multipliziert werden (wie Polynomfunktionen). Die neuen Potenzreihen konvergieren dann mindestens im gemeinsamen Konvergenzbereich der Ausgangsreihen.
+\end{itemize}
+
+\subsubsection{Binomialreihen und ihr Konvergenzverhalten}
+
+Definition des Binomialkoeffizienten: (auch f"ur $\alpha \in \mathbb{C}$)\\
+$\binom{\alpha}{0}=1,\:\:\binom{\alpha}{k}:=\frac{\alpha(\alpha-1)\ldots(\alpha-k+1)}{k!}\: (k\geq 1)$\\
+
+Die Binomialreihe $b_\alpha(x):=\sum^\infty_{k=0}\binom{\alpha}{k}x^k=1+\alpha\cdotp x +\frac{\alpha (\alpha - 1)}{2!}\cdotp x^2+\ldots$ ist f"ur $\alpha \in \mathbb{N}$ ein Polynom gem"ass dem binomischen Lehrsatz: $\forall x\in\mathbb{R}:\:b_\alpha (x)=(1+x)^\alpha$. F"ur $\alpha\not\in\mathbb{N}$ besitzt sie den Konvergenzradius 1 und im Intervall $-1<x<1$ gilt: $\sum^n_{k=0}\binom{\alpha}{k}x^k=(1+x)^\alpha$.\\
+
+\subsection{Trigonometrische Funktionen}
+
+\subsubsection{Definitionen}
+
+$\cos t= Re(e^{it})=\frac{e^{it}+e^{-it}}{2}=\sum^\infty_{j=0}\frac{(-1)^j t^{2j}}{(2j)!}=\frac{x}{r}$\\
+$\sin t= Im(e^{it})=\frac{e^{it}-e^{-it}}{2}=\sum^\infty_{j=0}\frac{(-1)^j t^{2j+1}}{(2j+1)!}=\frac{y}{r}$\\
+$\tan \varphi =\frac{\sin \varphi}{\cos\varphi}=\frac{y}{x}$, $\cot \varphi =\frac{\cos \varphi}{\sin\varphi}$
+
+\subsubsection{Additionstheoreme}
+\begin{tabular}{l}
+ $\sin^2\varphi+\cos^2\varphi=1$\\
+ $\cos\varphi=\sin(\varphi+\pi/2)$\\
+ $\sin(-\varphi)=-\sin\varphi$\\
+ $\cos(-\varphi)=\cos\varphi$\\
+ $\sin(\alpha\pm\beta)=\sin\alpha\cos\beta\pm\cos\alpha\sin\beta$\\
+ $\cos(\alpha\pm\beta)=\cos\alpha\cos\beta\mp\sin\alpha\sin\beta$\\
+ $\sin(2\varphi)=2\sin\varphi\cos\varphi$\\
+ $\cos(2\varphi)=\cos^2\varphi-\sin^2\varphi=2\cos^2\varphi-1=1-2\sin^2\varphi$\\
+ $\sin(3\varphi)=3\sin\varphi-4\sin^3\varphi$\\
+ $\cos(3\varphi)=4\cos^3\varphi-3\cos\varphi$\\
+ $\sin^2(\frac{\varphi}{2})=\frac{1-\cos\varphi}{2}$\\
+ $\cos^2(\frac{\varphi}{2})=\frac{1+\cos\varphi}{2}$\\
+ $\tan(\alpha\pm\beta)=\frac{\tan\alpha\pm\tan\beta}{1\mp\tan\alpha\tan\beta}$\\
+ $\tan(2\varphi)=\frac{2\tan\varphi}{1-\tan^2\varphi}$\\
+ $\tan(3\varphi)=\frac{3\tan\varphi-\tan^3\varphi}{1-3\tan^2\varphi}$\\
+ $\tan^2(\frac{\varphi}{2})=\frac{1-\cos\varphi}{1+\cos\varphi}$\\
+ $\tan\frac{\varphi}{2}=\frac{1-\cos\varphi}{\sin\varphi}=\frac{\sin\varphi}{1+\cos\varphi}$
+\end{tabular}
+
+\subsubsection{Funktionswerte f"ur einige Winkel}
+
+\begin{tabular}{l|lllll}
+ $\alpha$ &		$0$ &		$\frac{\pi}{6}$ &	$\frac{\pi}{4}$ &	$\frac{\pi}{3}$ &	$\frac{\pi}{2}$\\\hline
+ $\sin\alpha$ &		$0$ &		$\frac{1}{2}$ &		$\frac{\sqrt{2}}{2}$ &	$\frac{\sqrt{3}}{2}$ &	$1$\\
+ $\cos\alpha$ &		$1$ &		$\frac{\sqrt{3}}{2}$ & 	$\frac{\sqrt{2}}{2}$ &	$\frac{1}{2}$ &		0\\
+ $\tan\alpha$ &		$0$ &		$\frac{\sqrt{3}}{3}$ &	$1$ &			$\sqrt{3}$ &		-
+\end{tabular}
+
+\subsection{Die Exponentialfunktion}
+$exp\:z\::=\:\sum^\infty_{k=0}\frac{z^k}{k!}$ ist f"ur alle z $\in \mathbb{C}$ definiert.\\
+F"ur beliebige z,w $\in \mathbb{C}$ gilt:\\
+$exp(z+w) = exp(z)\cdotp exp(w),\:exp 1=:e$
+
+Es gilt:
+\begin{enumerate}
+ \item Die Exponentialfunktion ist auf $\mathbb{R}$ positiv und streng monton wachsend.
+ \item F"ur jedes k $\in \mathbb{N}$ gilt: $\lim_{t\to\infty}\frac{e^t}{t^k}=\infty$, $\lim_{t \to \infty}e^t=0$
+\end{enumerate}
+
+\subsubsection{Hyperbolische Funktionen}
+
+Jede Funktion mit einem bzgl. 0 symm. Def.bereich, l"asst sich in einen geraden und einen ungeraden Anteil zerlegen. Bei der Exponentialfunktion f"uhrt diese Zerlegung auf die hyperbolischen Funktionen (d.h. $\cosh x+\sinh x=e^x$).\\
+
+$\cosh(x):=\frac{e^x+e^{-x}}{2}$\\
+$\sinh(x):=\frac{e^x-e^{-x}}{2}$\\
+$\cosh^2(x)-\sinh^2(x)=1$\\
+$\cosh(x+y)=\cosh(x)\cdotp\cosh(y)+\sinh(x)\cdotp\sinh(y)$\\
+$\sinh(x+y)=\sinh(x)\cdotp\cosh(y)+\cosh(x)\cdotp\sinh(y)$\\
+$\tanh(x):=\frac{\sinh(x)}{\cosh(x)}=\frac{e^x-e^{-x}}{e^x+e^{-x}}=1-\frac{2e^{-2x}}{1+e^{-2x}}$
+
+\subsection{Logarithmusfunktion}
+$log := (exp)^{-1}:\:\mathbb{R}_{>0}\rightarrow \mathbb{R}$ der nat"urliche Logarithmus\\
+$\forall x\in \mathbb{R}_{>0}: e^{\ln x}=x$\\
+$\lim_{x \to 0+}\ln x =-\infty$, $\lim_{x \to \infty}\ln x =\infty$\\
+
+$\lim_{x\to\infty}\frac{\log x}{x^\alpha}=0$\\
+$\lim_{x\to 0+}(x^\alpha\log x)=0$ w"achst schw"acher als jede noch so kleine Potenz
+
+$log(u\cdotp v)=log(u) + log(v)$
+
+\subsubsection{allgemeine Potenz}
+$a^x$ def. durch $e^{x*log(a)}$
+
+\subsubsection{Rechenregeln}
+$\log a^x=x\cdotp\log a$\\
+$a^{x+y}=a^x\cdotp a^y$\\
+$(a \cdotp b)^x = a^x \cdotp b^x$\\
+$(a^x)^y = a^{x\cdotp y}$
+
+
+\section{Eindimensionale Differentialrechnung}
+
+\subsection{Grundbegriffe, Rechenregeln}
+
+\footnotesize
+\begin{tabular}{ll}
+ $f(x)=c$ & 		$f'(x)=0$\\
+ $f(x)=cx$ &		$f'(x)=c$\\
+ $f(x)=x^n$ &		$f'(x)=nx^{n-1}$\\
+ $f(x)=\sqrt{x}$ &	$f'(x)=\frac{1}{2\sqrt{x}}$\\
+ $f(x)=e^{cx}$ &	$f'(x)=ce^{cx}$\\
+ $f(x)=\ln |x|$ &	$f'(x)=\frac{1}{x}$\\
+ $f(x)=\log_a|x|$ &	$f'(x)=(\log_a e)\frac{1}{x}=\frac{1}{x\ln x}$\\
+ $f(x)=a^x$ &		$f'(x)=a^x\cdotp \ln(a)$\\
+ $f(x)=a^{cx}$ &	$f'(x)=a^{cx}\cdotp (c\ln a)$\\
+ $f(x)=x^{x}$ &		$f'(x)=(1+\ln x)x^x$\\
+ $f(x)=\sin(x)$ &	$f'(x)=\cos(x)$\\
+ $f(x)=\cos(x)$ &	$f'(x)=-\sin(x)$\\
+ $f(x)=\tan{x}$ &	$f'(x)=\frac{1}{\cos^2(x)}=1+\tan^2(x)$\\
+ $f(x)=\cot{x}$ &	$f'(x)=-\frac{1}{\sin^2(x)}=-(1+\cot^2(x))$\\
+ $f(x)=\arcsin(x)$ &	$f'(x)=\frac{1}{\sqrt{1-x^2}}$\\
+ $f(x)=\arccos(x)$ &	$f'(x)=-\frac{1}{\sqrt{1-x^2}}$\\
+ $f(x)=\arctan(x)$ &	$f'(x)=\frac{1}{1+x^2}$\\
+ $f(x)=arccot(x)$ &	$f'(x)=-\frac{1}{1+x^2}$\\
+ $f(x)=\sinh(x)$ &	$f'(x)=\cosh(x)$\\
+ $f(x)=\cosh(x)$ &	$f'(x)=\sinh(x)$\\
+ $f(x)=\tanh(x)$ &	$f'(x)=\frac{1}{\cosh^2(x)}=1-\tanh^2(x)$\\
+ $f(x)=coth(x)$ &	$f'(x)=-\frac{1}{\sinh^2(x)}=1-coth^2(x)$\\
+ $f(x)=arcsinh(x)$ &	$f'(x)=\frac{1}{\sqrt{x^2+1}}$\\
+ $f(x)=arccosh(x)$ &	$f'(x)=\frac{1}{\sqrt{x^2-1}}$\\
+ $f(x)=artanh(x)$ &	$f'(x)=\frac{1}{\sqrt{1-x^2}}$\\
+ $f(x)=arcoth(x)$ &	$f'(x)=\frac{1}{\sqrt{1-x^2}}$\\
+\end{tabular}
+\normalsize
+
+\subsubsection{Rechenregeln}
+
+\begin{description}
+ \item[$(f+g)'=f'+g'$]
+ \item[$(cf)'=c\cdotp f'$]
+ \item[$(f\cdotp g)'=f'g+fg'$] Produktregel
+ \item[$(\frac{f}{g})'=\frac{f'g-fg'}{g^2}$] Quotientenregel
+ \item[$(f(g(x)))'=f'(g(x))\cdotp g'(x)$] Kettenregel
+ \item$\vec{f}=(f_1,f_2,f_3)\Rightarrow \vec{f'}=(f_1',f_2',f_3')$
+\end{description}
+
+\subsubsection{Ableitung der Umkehrfunktion}
+Sei $g=f^{-1}$ und $y=f(x)$, dann gilt:\\
+$\frac{d}{dy}g(y)=\frac{1}{f'(g(y))}$
+
+
+\subsection{Der Mittelwertsatz der Differentialrechnung}
+
+\subsubsection{Satz von Rolle}
+Sei $f:[a,b]\to{\mathbb{R}}$ stetig, mit $f(a)=f(b)=c$. Ist f im Innern von $[a,b]$ diff'bar, so existiert ein Punkt $\xi\in ]a,b[$ mit $f'(\xi)=0$, e.g. $\exists\xi\in]a,b[$ mit $f'(\xi)=0$\\
+
+\subsubsection{Mittelwertsatz der Diff'rechnung}
+$f:[a,b]\to\mathbb{R}$ stetig und im Inneren von $[a,b]$ diff'bar, dann gibt es einen Punkt $\xi\in]a,b[$ mit $\frac{f(b)-f(a)}{b-a}=f'(\xi)$
+
+\subsection{Extremalstellen bestimmen}
+
+$x_0$ ist ein kritischer Punkt, wenn $f'(x_0)=0$. Es gilt:
+\begin{itemize}
+ \item $f''(x_0)>0\:\Rightarrow\:$ $f$ hat bei $x_0$ ein Minimum
+ \item $f''(x_0)<0\:\Rightarrow\:$ $f$ hat bei $x_0$ ein Maximum
+ \item $f''(x_0)=0$ und $f^{(3)}(x_0)\neq 0$, dann hat $f$ bei $x_0$ einen Wendepunkt
+\end{itemize}
+
+\subsection{Taylor-Approximation}
+
+\subsubsection{Taylorsches Approximationspolynom}
+
+Sei $f:[a,b]\to{\mathbb{R}}$ gen"ugend oft differenzierbar. Das n-te Taylorpolynom von f um $x_0$:\\
+\begin{displaymath}
+j^{n}_{x_0}f(x)=\sum^{n}_{k=0}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k
+\end{displaymath}
+
+Falls $n=\infty$ so heisst die Summe Taylor-Reihe und ist eine Potenzreihenentwicklung der Funktion f.\\
+
+Beispiel:\\
+$f(a+\Delta a)\approx f(a)+f'(a)\cdotp\Delta a$
+
+\subsubsection{Qualit"at der Approximation}
+
+$f(x)=j^n_{x_0}f(x)+R_n(x)$, wobei $R_n$ das n-te Restglied (Abbrechfehler) ist, f"ur den gilt:\\
+F"ur ein geeignetes $\tau\in ]x_0,x[$ hat $R_n$ den Wert:
+\begin{displaymath}
+ R_n(x)=\frac{f^{(n+1)(\tau)}}{(n+1)!}(x-x_0)^{n+1}
+\end{displaymath}
+Die Approximation ist nur m"oglich, falls $lim_{n\to\infty}R_n=0$.
+
+\subsubsection{Verfahren von Newton zur Nullstellensuche}
+Approximative L"osung von f(x)=0:\\
+$x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}$
+
+\section{Mehrdimensionale Differentialrechnung}
+
+\subsection{Grundbegriffe}
+
+\subsubsection{partielle Ableitungen}
+
+$\frac{\partial f}{\partial x}(x,y,z)=f_x(x,y,z)$\\
+Funktion nach x ableiten, y und z als Konstanten betrachten.\\
+Es gilt: $(f_x)_y=(f_y)_x$\\
+
+$f_X\equiv 0$ auf einem ''anst"andigen'' Bereich $\Leftrightarrow f(x,y)$ h"angt nur von x ab.\\
+
+$f_{xy}\equiv 0\Leftrightarrow f(x,y)=F(x)+G(y)$\\
+
+f sei stetig diff'bar, dann gilt: $f(x,y)-f(x_0,y_0)=f_X(x_0,y_0)+f_Y(x_0,y_0) + o(\vec{x}-\vec{x_0})$ f"ur $\vec{x}\rightarrow\vec{x_0}$
+
+\subsubsection{Gradient $\nabla$}
+
+Der Gradient ist ein Vektor, der aus den partiellen Ableitungen 1. Ordnung einer Funktion gebildet wird und immer senkrecht auf $f$ (im Punkt P) bezl. der Niveaulinie (Niveaufl"ache) steht:
+\begin{displaymath}
+ grad\:f = \frac{\partial f}{\partial x}\vec{e_x}+\frac{\partial f}{\partial y}\vec{e_y}+\frac{\partial f}{\partial y}\vec{e_z}=
+\left(
+ \begin{array}{c}
+  \frac{\partial f}{\partial x}\\
+  \frac{\partial f}{\partial y}\\
+  \frac{\partial f}{\partial z}\\
+ \end{array}
+ \right )=\vec{\nabla}f
+\end{displaymath}
+
+$grad\:f(P_0)$ zeigt in die Richtung der max. Zuwachsrate von f an der Stelle $P_0$ und $\mid grad\: f(P_0)\mid$ ist gleich dieser max. Zuwachsrate.
+
+\subsubsection{Richtungsableitung}
+
+Sie ist ein Mass f"ur die "Anderung eines Funktionswertes, wenn man von P aus in Richtung $\vec{\nu}$ geht. Es ist die Projektion vom Gradienten im Punkt P auf die Richtung $\vec{\nu}$:
+
+\begin{displaymath}
+ D_{\vec{\nu}}f=\frac{1}{|\vec{\nu}|}\langle \nabla f, \nu \rangle
+\end{displaymath}
+
+\subsubsection{Tangentialebene}
+
+Gleichung der Tangentialebene in $P_0(x_0,y_0,z_0)$\\
+\begin{displaymath}
+ \langle\nabla f(P_0),
+ \left(
+  \begin{array}{c}
+   x\\
+   y\\
+   z
+  \end{array}
+ \right ) -P_0\rangle=0
+\end{displaymath}
+
+\subsubsection{Verallgemeinerte Kettenregel}
+
+Sei $\phi:t\to f(\vec{x}(t))$, dann gilt:
+\begin{displaymath}
+ \frac{d}{dt}f(\vec{x}(t))=\langle\nabla f(\vec{x}(t))\cdotp \vec{x}'(t)\rangle
+\end{displaymath}
+
+Beispiel:\\
+$\phi(t)=f(x(t),y(t))\equiv c_0$\\
+$\phi'(t)=f_x\cdotp\dot{x}+f_y\cdotp\dot{y}=0$
+
+\subsubsection{Leibniz-Regel}
+
+\textit{Integrale mit einem Parameter}
+\begin{displaymath}
+ \frac{d}{dt}\int\limits_B f(\vec{x},t)d\mu(\vec{x})=\int\limits_B f_t(\vec{x},t)d\mu(\vec{x})
+\end{displaymath}
+
+\textit{Integralbereich h"angt von t ab}\\
+$\frac{d}{dt}\int\limits^{b(t)}_{a(t)}f(x,t)dx=f(b(t),t)\cdotp b'(t)-f(a(t),t)\cdotp a'(t)+\int\limits^{b(t)}_{a(t)}f_t(x,t)dx$
+
+
+\subsection{Taylorentwicklung bei Funktionen mehrerer Variablen}
+
+F"ur eine Funktion von n Variablen bedient man sich einer Hilfsfunktion (hier beispielsweise mit n=2) $\phi(t):=f(x_0+t\Delta x,y_0+t\Delta y)\:(0\leq t\leq 1)$. Damit ist dann $\phi(0)=f(x_0,y_0)$ und $\phi(1)=f(x_0+\Delta x, y_0+\Delta y)$. Durch Anwendung der Taylorentwicklung f"ur n=1 erh"alt man dann: $\phi(1)=\phi(0)+\frac{1}{1!}\phi'(0)+\frac{1}{2!}\phi(0)+\ldots+\frac{1}{N!}\phi^{(N)}(0)+R_N$. F"ur die Ableitung von $\phi$ benutzt man die verallgemeinerte Kettenregel.
+
+\subsubsection{2 Variablen}
+
+\footnotesize
+$j^N_{x_0,y_0}f(x_0+\Delta x,y_0+\Delta y)=f(x_0,y_0)+f_x\Delta x+f_y\Delta y+\frac{1}{2}[f_{xx}\Delta x^2+2f_{xy}\Delta x\Delta y+f_{yy}\Delta y^2]+\ldots+\frac{1}{N!}[\binom{N}{0}f_{x^N}\Delta x^N+\binom{N}{1}f_{x^{N-1}y}\Delta x^{N-1}\Delta y+\ldots]+R_N(x,y)$
+\normalsize\\
+
+Die partiellen Ableitungen sind an der Stelle $(x_0,y_0)$ zu nehmen und $\Delta x=(x-x_0)$, $\Delta y=(y-y_0)$
+
+\subsubsection{3 Variablen}
+
+\footnotesize
+$j^N_{x_0,y_0,z_0}f(x_0+\Delta x,y_0+\Delta y,z_0+\Delta z)=f(x_0,y_0,z_0)+f_x\Delta x+f_y\Delta y+f_z\Delta z+\frac{1}{2}[f_{xx}\Delta x^2+f_{yy}\Delta y^2+f_{zz}\Delta z^2+2f_{xy}\Delta x\Delta y+2f_{xz}\Delta x\Delta z+2f_{yz}\Delta y \Delta z]+\ldots+R_N$
+\normalsize\\
+
+\subsection{Extremalstellen}
+
+Berechnung der Extrema einer Funktion f auf einem n-dimensionalen Bereich B.
+
+\begin{enumerate}
+ \item \textit{Kritische Punkte im Innern von B}\\
+  $\vec{\nabla}f(P_0)=\vec{0}$. Diese L"osungsmenge kann aber auch Punkte vom falschen Typ und solche, die nicht in B liegen beinhalten.
+  \begin{enumerate}
+   \item
+    $\left \bracevert
+    \begin{array}{cc}
+     f_{xx} & f_{xy} \\
+     f_{yx} & f_{yy}
+    \end{array}
+    \right \bracevert > 0$ an der Stelle $(x_0,y_0)$
+    \begin{enumerate}
+     \item $f_{XX}(x_0,y_0)>0\:\Rightarrow$ lokales Minimum
+     \item $f_{XX}(x_0,y_0)<0\:\Rightarrow$ lokales Maximum
+    \end{enumerate}
+   \item 
+    $\left \bracevert
+    \begin{array}{cc}
+     f_{xx} & f_{xy} \\
+     f_{yx} & f_{yy}
+    \end{array}
+    \right \bracevert < 0$ an der Stelle $(x_0,y_0)$\\
+    $\Rightarrow$ keine lokale Extremalstelle: Sattelpunkt
+   \item
+    $\left \bracevert
+    \begin{array}{cc}
+     f_{xx} & f_{xy} \\
+     f_{yx} & f_{yy}
+    \end{array}
+    \right \bracevert = 0$ an der Stelle $(x_0,y_0)$\\
+    $\Rightarrow$ Entartung
+  \end{enumerate}
+ \item \textit{Bedingt kritische Punkte auf jeder d-dimensionalen Seitenfl"ache mit $0<d<n$}\\
+  Seitenfl"ache durch Funktion $\vec{g}$ ausdr"ucken und mit Lagrange Extremalwerte bestimmen.
+ \item \textit{die Ecken von B}
+\end{enumerate}
+
+\subsubsection{Extremalstellen mit Nebenbedingungen}
+
+\textbf{Satz} $\nabla\:g(P_0)\neq 0$. Sei $P_0$ eine Extremalstelle von f auf der Fl"ache $g(x,y,z)=0$. Dann gibt es eine Zahl $\lambda$ mit $\nabla\:f(P_0)=\lambda \nabla\:g(P_0)$.\\
+Zus"atzlich muss gelten: $g(x,y,z)=0$\\
+
+Allgemein mit mehreren Nebenbedingungen:\\
+$f(x_1,x_2,\ldots,x_n)$ und Nebenbed. $g_1=0,\ldots,g_r=0$\\
+$$\nabla f=\lambda_1\nabla g_1 +\ldots +\lambda_r\nabla g_r$$
+$$g_1=0,g_2=0,\ldots,g_r=0$$
+
+\subsection{Implizite Funktionen}
+
+Gegeben die Funktion $f(x,y)=0$.\\
+
+Wenn $f_y(x_0,y_0)\neq 0$ so gibt es ein Fenster mit Zentrum $(x_0,y_0)$ in dem gilt $x\mapsto y=\phi(x)$, wobei $\phi(x_0)=y_0$ und $f(x,\phi(x))=0$. Es gilt dann:
+$$\phi'(x_0)=-\frac{f_x(x_0,y_0)}{f_y(x_0,y_0)}$$
+$$\phi''(x_0)=[\frac{f_{xx}f_{y}^2+2f_{x}f_{xy}f_{y}-f_x^2f_{yy}}{f_y^3}]$$
+
+Analoges gilt auch wenn $f_x(x_0,y_0)\neq 0$, dann gibt es aber eine Funktion $y\mapsto x=\psi(y)$ und die Ableitungen lauten:
+$$\psi'(y_0)=-\frac{f_y(x_0,y_0)}{f_x(x_0,y_0)}$$
+$$\psi''(y_0)=[\frac{f_{yy}f_{x}^2+2f_{y}f_{xy}f_{x}-f_y^2f_{xx}}{f_x^3}]$$
+
+
+\subsubsection{Anwendungen auf Niveaulinien $f(x,y)=c$}
+
+Parameterdarstellung einer Niveaulinie:\\
+Vor: $grad\:f(P_0)\neq \vec{0}$, dann $\exists$ Fenster und $\phi:x\mapsto\phi(x)$\\
+in $P_0$: $grad\:f(P_0)\cdotp(1,\phi'(x_0))=0$ falls $f_Y(x_0,y_0)\neq 0$, sonst nach x aufl"osen ($x=\psi(y)$).\\
+Der Gradient steht also senkrecht zur Tangente an die Niveaulinie.
+
+
+\subsubsection{Niveaufl"ache $f(x,y,z)=c$ im Raum}
+
+$P_0$ auf Fl"ache\\
+$grad\:f(P_0)\perp$ Tangentialebene.
+
+
+\subsection{Die Funktionalmatrix}
+
+$\vec{f}:\mathbb{R}^n\rightarrow \mathbb{R}^m\:\:\vec{x}\mapsto \vec{y}=\vec{f}(\vec{x})$\\
+Abbildung $\vec{f}=
+\left(
+\begin{array}{c}
+ f_1\\
+ \vdots\\
+ f_m
+\end{array}
+\right )$\\
+
+Die Jacobische Matrix oder Funktionalmatrix von $\vec{f}$ an der Stelle $\vec{p}$ sieht folgendermassen aus:
+
+$$
+Jac(f):=(\frac{\partial \vec{f}}{\partial \vec{x}})_{\vec{p}}:=
+\left (
+\begin{array}{ccc}
+ \frac{\partial f_1}{\partial x_1} &	\ldots &	\frac{\partial f_1}{\partial x_n}\\
+ \frac{\partial f_2}{\partial x_1} &	\ldots &	\frac{\partial f_2}{\partial x_n}\\
+ \vdots &				&		\\
+ \frac{\partial f_m}{\partial x_1} &	\ldots &	\frac{\partial f_m}{\partial x_n}\\
+\end{array}
+\right )
+$$\\
+
+Zuwachs von $\vec{p}$:\\
+$\Delta\vec{f}(\vec{p}+d\vec{x})-\vec{f}(\vec{p})=A\cdotp d\vec{x}+o(|d\vec{x}|)$ (Matrixmultiplikation)\\
+Falls m=n: Koordinatentransformation\\
+
+Als Funktional- oder Jacobideterminante wird $|A|$ bezeichnet
+
+\subsubsection{Zusammensetzungen von Abbildungen}
+
+$x\stackrel{f}{\rightarrow}y\stackrel{g}{\rightarrow}z$\\
+
+$(\frac{\partial z}{\partial x})_P=(\frac{\partial(g\cdotp f)}{\partial x})_P=(\frac{\partial z}{\partial y})_Q\cdotp(\frac{\partial y}{\partial x})_P$ (Matrixmult.)
+
+\subsubsection{Existenz einer Umkehrabbildung}
+
+$f:f^{-1}$\\
+$(\frac{\partial f^{-1}}{\partial y})_{Q_0}\cdotp(\frac{\partial f}{\partial x})_{P_0}=I$\\
+
+\textbf{Satz} $f:\mathbb{R}^n\rightarrow\mathbb{R}^n$\\
+$P_0\rightarrow f(P_0)=Q_0$\\
+Vor: $det((\frac{\partial f}{\partial x})_{P_0})\neq 0$\\
+$\Rightarrow\:\exists$ Umgebung U um $Q_0$, wo $f$ umkehrbar ist, d.h. $\exists f^{-1}:U\rightarrow\mathbb{R}^n$.
+
+
+\subsection{Kurvenschar in der Ebene}
+$F(x,y,c)=0$\\
+Zu jeder Schar geh"ort eine Diff'gl. deren L"osungen die Kurven der Schar ist (und umgekehrt).
+
+\subsubsection{Kurvennormale an $\gamma$ in  $\gamma(t)$}
+
+$\langle n- \gamma(t),\dot{\gamma}(t)\rangle=0$
+
+\subsubsection{Orthogonale Trajektorien}
+
+Geg: $F(x,y,c)=0$. Kurve zum Parameter c: $\gamma_c$\\
+Ges: Kurve durch einen Punkt $P_0$ von einer $\gamma_c$, welche alle $\gamma_c\:\perp$ schneidet: ''Orthogonale Trajektorien''. Die orthogonalen Traj. sind die Kurven steilsten Anstiegs.\\
+
+Diff'Gl der orthogonalen Trajektorien:\\
+$y'=-\frac{1}{f(x,y)}\rightarrow$ L"osung $\rightarrow=$ Schar der $\perp$ Traj.\\\\
+
+\begin{tabular}{p{3cm}cp{3cm}}
+ Geg. Schar $F(x,y,c)=0$ &	$\rightarrow$ &		Diff'Gl $y'=f(x,y)$\\
+ &				&			$\downarrow$\\
+ ges. Schar der $\perp$ Trajektorien & $\leftarrow$ &	Diff'Gl der $\perp$-Schar $y'=\frac{1}{f(x,y)}$
+\end{tabular}
+
+
+\subsubsection{Enveloppe/Einh"ullende}
+
+Eine Einh"ullende $\epsilon$ einer Schar $\Gamma$ ist eine Kurve welche in jedem Punkt von einer Kurve der Schar ber"uhrt wird. Ber"uhrungspunkt = gemeinsamer Punkt und gemeinsame Tangente.\\
+
+\textit{Bestimmung} von evtl. Einh"ullenden\\
+Schar: $F(x,y,c)=0$\\
+Einhh"ullende in Parameterdarst:\\
+gemeinsamer Punkt: $F(x(c),y(c),c)=0$ f"ur alle c\\
+gemeinsame Tangente: $F_C(x,y,c)=0$\\
+Aus diesen beiden Gleichungen nun den den Parameter c eliminieren und man erh"alt die Gleichung f"ur die Enveloppe.
+
+\textbf{Bemerkungen}
+\begin{itemize}
+ \item nicht jede Schar hat eine Einh"ullende
+ \item in $P\in \epsilon$ hat die Diff'gl $y'=f(x,y)$ 2 L"os.
+\end{itemize}
+
+
+\section{Integralrechnung}
+
+\subsection{Integralbegriff}
+
+Intervall $[a,b]$\\
+$\lim_{N\to\infty} \sum^N_{k=1} f(\xi_k)\Delta x_k = \int^b_a f(x) dx$\\
+$\Delta x_k =\frac{b-a}{N}$
+
+\subsection{Haupts"atze}
+
+\begin{enumerate}
+ \item $\int^b_a(f(x)+g(x))dx=\int^b_a f(x)dx + \int^b_a g(x)dx$
+ \item $\int^b_a c f(x)dx = c\int^b_a f(x) dx$
+ \item $\int^b_a f(x)dx + \int^c_b f(x) dx = \int^c_a f(x)dx$
+ \item $\frac{d}{dx}\int^{g(x)}_a f(t)dt=f(g(x))\cdotp g'(x)$
+ \item $\frac{d}{dx}\int^{b}_{g(x)} f(t)dt=-f(g(x))\cdotp g'(x)$
+\end{enumerate}
+
+
+\subsection{Technik des Integrals}
+
+\subsubsection{Partielle Integration}
+
+$$\int u(t)v'(t)\:dt = u(t)v(t) - \int u'(t)v(t)\:dt$$
+
+\subsubsection{Substitutionsmethode}
+
+$F(g(x))+c=\int f(g(x))\cdotp g'(x) dx$
+
+Beispiel:\\
+$\int \tan(x) dx=\int \frac{\sin(x)}{\cos(x)}dx$\\
+$t=\cos(x)$\\
+$dt = -\sin (x)dx\rightarrow dx=-\frac{dt}{\sin x}$\\
+$\Rightarrow-\int\frac{1}{t}dt=-ln|\cos (x)| + c$\\
+
+Oftmals auch umgekehrt:\\
+$\int \sqrt{1-t^2}dt$\\
+$t=\sin (x)$\\
+$dt=\cos (x)dx$\\
+$\Rightarrow\int \cos^2(x)dx$
+
+\subsubsection{Partialbruchzerlegung}
+
+Gegeben sei eine Funktion $f(x)=\frac{p(x)}{q(x)}$, wobei $p(x)$ und $q(x)$ Polynome sind.\\
+
+\begin{enumerate}
+ \item Falls $deg(p(x))> deg(q(x))$, so macht man eine Polynomdivision.
+ \item Nullstellen von $q(x)$ bestimmen
+ \item Jeder Nullstelle einen Partialbruch zuordnen\\
+  Dabei multipliziert man jede NS mit dem urspr"unglichen Bruch und setzt f"ur x den Wert der NS ein.\\
+  
+  $\alpha$: einfache NS $\rightarrow\:\frac{A}{(x-\alpha)}$\\
+  $\alpha$: r-fache NS $\rightarrow\:\frac{A_1}{(x-\alpha)}+\ldots+\frac{A_r}{(x-\alpha)^r}$\\
+  $\alpha\in\mathbb{C}$ so beh"alt dieser Teil die Form $\frac{Bx+C}{x^2+bx+c}$
+  
+  \textit{Beispiel}\\
+  $\frac{1}{x(x+1)(x+2)}=\frac{A}{x}+\frac{B}{x+1}+\frac{C}{x+2}$\\
+  $A=\frac{1}{(x+1)(x+2)}|_{x=0}=\frac{1}{1\cdotp2}$\\
+  $B=\frac{1}{x(x+2)}|_{x=-1}=\frac{1}{(-1)\cdotp1}$\\
+  $C=\frac{1}{x(x+1)}|_{x=-2}=\frac{1}{(-2)\cdotp(-1)}$
+ \item $f(x)$ ist nun als Summe aller Partialbr"uche darstellbar
+ \item Integrale der Partialbr"uche bestimmen
+  \begin{enumerate}
+   \item $q(x)=(x-\alpha)$\\
+    $\int\frac{A_i}{bx+c}dx=A_i\cdotp\frac{1}{b}\ln|bx+c|+C$
+   \item $q(x)=(x-\alpha)^r$\\
+    $\int\frac{A_i}{(x-\alpha)^r}=\frac{1}{-r+1}\frac{A_i}{(x-\alpha)^{r-1}}$
+   \item $q(x)=(x-\alpha)(x-\overline{\alpha})=(x-\beta)^2+\gamma^2$\\
+    $\alpha=\beta+i\gamma,\overline{\alpha}=\beta-i\gamma$\\
+    $\int\frac{Bx+c}{q(x)}dx=\frac{B}{2}\ln q(x) +(B\beta +c)\frac{1}{\gamma}\arctan (\frac{x-\beta}{\gamma})+C$
+  \end{enumerate}
+\end{enumerate}
+
+
+\subsubsection{Wichtige Integrale}
+
+\footnotesize
+\begin{tabular}{lcl}
+ $\int x^n dx$ & = &				$\frac{x^{n+1}}{n+1}+C\:\:n\neq -1$\\
+ $\int \frac{1}{x} dx$ & = &			$\ln |x| +C$\\
+ $\int e^x dx$ & = &				$e^x +C$\\
+ $\int \ln |x| dx$ & = &			$x\ln |x| -x +C$\\
+ $\int \frac{f'(x)}{f(x)}dx$ & = &		$\ln|f(x)|$\\
+ $\int \sin x dx$ & = &				$-\cos x +C$\\
+ $\int \cos x dx$ & = &				$\sin x +C$\\
+ $\int \frac{1}{\cos^2 x}dx$ & = &		$\tan x +C$\\
+ $\int \tan x dx$ & = &				$-\ln|\cos x|+C$\\
+ $\int \frac{1}{\sqrt{1-x^2}}dx$ & = &	$\arcsin x +C$\\
+ $\int \frac{-1}{\sqrt{1-x^2}}dx$ & = &	$\arccos x +C$\\
+ $\int \frac{1}{1+x^2}dx$ & = &			$\arctan x +C$\\
+ $\int \sinh x dx$ & = &			$\cosh x +C$\\
+ $\int \cosh x dx$ & = &			$\sinh x +C$\\
+ $\int \frac{1}{\cosh^2 x}dx$ & = &		$\tanh x +C$\\
+ $\int \tanh x dx$ & = &			$\ln\cosh x + C$\\
+ $\int \frac{1}{\sqrt{1+x^2}}dx$ & = &		$arsinh x + C$\\
+ $\int \frac{1}{\sqrt{x^2-1}}dx$ & = &		$arcosh x + C$\\
+ $\int \frac{1}{1-x^2}dx$ & = &			$artanh x + C$\\
+ $\int \sin^2 x dx$ & = &			$\frac{1}{2}(x-\sin x \cos x) +C$\\
+ $\int \cos^2 x dx$ & = &			$\frac{1}{2}(x+\sin x \cos x) +C$\\
+ $\int \tan^2 x dx$ & = &			$\tan x-x +C$\\
+ $\int \cot^2 x dx$ & = &			$-\cot x-x +C$\\
+ $\int (ax+b)^ndx$ & = &			$\frac{(ax+b)^{n+1}}{a(n+1)}$\\
+ $\int \frac{1}{ax+b}dx$ & = &			$\frac{1}{a}\ln|ax+b| +C$\\
+ $\int (ax^p+b)^s x^{p-1}dx$ & = &		$\frac{(ax^p+b)^{s+1}}{ap(s+1)} +C$\\
+ $\int (ax^p+b)^{-1} x^{p-1}dx$ & = &		$\frac{1}{ap}\ln |ax^p+b| +C$\\
+ $\int \log_a |x|dx$ & = &			$x(\log_a|x|-\log_a e) +C$\\
+ $\int x^{-1}\ln x dx$ & = &			$\frac{1}{2}(\ln^x)^2 +C$\\
+ $\int \cot x dx$ & = &				$\ln|\sin x| +C$\\
+ $\int \sin (ax +b) dx$ & = &			$-\frac{1}{a}\cos(ax+b) +C$\\
+ $\int \cos (ax +b) dx$ & = &			$\frac{1}{a}\sin(ax+b) +C$\\
+ $\int \frac{1}{\sin x}dx$ & = &		$\ln|\tan\frac{x}{2}| +C$\\
+ $\int \frac{1}{\cos x}dx$ & = &		$\ln|\tan(\frac{x}{2}+4\pi)| +C$\\
+ $\int \sin^nxdx$ & = &				$-\frac{1}{n}\sin^{n-1}x\cos x+\frac{n-1}{n}\int\sin^{n-2} +C$\\
+ $\int \cos^nxdx$ & = &				$\frac{1}{n}\sin x\cos^{n-1} x+\frac{n-1}{n}\int\cos^{n-2} +C$\\
+\end{tabular}
+\normalsize
+
+\subsubsection{Standard-Substitutionen}
+
+\tiny
+\begin{tabular}{|l|l|p{1.2cm}|p{1.3cm}|}
+ \hline
+ Integral & Substitution &  Differential  & Bemerkungen \\ \hline \hline
+
+ $\int f(x,\sqrt{ax+b})dx$ & 		$x=\frac{t^2-b}{a}$ & 		$dx=\frac{2tdt}{a}$ &	$t\geq 0$\\ \hline
+ $\int f(x,\sqrt{ax^2+bx+c})dx$ & 	$x=\alpha t+\beta$ & 		$dx=\alpha dt$ &	w"ahle $\alpha$ und $\beta$ so, dass gilt $ax^2+bx+c=\gamma\cdotp(\pm t^2\pm 1)$ \\ \hline
+ $\int f(x,\sqrt{1-x^2})dx$ & 		$x=\sin t$ & 			$dx=\cos t dt$ &	$-\frac{\Pi}{2}\leq t \leq \frac{\Pi}{2}$\\ \hline
+ $\int f(x,\sqrt{1+x^2})dx$ &		$x=\sinh t$ & 			$dx=\cosh t dt$ &	$t\in\mathbb{R}$\\ \hline
+ $\int f(x,\sqrt{x^2-1})dx$ &		$x=\cosh t$ & 			$dx=\sinh t dt$ &	$t \geq 0$\\ \hline
+ $\int f(e^x, \sinh x, \cosh x)dx$ & 	$e^x=t$ & 			$dx=\frac{dt}{t}$ &	$t>0$, und dabei gilt $\sinh x =\frac{t^2-1}{2t}$, $\cosh x= \frac{t^2+1}{2t}$ \\ \hline
+ $\int f(\sin x, \cos x)dx$ & 		$\tan \frac{x}{2} = t$ & 	$dx=\frac{2dt}{1+t^2}$ &$-\frac{\Pi}{2}<t<\frac{\Pi}{2}$, und dabei gilt $\sin x =\frac{2t}{1+t^2}$, $\cos x = \frac{1-t^2}{1+t^2}$ \\ \hline
+\end{tabular}
+\normalsize
+
+\subsection{Uneigentliche Integrale}
+
+$\int^{\infty}_a f(x)dx:=\lim_{b\rightarrow \infty}\int^b_a f(x)dx$\\
+$\int^{b}_0 g(x)dx:=\lim_{\epsilon\to 0+}\int^b_\epsilon g(x)dx$\\
+Grenzwert kann existieren, oder evtl. nicht!
+
+\subsubsection{Vergleichskriterium}
+
+Gilt $|f(x)|\leq g(x)$ f"ur $x \in [a,\infty[$ und konvergiert $\int^{\infty}_a g(x)dx$, so konvergiert auch $\int^{\infty}_a f(x)dx$\\
+Gilt $0\leq g(x) \leq f(x)$ und divergiert $\int^{\infty}_a g(x)dx$, so divergiert auch $\int^{\infty}_a f(x)dx$
+
+\subsubsection{Testfunktionen}
+
+\begin{enumerate}
+\item $\mathit{x\to\infty}$
+\begin{enumerate}
+ \item Nimmt $f(x)$ f"ur $x\to\infty$ mindestens so rasch ab wie $\frac{1}{x^\alpha}$ mit geeignetem $\alpha > 1$, dass heisst: Gilt f"ur ein C und ein $\alpha > 1$ die Absch"atzung
+  $$|f(x)|\leq\frac{C}{x^\alpha}\:\:(x>x_0)$$
+  so ist das uneigentliche Integral $\int^\infty_{a}f(x)dx$ (absolut) konvergent.
+ \item Ist jedoch f"ur ein geeignetes $C>0$ durchwegs
+  $f(x)\geq\frac{C}{x}\:\:(x>x_0)$
+  so ist das Integral $\int^\infty_a f(x) dx$ divergent
+\end{enumerate}
+\item $\mathit{x\to0+}$
+\begin{enumerate}
+ \item Geht $g(x)$ f"ur $x\to 0+$ h"ochstens so rasch gegen $\infty$ wie $\frac{1}{x^\beta}$ mit einem geeigneten $\beta < 1$, das heisst: Gilt f"ur ein C und ein $\beta < 1$ die Absch"atzung
+  $$0\leq g(x)\leq \frac{C}{x^\beta}\:\:(0<x<x_0)$$
+  so ist das uneigentliche Integral $\int^b_0 g(x)dx$ konvergent.
+ \item Ist jedoch f"ur ein geeignetes $C>0$ durchwegs
+  $$g(x)\geq\frac{C}{x}\:\:(0<x<x_0)$$
+  so ist das Integral $\int^b_0g(x)dx$ divergent
+\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Summenkonvergenzen}
+
+$\int^\infty_{n_0}f(x)dx$ konvergiert/divergiert $\Leftrightarrow$ $\sum^\infty_{n_0}f(k)$ konvergiert/divergiert.
+
+\subsubsection{Polstellen}
+f Pol in b. $\int^b_a f(x)dx$ konvergiert, falls $\lim_{c\rightarrow b}\int^c_a f(x)dx$ existiert.
+
+
+\subsubsection{Gamma-Funktion}
+$\Gamma(\alpha)=\int^\infty_0 x^{\alpha-1}e^{-x}dx$\\
+$\Gamma (\alpha+1)=\alpha\cdotp\Gamma(\alpha)$\\
+$\Gamma(1)=1,\Gamma(2)=1,\ldots,\Gamma(n+1)=n!$
+
+\subsection{Bogenl"ange einer ebenen Kurve}
+
+\begin{itemize}
+ \item von $y=f(x)$ in $[a,b]$\\
+  $L(\gamma)=\int^b_a \sqrt{1+(f'(x))^2}dx$
+ \item von $x=x(t),y=y(t)$ in $[a,b]$\\
+  $L(\gamma)=\int^b_a\sqrt{(\dot{x})^2+(\dot{y})^2}dt$
+\end{itemize}
+
+\textit{Beispiel}\\
+Bestimme eine Funktion $f$ so, dass die Kurve $\gamma(t)=(t,f(t))$ durch (0,1) verl"auft und ihre L"ange L zw. (0,1) und (x,y) gegeben ist durch $L=2e^x-y$.\\
+$L(\gamma)=\int^x_0 \sqrt{1+ f'(t)^2}dt=2e^x-f(t)$
+\begin{eqnarray}
+ \sqrt{1+f'(t)^2}&	=&	2e^t-f'(t)\nonumber\\
+ 1+f'(t)^2&		=&	4e^{2t}-4e^{t}f'(t)+f'(t)^2 \nonumber\\
+ 4e^t f'(t) &		=&	4e2t-1\nonumber\\
+ f'(t)&			=&	\frac{4e^{2t}-1}{4e^t}=-\frac{1}{4}e^{-t}+e^t\nonumber\\
+ f(t) &			=&	\frac{1}{4}e^{-t}+e^t-\frac{1}{4}\nonumber\\
+\end{eqnarray}
+
+\subsection{Mehrfache Integrale}
+
+Ist ein Bereich gegeben durch\\
+$B=\{(x,y)|a\leq x\leq b, \phi(x)\leq y \leq \psi(x)\}$, so gilt:
+
+$$\int_B f(x,y)d\mu(x,y)=\int^b_a(\int^{\psi(x)}_{\phi(x)}f(x,y)dy)dx$$
+
+\subsubsection{Schwerpunkt eines K"orpers}
+
+$$\vec{x}_S=\frac{\int_B xdV,\int_B ydV,\int_B zdV}{\int_B dV}$$
+
+Wobei "uber den ganzen K"orper B integriert wird.
+
+\subsubsection{Tr"agheitsmoment $\Theta$}
+
+$\Theta:=\int_P a^2d\mu(x,y,z)$\\
+
+Wobei "uber den K"orper integriert wird und a dem Abstand von der Rotationsachse entspricht.
+
+\subsection{Transformationsformel f"ur mehrdimensionale Integrale}
+
+\subsubsection{Funktionen einer Variable}
+
+$\int\limits^b_a f(x)dx$ Substitution $x=\phi(t),\:\alpha=\phi(a),\:\beta=\phi(b)\Rightarrow\int\limits^\beta_\alpha f(\phi(t))\phi'(t)dt$\\
+
+\subsubsection{Funktionen von 2 Variablen}
+Koordinatentransformation: $x=x(u,v);\:y=y(u,v)$\\
+$\iint\limits_B f(x,y)d\mu(x,y)=\iint\limits_{B'}f(x(u,v),y(u,v))\cdotp|det(\frac{\partial(x,y)}{\partial(u,v)})|\cdotp d\mu(u,v)$\\
+Diese Determinate wird als Jaccobische Det. der Transformation bez.\\
+
+F"ur 3 und mehr Variablen wird analog vorgegangen.
+
+\subsubsection{wichtige Korrekturfaktoren}
+
+\begin{itemize}
+ \item \textbf{Polarkoordinaten}\\
+  $x=r\cos\varphi$, $y=r\sin\varphi$, $d\mu\rightarrow rdrd\varphi$
+ \item \textbf{Kugelkoordinaten}\\
+  $d\mu \rightarrow r^2\cos\vartheta drd\vartheta d\varphi$
+ \item \textbf{Zylinderkoordinaten}\\
+  $d\mu \rightarrow rdrd\varphi dz$
+\end{itemize}
+
+\subsection{Integrale "uber Fl"ache S}
+
+\textit{Fl"acheninhalt} $\omega(S)$ der Fl"ache
+
+$$S:\:\:B\rightarrow\mathbb{R}^3,\:\:(u,v)\mapsto r(u,v)$$
+
+ist folgendermassen festgesetzt:
+
+$$\omega(S):=\int_B|\vec{r_u}\times\vec{r_v}|d\mu(u,v)$$
+
+Der unter dem Integralzeichen erscheindene Ausdruck
+
+$$d\omega:=|\vec{r_u}\times\vec{r_v}|d\mu(u,v)$$
+
+wird als \textit{(skalares) Oberfl"achenelement} bezeichnet.\\
+
+\textit{Beispiel} B parametrisiert durch:
+$$\left (
+\begin{array}{c}
+ x\\
+ y\\
+ z
+\end{array}
+\right )=T(\varphi,\vartheta)=
+\left(
+\begin{array}{c}
+ R\cos\vartheta\cos\varphi\\
+ R\cos\vartheta\sin\varphi\\
+ R\sin\vartheta
+\end{array}
+\right)
+$$
+Mit dieser Parametrisierung ist das vektorielle Fl"achenelement:\\
+$d\vec{\omega}=\frac{\partial T}{\partial \varphi}\times\frac{\partial T}{\partial \vartheta}d\varphi d\vartheta$\\
+$=\left(
+\begin{array}{c}
+ -R\cos\vartheta\sin\varphi\\
+ R\cos\vartheta\cos\varphi\\
+ 0
+\end{array}
+\right)\times
+\left(
+\begin{array}{c}
+ -R\sin\vartheta\cos\varphi\\
+ -R\sin\vartheta\sin\varphi\\
+ R\cos\vartheta
+\end{array}
+\right) d\varphi d\vartheta$\\
+$=\left (
+\begin{array}{c}
+ R^2\cos^2\vartheta\cos\varphi\\
+ R^2\cos^2\vartheta\sin\varphi\\
+ R^2\sin^2\vartheta\cos\varphi
+\end{array}
+\right )d\varphi d\vartheta$
+
+\subsubsection{Funktion auf S integrieren}
+
+\begin{enumerate}
+ \item Funktion in $\mathbb{R}^3$ definiert: $f=f(x,y,z)$\\
+  $\iint\limits_S f dw:=\iint\limits_B f(x(u,v),y(u,v),z(u,v))|\vec{r_u}\times\vec{r_v}|dudv$
+ \item Funktion auf $\mathbb{R}^2$ $f=f(u,v)$\\
+  $\iint\limits_S f dw:=\iint\limits_B f(u,v)|\vec{r_u}\times\vec{r_v}|dudv$
+\end{enumerate}
+
+
+\section{Differentialgleichungen}
+
+\subsection{Differentialgleichungen I}
+
+\subsubsection{homogene DGL mit konstanten Koeffizienten}
+
+Gesucht $y(x)$ so dass
+\begin{equation}
+ \label{homog_diffgl}
+ y^{(n)}+a_{n-1}y^{(n-1)}+\ldots+a_1y'+a_0y=0
+\end{equation}
+
+\textbf{Satz}
+\begin{itemize}
+ \item Sind $y_1,y_2$ L"osungen von ~(\ref{homog_diffgl}), so auch $y_1+y_2$ und $\alpha\cdotp y_1$ $(\alpha \in \mathbb{R})$
+ \item Es gibt genau n linear unabh"anigige L"osungen $y_0,\ldots ,y_{n-1}$ und die allg. L"osung ist $y=c_0y_0 + c_1y_1+\ldots+c_{n-1}y_{n-1}$
+\end{itemize}
+
+Ansatz f"ur ~(\ref{homog_diffgl}): $y(x)=e^{\lambda\cdotp x}$\\
+$y'(x)=\lambda e^{\lambda x},\ldots , y^{(n)}(x)=\lambda^{n}e^{\lambda x}$\\
+~(\ref{homog_diffgl})$\rightarrow$ $\lambda^n e^{\lambda x}+\ldots +a_1\lambda e^{\lambda x}+a_0 e^{\lambda x}=0$\\
+$\rightarrow$ $e^{\lambda x}\underbrace{[\lambda^n +\ldots+a_1\lambda+a_0]}=0$\\
+$chp(\lambda)$: charakteristisches Polynom\\
+
+Falls $\lambda_i$ eine Nullstelle von $chp(\lambda)$ ist und gilt:
+\begin{itemize}
+ \item \textit{$\lambda_i$ ist einfache Nullstelle}\\
+  so ist $e^{\lambda_i x}$ eine linear unabh"angige L"osung von ~(\ref{homog_diffgl}).
+ \item \textit{$\lambda_i$ ist m-fache Nullstelle}\\
+  so sind die Funktionen $e^{\lambda_i t},t\cdotp e^{\lambda_i t},t^2\cdotp e^{\lambda_i t},\ldots,t^{m-1}\cdotp e^{\lambda_i t}$ linear unabh"angige L"osungen von ~(\ref{homog_diffgl}).
+ \item \textit{$\lambda_i$ ist komplexe Nullstelle}\\
+  wenn also $\lambda_i=\mu_i + i\nu_i, \nu_i\neq 0$ bzw. die L"osung $z(x)=e^{\lambda_i x}$ so bilden $Re(z)$ und $Im(z)$ zwei reelle unabh"angige L"osungen von ~(\ref{homog_diffgl}).\\
+  $Re(z)=e^{\mu_i x}\cos(\nu_i x)$\\
+  $Im(z)=e^{\mu_i x}\sin(\nu_i x)$\\
+\end{itemize}
+
+\subsubsection{Inhomogene DGL mit konstanten Koeffizienten}
+
+\begin{equation}
+ \label{inhomog_diffgl}
+ y^{(n)}+a_{n-1}y^{(n-1)}+\ldots+a_1y'+a_0y=K(t)
+\end{equation}
+
+\textbf{Satz} Sei $y_{part}(t)$ eine spezielle L"osung von ~(\ref{inhomog_diffgl}) und sei $y(t)=c_1y_1+\ldots+c_ny_n$ die allg. L"osung der homogenen Gleichung. Dann ist 
+$$y=y_{part}+c_1y_1+\ldots+c_ny_n$$
+die allg. L"osung der inhomogenen Gleichung ~(\ref{inhomog_diffgl}).\\
+
+\textbf{Suche von partikul"aren L"osungen}\\
+
+Wenn $K(t):=t^re^{\lambda t}$ bzw. allgemeiner $K(t):=q(t)e^{\lambda_0 t}$ mit einem Polynom $q(t)$ vom Grad r und $\lambda_0$ m-facher Nullstelle von $chp(\lambda)$, so erh"alt man die partikul"are L"osung durch den Ansatz:
+$$y_{part}(x):=(A_0+A_1 t+\ldots+A_r t^r)t^m e^{\lambda_0t}$$
+
+mit unbestimmten Koeffizienten $A_k$. Danach alle in ~(\ref{inhomog_diffgl}) vorkommenden Ableitungen ausrechnen und in ~(\ref{inhomog_diffgl}) einsetzen und $A_k$ durch Koeffizientenvergleich bestimmen.\\
+
+\textit{m"ogliche Ans"atze}
+
+\footnotesize
+\begin{tabular}{|c|c|c|}
+ \hline
+ $K(t)$&				Bedingung &			Ansatz f"ur $y_{part}(t)$\\ \hline
+ $t^r$& 				$0 \not\in L$ &			$A_0+\ldots+A_rt^r$\\ \hline
+ $t^r$&					$0 \in L$, m-fach &		$A_0t^m+\ldots+A_rt^{m+r}$\\ \hline
+ $b_0+\ldots+b_r t^r$&			$0 \not\in L$ &			$A_0+A_1t+\ldots+A_rt^r$\\ \hline
+ $e^{\lambda_0 t}$ &			$\lambda \not\in L$&		$Ae^{\lambda_0 t}$\\ \hline
+ $e^{\lambda_0 t}$ &			$\lambda \in L$, m-fach&	$at^me^{\lambda_0 t}$\\ \hline
+ $\cos(\omega t),\sin(\omega t)$ &	$\pm i\omega \not \in L$ &	$A\cos(\omega t)+B\sin(\omega t)$\\ \hline
+ $\cos(\omega t),\sin(\omega t)$ &	$\pm i\omega \in L$,1-fach &	$t(A\cos(\omega t)+B\sin(\omega t))$\\ \hline
+ $t^2e^{-t}$ &				$-1 \not \in L$ &		$(A_0+A_1t+A_2t^2)e^{-t}$\\ \hline
+\end{tabular}
+\normalsize\\
+
+\textit{Beispiel} Bestimme allgem. L"osung der DGL
+$$y''(x)+3y'(x)+2y(x)=\cos x$$
+
+\begin{enumerate}
+ \item Homogene L"osung: $y(x)=c_1 e^{-x}+c_2 e^{-2x}$
+ \item Inhomogene L"osung:\\
+  Ansatz (nach Tabelle):
+  \begin{eqnarray}
+   y &	=& a\cos x+ b\sin x\nonumber \\
+   y'&	=& -a\sin x + b\cos x \nonumber \\
+   y''&	=& -a\cos x - b\sin x \nonumber 
+  \end{eqnarray}
+  $y''+3y'+2y=(a+3b)\cos x + (b-3a)\sin x = \cos x$\\
+  $\Rightarrow a=\frac{1}{10}, b=\frac{3}{10}$\\
+  Allgem. L"os der DGL:\\
+  $y(x)=c_1e^{-x}+c_2e^{-2x}+\frac{1}{10}\cos x+\frac{3}{10}\sin x$
+\end{enumerate}
+
+
+\subsubsection{Eulersche Differentialgleichungen}
+
+Gesucht $y=y(r)$ so dass
+\begin{equation}
+ \label{euler_diffgl}
+ y^{(n)}+\frac{b_{n-1}}{r}y^{(n-1)}+\ldots+\frac{b_0}{r^n}=0
+\end{equation}
+
+Koeffizienten sind hier also nicht konstant. Auch hier gibt es einen Ansatz:
+$$y(r)=r^\alpha$$
+$$y'(r)=\alpha r^{\alpha-1},\:y^{(k)}=\alpha(\alpha -1)\cdotp\ldots\cdotp(\alpha -k+1)r^{\alpha - k}$$
+
+Das Indexpolynom lautet dann:
+$$inp(\alpha):=\alpha\ldots(\alpha-n+1)+\ldots+\alpha b_1+b_0=0$$
+
+Falls $\alpha_i$ eine Nullstelle von $inp(\alpha)$ ist und gilt:
+\begin{itemize}
+ \item \textit{$\alpha_i$ ist einfache Nullstelle}\\
+  so ist $r^{\alpha_i}$ eine linear unabh"angige L"osung von ~(\ref{euler_diffgl}).
+ \item \textit{$\alpha_i$ ist m-fache reelle Nullstelle}\\
+  so sind die Funktionen $r^{\alpha_i},r^{\alpha_i}\cdotp\ln r,\ldots,r^{\alpha_i}\cdotp(\ln r)^{m-1}$ linear unabh"angige L"osungen von ~(\ref{euler_diffgl}).
+ \item \textit{$\alpha_i$ ist einfach komplex konjugierte Nullstelle}\\
+  wenn also $\alpha_i=\mu_i + i\nu_i, \nu_i\neq 0$ so ersetze $r^{\alpha_i}, r^{\overline{\alpha_i}}$ durch $r^{\mu_i}\cos(\nu_i\ln r)$ und $r^{\mu_i}\sin(\nu_i \ln r)$ welche zwei reelle unabh"angige L"osungen von ~(\ref{euler_diffgl}) sind.\\
+ \item \textit{mehrfache komplex konjugierte Nullstelle}\\
+  so sind die rellen L"osugen der komplex konjugierten Nullstelle multipliziert mit $(\ln r)^k$ ebenfalls unabh"angige L"osugen von ~(\ref{euler_diffgl}).
+\end{itemize}
+
+Falls das Indexpolynom m-fache NS hat, dann gibt es folgende L"osungen:\\
+$r^{\alpha_1},(\ln r)\cdotp r^{\alpha_1},\ldots,(\ln r)^{m-1}r^{\alpha_1}$\\
+
+Falls $\alpha$ komplex $(r^{a+ib})$:\\
+Ersetze $r^\alpha, r^{\overline{\alpha}}$ durch $r^a\cos(b\ln r)$ und $r^a\sin(b \ln r)$
+
+\subsubsection{inhomogene DGL mit variablen Koeffizienten}
+
+\begin{equation}
+ \label{inhom_variab}
+ y''+p_0(t)y'+p_1(t)y=q(t)
+\end{equation}
+
+wobei $q(t)$ beliebig ist.\\
+
+\textit{Annahme}: die allgemeine L"osung der homogenen Gleichung sei bekannt, z.B. $p_0,p_1$ konst. oder Eulersche DGL.\\
+\textit{Ziel}: daraus eine spezielle L"osung der inhomogenen Gleichung finden.\\
+\textit{Ansatz}:
+$$y_0(t)=c_1(t)y_1(t)+c_2(t)y_2(t)$$
+mit $y_1,y_2$ lin. unabh. L"osungen der homogenen Gleichung von ~(\ref{inhom_variab})
+$$y_0=c_1y_1+c_2y_2$$
+$$y_0'=c_1y_1'+c_2y_2'+\underbrace{c_1'y_1+c_2'y2}_{\mbox{1. Bed = 0}}$$
+$$y_0''=c_1y_1''+c_2y_2''+c_1'y_1'+c_2'y_2'$$
+
+Diese Gleichung kann man wieder in die DGL einsetzen. Durch ausklammern von $c_1,c_2$ erh"alt man dann die 2.Bedingung.
+$$c_1'y_1'+c_2'y_2'=q(t)\quad \mbox{2. Bedingung}$$
+Mit diesen beiden Bedingungnen hat man ein Gleichungssystem aus dem man die unbekannten Funktionen bestimmen kann.
+
+\subsection{Anwendungen der $\int$-Rechnung auf Diff'Gl}
+
+\subsubsection{Variation der Konstante}
+
+\begin{equation}
+ \label{variation_konst}
+ y'=p(x)\cdotp y + q(x)
+\end{equation}
+
+\begin{enumerate}
+ \item homogene L"osung von ~(\ref{variation_konst}) finden\\
+  $y_{hom}(x)=Ce^{P(x)}$ wobei $P(x)$ die Stammfunktion von $p(x)$
+ \item inhomogene L"osung von ~(\ref{variation_konst}) finden\\
+  Daf"ur benutzt man den Ansatz: 
+  $$y_{inhom}(x)=c(x)\cdotp y_{hom}(x)$$
+  Man setzt also die homogene L"osung als ''Konstante'' einer unbekannten Funktion.\\
+  So erh"alt man schliesslich nach einsetzen in ~(\ref{variation_konst})
+  $$c'(x)\cdotp y_{hom}(x)=q(x)$$
+ \item Die Allgemeine L"osung lautet dann
+  $$y(x)=y_{hom}+y_{inhom}$$
+\end{enumerate}
+
+\subsubsection{Separtion (Trennung der Variablen)}
+
+Eine DGL 1. Ordnung der Form $\frac{dy}{dx}=g(x)\cdotp k(y)$ l"asst sich folgendermassen l"osen:
+\begin{enumerate}
+ \item Trennung der beiden Variablen
+  $$\frac{dy}{dx}=g(x)\cdotp k(y)\quad\Rightarrow\quad \frac{dy}{k(y)}=dx\cdotp g(x)$$
+ \item Integration auf beiden Seiten der Gleichung
+  $$\int\frac{dy}{k(y)}=\int dx\cdotp g(x)$$
+ \item nach y aufl"osen
+\end{enumerate}
+
+\subsubsection{Substitution}
+
+DGL 1.Ordnung k"onnen teilweise durch geschickte Substitution auf seperierbare zur"uckgef"uhrt, danach kann man die neu erhaltene DGL f"ur u l"osen und r"ucksubstituieren:
+
+\begin{itemize}
+ \item $y'=\Phi(\frac{y}{x})$\\
+  $u=\frac{y}{x}\quad\Rightarrow\quad u'(x)=\frac{\Phi(u)-u}{x}$
+ \item $y'=\Psi(x+y+c)$\\
+  $u=x+y\quad\Rightarrow\quad y=u-x\Rightarrow y'=u'-1=\Psi(u)$\\
+  Danach l"ose $\frac{du}{dx}=u'=\Psi(u)+1\Rightarrow \frac{du}{\Psi(u)+1}=dx$
+\end{itemize}
+
+\textit{Beispiel} L"ose $\frac{dy}{dx}=\frac{2x^3+y^3}{3xy^2}$\\
+Setze $u:=\frac{y}{x}.\Rightarrow y(x)=u(x)\cdotp x\Rightarrow y'=u'x+u$
+\begin{eqnarray}
+ y'&	=&	\frac{2}{3}\frac{x^2}{y^2}+\frac{1}{3}\frac{y}{x}\nonumber\\
+ u'x+u&	=&	\frac{2}{3}v^{-}+\frac{1}{3}\frac{y}{x}\nonumber\\
+ u'x&	=&	\frac{2}{3}(v^{-2}-v)\nonumber
+\end{eqnarray}
+
+So ist $v=1$ und damit $y=x$ eine konstante L"osung und f"ur nicht konstantes $v$ rechnet man mit Seperation der Variablen weiter:
+$$\frac{3v'}{v^{-2}-v}=2\frac{1}{x}$$
+$$...$$
+
+\section{Vektoranalysis}
+
+\subsection{Einf"uhrung}
+
+\subsubsection{Skalarfeld}
+Ein Skalarfeld ordnet jedem Punkt im Raum ein Skalar zu (z.B. eine Temperaturverteilung). $\phi:\quad\mathbb{R}^n\rightarrow \mathbb{R}$
+
+\subsubsection{Vektorfeld}
+Ein Vektorfeld ordnet jedem Punkt im Raum eindeutig einen Vektor zu (z.B. Feldlinien oder Geschwindigkeit einer Fl"ussigkeit).\\
+
+\begin{itemize}
+ \item \textit{Coulombfeld}
+  $$\vec{K}=\frac{C}{r^3}\vec{r}\qquad|\vec{K}=\frac{C}{r^2}|$$
+ \item \textit{Gradientenfelder} Geg: $f:f(x,y,z)$
+  $$\vec{K}=grad\:f=
+  \left (
+  \begin{array}{c}
+   \frac{\partial f}{\partial x}\\
+   \frac{\partial f}{\partial y}\\
+   \frac{\partial f}{\partial z}\\
+  \end{array}
+  \right )
+  $$
+  Die Feldvektoren stehen "uberall senkrecht auf den Niveaufl"achen von $f$.
+ \item \textit{Hagen-Poiseuille Str"omung}\\
+  Modell f"ur eine z"ahe Fl"ussigkeit in einer Leitung vom Radius R
+  $$\vec{v}=(0,0,c(R^2-(x^2+y^2)))$$
+\end{itemize}
+
+\subsubsection{Feldlinien}
+
+Es sei $\vec{v}$ ein Vektorfeld. Eine Kurve $\gamma$ deren Tangente in jedem Punkt zum dort angehefteten Feldvektor parallel ist, heisst eine Feldlinie von $\vec{v}$. Die Feldlinien eines Gradientenfeldes $\nabla f$ sind die Orthogonaltrajektorien der Niveaulinien (Niveaufl"achen).\\
+
+\textit{Bestimmung der Feldlinien}
+
+\begin{itemize}
+ \item in $\mathbb{R}^3$\\
+  Die Feldlinien $\gamma$ eines Vektorfelds $\vec{v}$ besitzen eine Parameterdarstellung
+  \begin{equation}
+   \label{feldlinien_param}
+   \gamma:\qquad t\mapsto \vec{x}(t)
+  \end{equation}
+  Wir verlangen dabei, dass der Geschwindigkeitsvektor $\dot{\vec{x}}(t)$ jederzeit gleich dem Feldvektor an der Stelle $\vec{x}(t)$ ist, in Formeln:
+  $$\dot{\vec{x}}(t)\equiv\vec{v}(\vec{x}(t))$$
+  Diese Identit"at l"asst sich folgendermassen interpretieren: Die Funktion ~(\ref{feldlinien_param}) ist L"osung der Differentialgleichung
+  $$\dot{x}=v(x)$$
+  Oder in Koordinaten ausgeschrieben:
+  \begin{eqnarray}
+   \dot{x_1} & = & v_1(x_1,x_2,x_3) \nonumber \\
+   \dot{x_2} & = & v_2(x_1,x_2,x_3) \nonumber \\
+   \dot{x_3} & = & v_3(x_1,x_2,x_3) \nonumber
+  \end{eqnarray}
+ \item ebenes Vektorfeld\\
+  Die Feldlinien eines ebenen Vektorfeldes $\vec{v}=(P,Q)$ lassen sich schon mit Hilfe einer einzigen Differentialgleichung bestimmen
+  $$y'=\frac{Q(x,y)}{P(x,y)}$$
+\end{itemize}
+
+
+\subsubsection{Divergenz}
+
+$$\vec{v}=
+\left (
+\begin{array}{c}
+ P\\
+ Q\\
+ R
+\end{array}
+\right ),\quad div\:\vec{v}= P_x + Q_y +R_z
+$$
+
+Wird anschaulich, wenn man sich eine str"omende Fl"ussigkeit vorstellt mit dem Geschwindigkeitsvektor $\vec{v}$. Es gilt dann:
+\begin{itemize}
+ \item $div\:\vec{v}> 0$: in dV gibt es eine Quelle
+ \item $div\:\vec{v}< 0$: in dV gibt es eine Senke
+ \item $div\:\vec{v}= 0$: in dV ist das Feld \textit{quellenfrei}
+\end{itemize}
+
+\subsubsection{Rotation $rot\:\vec{v}=\nabla\times\vec{v}$}
+
+in $\mathbb{R}^2$:
+$$\vec{v}=
+\left (
+\begin{array}{c}
+ P\\
+ Q
+\end{array}
+\right ),\quad rot\:\vec{v}=
+\left (
+\begin{array}{c}
+ Q_X -P_Y\\
+\end{array}
+\right )
+$$
+
+in $\mathbb{R}^3$:
+$$\vec{v}=
+\left (
+\begin{array}{c}
+ P\\
+ Q\\
+ R
+\end{array}
+\right ),\quad rot\:\vec{v}=
+\left (
+\begin{array}{c}
+ R_Y -Q_Z\\
+ P_Z -R_X\\
+ Q_X -P_Y
+\end{array}
+\right )
+$$
+
+Wird anschaulich, wenn man sich die Wasserstr"omung in einem Kanal vorstellt. Das Vektorfeld ist \textit{wirbelfrei}, wenn $rot\:\vec{v}=0$.\\
+
+Es gilt:\\
+$rot\:\nabla\:f=\vec{0}$\\
+$div\:rot\:\vec{K}=0$\\
+$div(f\cdotp \vec{K})=\nabla f\cdotp \vec{K}+f\cdotp div \vec{K}$\\
+$div(\vec{K}\times\vec{L})=\vec{L}\cdotp rot\vec{K}-K\cdotp rot \vec{L}$\\
+$div(f\cdotp rot \vec{K})=\nabla f\cdotp rot\vec{K}$
+
+
+\subsubsection{Linienintegrale}
+
+$Arbeit\:=\:Kraft\:\cdotp\:Weg$\\
+$\gamma$ Kurve in $\mathbb{R}^3$, Kraftfeld $\vec{K}=\vec{K}(x,y,z)$\\
+Ges: Arbeit von $\vec{K}$ l"angs $\gamma$ von P nach Q.\\
+Parameterdarst. $\gamma\qquad t\rightarrow \vec{r}(t)$\\
+$\vec{r}(a)=\overrightarrow{OP}$, $\vec{r}(b)=\overrightarrow{OQ}$\\
+$\Rightarrow A=\int\limits^b_a \vec{K}(x(t),y(t),z(t))\cdotp \dot{\vec{r}}(t)dt$\\
+
+$\dot{\vec{r}}dt=
+\left (
+\begin{array}{c}
+ \dot{x}dt\\
+ \dot{y}dt\\
+ \dot{z}dt
+\end{array}
+\right )$,
+neue Schreibweise: $\vec{K}=
+\left (
+\begin{array}{c}
+ P\\
+ Q\\
+ R
+\end{array}
+\right )
+$\\
+
+$A=\int\limits_\gamma\vec{K}\cdotp d\vec{r}=\int\limits_\gamma(Pdx+Qdy+Rdz)=\int\limits^b_a[P(x(t),y(t),z(t))\cdotp \dot{x}(t)+Q(\ldots)\cdotp\dot{y}(t)+R(\ldots)\cdotp\dot{z}(t)]dt$\\
+
+F"ur ein Vektorfeld $\vec{K}=(P,Q)$ und eine Kurve
+$$\gamma:\qquad t\mapsto \vec{z}(t)=(x(t),y(t))$$
+in der Ebene gilt analog
+$$\int_\gamma \vec{K}\cdotp d\vec{z}=\int^b_a(P(x(t),y(t))x'(t)+Q(x(t),y(t))y'(t))dt$$
+
+\textit{Vorgehen zur Berechnung:}
+\begin{enumerate}
+ \item In $\vec{K}(x,y,z)$ die Koordinaten durch die parameterabh"angigen Koordinaten der Raumkurve ersetzen.
+ \item Den Ortsvektor $\vec{r}(t)$ nach t differenzieren $\Rightarrow \dot{\vec{r}}$
+ \item Das Skalarprodukt $\vec{K}\cdotp \dot{\vec{r}}$ bilden und dann wie gewohnt nach t integrieren.
+\end{enumerate}
+
+\textit{Beispiel} $\vec{K}(x,y,z)=
+\left(
+\begin{array}{c}
+ 3xy\\
+ -5z\\
+ 10x
+\end{array}\right) $,\\
+und $\gamma: t\mapsto
+\left(
+\begin{array}{c}
+ t^2+1\\
+ 2t^2\\
+ t^3
+\end{array}\right )$ f"ur $t\in[1,2]$\\
+
+$$\gamma(t)=\left(
+\begin{array}{c}
+ x(t)\\
+ y(t)\\
+ z(t)
+\end{array}\right)=\left(
+\begin{array}{c}
+ t^2+1\\
+ 2t^2\\
+ t^3
+\end{array}\right)$$
+$$\gamma'(t)=\left(
+\begin{array}{c}
+ 2t\\
+ 4t\\
+ 3t^2
+\end{array}
+\right)$$
+$$\vec{K}(\gamma (t))=\left (
+\begin{array}{c}
+ 3x(t)y(t)\\
+ -5z(t)\\
+ 10x(t)
+\end{array}
+\right )=\left (
+\begin{array}{c}
+ 3(t^2+1)\cdotp 2t^2\\
+ -5t^3\\
+ 10(t^2+1)
+\end{array}
+\right )$$
+\begin{eqnarray}
+\vec{K}(\gamma(t))\cdotp\gamma'(t)& =& \left (
+\begin{array}{c}
+ 3(t^2+1)\cdotp 2t^2\\
+ -5t^3\\
+ 10(t^2+1)
+\end{array}=\right)\cdotp \left(
+\begin{array}{c}
+ 2t\\
+ 4t\\
+ 3t^2
+\end{array}
+\right )\nonumber\\
+&=& 12t^2+12t^3-20t^4+30t^4+30t^2\nonumber
+\end{eqnarray}
+\begin{eqnarray}
+ \int_\gamma \vec{K}\cdotp d\vec{x}& 	=&	\int^2_1 \vec{K}(\gamma(t))\cdotp\gamma'(t)dt\nonumber\\
+ &					=&	\int^2_1 (12t^5+12t^3+10t^4+30t^2)dt\nonumber\\
+ &					=&	\ldots\nonumber
+\end{eqnarray}
+
+\subsubsection{Kalk"ul mit Wegen}
+
+$\int\limits_{-\gamma}\vec{K}d\vec{r}=-\int\limits_{\gamma}\vec{K}d\vec{r}$\\
+$\int\limits_{\gamma_1+\gamma_2}\vec{K}d\vec{r}=\int\limits_{\gamma_1}\vec{K}d\vec{r}+\int\limits_{\gamma_2}\vec{K}d\vec{r}$
+
+\subsubsection{konservative Felder/ Potential}
+
+\textbf{Definition} Ein Vektorfeld $\vec{K}$ heisst \textit{konservativ} in einem Bereich B, falls $\forall P,Q\in B$, $\forall$ Kurven $\gamma_1,\gamma_2$ mit P=Anfanspunkt, Q=Endpunkt gilt $\int\limits_{\gamma_1}\vec{K}d\vec{r}=\int\limits_{\gamma_2}\vec{K}d\vec{r}$. ''Arbeit ist unabh"angig vom Weg.''\\
+
+\textbf{Satz} Gradientenfelder sind konservativ.  Wenn $\vec{K}=grad\:f$, dann gilt f"ur alle von $\vec{p}$ nach $\vec{q}$ laufenden Kurven $\gamma$: $\int_\gamma\vec{K}d\vec{r}=f(\vec{q})-f(\vec{p})$ (Potentialdifferenz). $f$ wird in diesem Fall als \textit{Potential} des Feldes $\vec{K}$ bezeichnet. Ein Gradientenfeld wird auch als Potentialfeld bezeichnet.\\
+
+\textbf{Satz} Sei $\vec{K}$ konservativ in einem \textit{zusammenh"angendem} Bereich. Dann ist $\vec{K}$ ein Potentialfeld.\\
+
+\textit{zusammenh"angend} $\forall P,Q\in B,\exists\gamma: P\rightarrow Q$\\
+
+
+\textit{Potential} existiert, falls das Vektorfeld $\vec{K}$ wirbelfrei ist, d.h. $rot \vec{K}=0$. Falls K wirbelfrei, h"angt das Linienintegral nicht vom Weg nach $(x,y,z)$ ab.\\
+
+\textit{Bestimmung eines Potentials f"ur Vektorfeld $\vec{K}$}
+\begin{enumerate}
+ \item Testen ob gilt $rot \vec{K}=0$
+ \item Bestimmen des Potentials via 2 Varianten:
+  \begin{enumerate}
+   \item Komponentenweises aufleiten\\
+    Komponenten des VF aufleiten und gleichsetzen
+   \item Linienintegral berechen\\
+    $$f(P):=\int^P_{P_0}\vec{K}\cdotp d\vec{x}$$
+    Man w"ahlt beliebigen Weg von $P_0$ nach $P$, z.B.
+    $$\gamma: t\mapsto\left (\begin{array}{c} xt\\ yt\\ \end{array}\right ),\quad t\in[0,1]$$
+    von $P_0:=(0,0)$ nach $P=(x,y)$. Das Potential f ergibt sich damit als:
+    $$f(x,y)=\int^1_0 \vec{K}(\gamma(t))\cdotp \gamma '(t)dt$$
+  \end{enumerate}
+\end{enumerate}
+
+\subsection{Die Formel von Green f"ur ebene Vektorfelder}
+
+Ebenes Vektorfeld: $\vec{v}=(P(x,y),Q(x,y))$\\
+
+B Bereich in der Ebene mit Rand $\partial B$, Rand so orientiert, dass B links liegt.\\
+
+\subsubsection{Satz von Green}
+
+$$\int\limits_{\partial B}\vec{v}d\vec{r}=\int\limits_{\partial B}(Pdx +Qdy)=\iint\limits_B(Q_x-P_y)d\mu(x,y)$$
+
+Ein Linienintegral "uber einen Rand wird in ein Integral "uber eine Fl"ache umgewandelt.
+
+\subsubsection{Andwendung auf Fl"achenberechnungen}
+
+Spezialf"alle der Greenschen Formel:
+\begin{itemize}
+ \item $P=0,\:Q=x,\:Q_x-P_y=1$
+  $$\iint_B 1 d\mu(x,y)=\int_{\partial B}xdy$$
+ \item $P=-y,\:Q=0,\:Q_x-P_y=1$
+  $$\iint_B 1 d\mu(x,y)=-\int_{\partial B}xdy$$
+\end{itemize}
+
+Somit ergeben sich 3 Formeln f"ur den Fl"acheninhalt $\mu(B)$ von B:
+$$\mu(B)=\left\{
+\begin{array}{l}
+ \int_{\partial B}xdy\\
+ -\int_{\partial B}ydx\\
+ \frac{1}{2}\int_{\partial B}(xdy-ydx)
+\end{array}
+\right.
+$$
+
+Diese Formeln sind bequem, wenn B durch Parameterdarstellung und nicht durch Ungleichungen gegeben ist.
+
+\subsubsection{Anwendung auf Potentialfelder}
+
+Ein Vektorfeld $\vec{K}=(P,Q)$ auf einem einfach zusammenh"angenden Gebiet $\Omega\subset \mathbb{R^2}$ ist genau dann ein Potentialfeld $\nabla f$, wenn gilt:
+$$P_y=Q_x$$
+Es gibt dann eine Funktion, deren Gradient gerade $\vec{K}$ ist. Das entspricht auch gerade der Bedingung, dass das Feld wirbelfrei ist (also $rot\:\vec{K}=0$) und f"ur den Raum ist dann ein Vektorfeld ein Potentialfeld, wenn $rot\:\vec{K}=0$.\\
+
+\textbf{Definition} $\Omega$ \textit{einfach zusammenh"angend} falls jede geschlossene Kurve in $\Omega$ sich auf einen Punkt in $\Omega$ zusammenziehen l"asst.\\
+
+\textit{Beispiel} VF V definiert durch $V(x,y)=(f(x)xy,f(x)x)$\\
+Bestimme f so, dass V ein Gradientenfeld ist:
+\begin{eqnarray}
+ \frac{\partial}{\partial y}(f(x)xy)& 	=&	\frac{\partial}{\partial x}(f(x)x)\nonumber\\
+ f(x)x&					=&	(f(x)x)'\nonumber\\
+ f(x)&					=&	\frac{e^x}{x}\nonumber
+\end{eqnarray}
+
+Potential davon:\\
+$V=(e^x y, e^x)$
+\begin{eqnarray}
+ \int e^x y dx &	=&	e^x y +f(y)\nonumber\\
+ \int e^x dy&		=&	e^x y +g(x)\nonumber
+\end{eqnarray}
+$$\Rightarrow \mbox{Potential} \varphi =ye^x+c$$
+
+\subsubsection{Begriff des Flusses in $\mathbb{R}^2$}
+
+Gegeben sei $\vec{v}=(P,Q)$ ein Geschwindigkeitsfeld und Kurve $\gamma$ (in Parameterdarstellung und offen oder geschlossen)\\
+Gesucht sei der Fluss $\phi$ von $\vec{v}$ durch $\gamma$ pro Zeiteinheit?
+$$\phi=\int^b_a (P\cdotp \dot{y}-Q\cdotp \dot{x})dt=\iint_B (Q_x-P_y) d\mu(x,y)$$
+
+F"ur $\gamma=\partial B$:
+geschlossene Kurve, Rand eines Bereiches B (Fl"ache muss wieder links von der Kurve liegen). Fluss durch Rand nach aussen:
+$$\phi=\int\limits_{\partial B}(\vec{v}\cdotp\vec{n})ds=\iint\limits_B div\:\vec{v} d\mu(x,y)$$
+Gaussche Formel in $\mathbb{R}^2$\\
+f"ur $\vec{v}=\binom{P}{Q}$: $div \vec{v}=P_X+Q_Y$\\
+
+Der Fluss von $\vec{v}$ "uber $\partial B$ nach aussen ist gleich dem Integral der Divergenz $div\:\vec{v}$ "uber das Innere von B.
+
+\subsection{Der Satz von Gauss (in $\mathbb{R}^3$)}
+
+Gaussscher Integralsatz im Raum: Das Oberfl"achenintegral eines Vektorfeldes $\vec{v}$ "uber eine geschlossene Fl"ache $\partial K$ ist gleich dem Volumenintegral der Divergenz von $\vec{v}$, erstreckt "uber das von der Fl"ache von $\partial K$ eingeschlossene Volumen K:\\
+
+$$\phi=\iint\limits_{\partial K}(\vec{v}\cdotp \vec{n})d\omega=\iint\limits_{\partial K}(\vec{v}\cdotp d\vec{\omega})=\iiint\limits_K div\:\vec{v}dV$$
+
+Wobei $\vec{n}$ die Normale nach aussen ist.\\
+
+\textit{Praktisch:}\\
+Parameterdarstellung der Fl"ache:
+$$(u,v)\mapsto \vec{r}(u,v)$$
+
+und somit gilt:
+$$d\vec{\omega}=\vec{r_u}\times\vec{r_v}dudv$$
+
+
+\subsubsection{Hagen-Poiseuille Str"omung}
+
+Fluss durch Scheibe $\perp$ Leitung (Radius R)\\
+$\vec{v}=(0,0,c(R^2-r^2)),\quad\vec{n}=(0,0,1)$\\
+Parameterdarstellung
+\begin{eqnarray}
+ x& 		=&	r\cos\varphi \nonumber\\
+ y& 		=&	r\sin\varphi \nonumber\\
+ z& 		=&	0 \nonumber\\
+ d\omega& 	=&	rdrd\varphi \nonumber
+\end{eqnarray}
+Somit ist der Fluss gleich
+$$\phi=\iint\limits_K c(R^2-r^2)d\omega=\frac{\pi}{2}cR^4$$
+
+\subsubsection{Kontinuit"atsgleichung der Hydrodynamik}
+
+Gegeben eine Str"omung wobei die Dichte folgende Form hat:
+$$\rho=\rho(x,y,z,t)$$
+
+und ein Breich K der fest sei.\\
+
+Die Masse von K zur Zeit t ist gleich:
+$$M(t)=\iiint\limits_K\rho d\mu$$
+
+und der momentane Zuwachs ist gleich:
+$$M'(t)=\iiint\rho_td\mu$$
+
+Die Kontinuit"atsgleichung sieht dann wie folgt aus:
+$$\rho_t + div(\rho\vec{v})=0$$
+
+\subsubsection{W"armeleitungsgleichung}
+
+Gegeben sei eine zeitabh"angige Temperaturverteilung $u(x,y,z,t)$ im Raum und K ein Bereich darin.\\
+Gesucht ist der W"armefluss durch $\partial K$
+Die W"armeleitungsgleichung lautet wie folgt:
+$$c\rho u_t- k\Delta u=0$$
+
+c: W"armekapazit"at, $\rho$: Dichte, $k$ Phys. Gr"osse\\
+$\Delta u:=u_{XX}+u_{YY}+u_{ZZ}$ (Laplace Operator)
+
+
+\subsection{Satz von Stokes}
+
+S Fl"ache im Raum mit Rand $\partial S$. $\partial S$ orientiert, Normale $\vec{n}$ auf S nach Korkzieherregel kompatibel mit Orientierung auf S.
+
+$$\oint\limits_{\partial S}\vec{K}d\vec{r}=\iint\limits_S (rot\: \vec{K})\vec{n}d\omega$$
+
+f"ur eine ebene Fl"ache gilt:\\
+$\int\limits_{\partial S}\vec{K}d\vec{r}=\iint\limits_S (Q_X-P_Y)d\mu$ (Formel von Green)
+
+\subsubsection{Physikalische Interpretation}
+
+Scheibe mit Radius $\epsilon$ und Normale $\vec{n}$\\
+Die ''Zirkulation'' oder Arbeit ist dann:
+$$\int\limits_{\partial K(\vec{n},\epsilon)}\vec{v}d\vec{r}=\iint\limits_{K(\vec{n},\epsilon)}(rot\:\vec{v}\cdotp\vec{n})d\mu=(rot\:\vec{v}\cdotp\vec{n})\pi\epsilon^2$$
+
+Falls \textit{Wirbel} vorhanden, dann ist $\int\limits_{\partial K(\vec{n},\epsilon)}\vec{v}\cdotp d\vec{r}\neq 0$\\
+$\vec{v}$ heisst \textit{wirbelfrei} falls $rot\:\vec{v}=\vec{0}$
+
+\subsubsection{Integrabilit"atsbedingungen}
+
+Aus $rot\:\vec{v}=0$ folgt, dass $\vec{v}=grad\:f$ in einem Bereich $\mathbb{R}^3$, falls B zusammenh"angend und einfach zusammenh"angend ist. Es gilt also:
+$$rot\:\vec{v}=\vec{0}\Leftrightarrow\vec{v}=grad\:f$$
+$$f(P)=\int\limits_{\gamma:P_0\rightarrow P}\vec{v}d\vec{r}$$
+
+
+\appendix
+
+\section{Stereometrie}
+
+\subsection{Kreiszylinder}
+
+$
+\begin{array}{lll}
+ S&	=&	2\pi r(r+h))\\
+ V&	=&	\pi r^2 h
+\end{array}
+$
+\subsection{Gerader Kreiskegel}
+
+$
+\begin{array}{lll}
+ S&	=&	\pi r(r+s))\\
+ V&	=&	\frac{\pi}{3} r^2 h
+\end{array}
+$
+\subsection{Kugel}
+
+$
+\begin{array}{lll}
+ S&	=&	4\pi r^2\\
+ V&	=&	\frac{4\pi}{3} r^3
+\end{array}
+$
+\end{document}

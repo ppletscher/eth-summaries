@@ -1,0 +1,896 @@
+% Information & Kommunikation Zusammenfassung
+% aus dem Informatikstudium an der ETH Zuerich
+% basierend auf der Vorlesung von Prof. Ueli Maurer 
+% Copyright (C) 2004  Patrick Pletscher
+
+%TODO index
+
+\documentclass[german, 10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{makeidx}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage[bf]{caption2}
+\usepackage[dvips]{graphicx}
+\renewcommand{\captionfont}{\small\itshape}
+\renewcommand{\figurename}{Abb.}
+
+\textwidth = 19 cm
+\textheight = 25 cm
+\oddsidemargin = -1.5 cm
+\evensidemargin = -1.5 cm
+\hoffset = 0.0 cm
+\marginparwidth = 0.0 cm
+\topmargin = -1.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0 cm
+
+\makeindex
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{korollar}[theorem]{Korollar}
+
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\title{Information \& Kommunikation - Zusammenfassung}
+\author{Patrick Pletscher}
+\begin{document}
+
+\maketitle
+
+\section{Grundlagen der Informationstheorie}
+
+\subsection{Entropie als Mass f"ur Unsicherheit}
+
+\subsubsection{Definition der Entropie}
+\index{Entropie}
+
+Die Entropie einer \textit{diskreten} Wahrscheinlichkeitsverteilung $[p_1,\ldots,p_L]$ ist
+\begin{displaymath}
+	H([p_1,\ldots,p_L]) = - \sum_{i:1\leq i\leq L,\:p_i>0} p_i\log_2 p_i
+\end{displaymath}\\
+
+Die Entropie der \textit{Zufallsvariablen} $X$ ist
+\begin{displaymath}
+	- \sum_{x\in \mathcal{X}:P_X(x)\neq 0} P_X(x) \log_2 P_X(x)
+\end{displaymath}
+falls diese Summe endlich ist.\\
+
+
+\subsubsection{bin"are Entropiefunktion h}
+\index{bin"are Entropiefunktion}
+
+Die Entropie einer bin"aren Zufallsvariablen $X$ mit Parameter $P_X(0)=p$ wird als \textit{bin"are Entropiefunktion $h$} bezeichnet und ist durch
+\begin{displaymath}
+	h(p) = -p \log_2 p - (1-p)\log_2 (1-p)
+\end{displaymath}
+
+f"ur $0<p<1$ und $h(0)=h(1)=0$ definiert. Die Funktion $h(p)$ ist strikt konkav und besitzt ihr Maximum bei $p=1/2$ mit $h(1/2)=1$.
+
+\begin{figure}[hbt]
+	\begin{center}
+		\includegraphics[width=0.3\textwidth]{pyx/binaere_entropiefkt.eps}
+	\end{center}
+	\label{binaere_entropiefkt}
+	\caption{Bin"are Entropiefunktion}
+\end{figure}
+
+\subsubsection{Entropie als Erwartungswert}
+
+$H(x)$ kann auch als Erwartungswert einer reellwertigen Funktion $g(\cdotp)=-\log_2 P_X(\cdotp)$, ausgewertet f"ur $X$, aufgefasst werden:
+
+\begin{displaymath}
+	H(X) = E[g(X)] = E[-\log_2 P_X(X)]=E[\log_2 \frac{1}{P_X(x)}]
+\end{displaymath}
+
+\subsubsection{Schranken f"ur die Entropie}
+
+\begin{theorem}
+	Es gilt
+	\begin{displaymath}
+		0 \leq H(X) \leq \log_2|\mathcal{X}|
+	\end{displaymath}
+	(oder "aquivalent $0\leq H([p_1,\ldots,p_L]) \leq \log_2 L$) mit Gleichheit auf der linken Seite genau dann wenn $P_X(x)=1$ f"ur ein $x$ und mit Gleichheit auf der rechten Seite genau dann, wenn alle Werte $x\in \mathcal{X}$ gleich wahrscheinlich sind.
+\end{theorem}
+
+\subsection{Entropiegr"ossen mehrerer Zufallsvariablen}
+
+\subsubsection{Verbundentropie mehrerer Zufallsvariablen}
+
+Ein Paar $[X,Y]$, ein Tripel $[X,Y,Z]$ oder eine Liste $[X_1,\ldots,X_N]$ von Zufallsvariablen kann als eine einzelne, vektorwertige Zufallsvariable aufgefasst werden. Die gemeinsame Entropie mehrerer Zufallsvariablen ist also bereits definiert. Es gilt z.B.
+
+\begin{displaymath}
+	H(XY) = - \sum_{(x,y)} P_{XY}(x,y)\log P_{XY}(x,y)= E[-\log P_{XY}(X,Y)]
+\end{displaymath}
+
+\begin{theorem}
+	Es gilt
+	\begin{displaymath}
+		H(X) \leq H(XY)
+	\end{displaymath}
+	Gleichheit gilt genau dann, wenn $Y$ durch Kenntnis von $X$ eindeutig bestimmt ist
+\end{theorem}
+
+\begin{theorem}
+	Es gilt
+	\begin{displaymath}
+		H(XY) \leq H(X) + H(Y)
+	\end{displaymath}
+	Gleichheit gilt genau dann, wenn $X$ und $Y$ statistisch unabh"angig sind.
+\end{theorem}
+
+\subsubsection{Bedingte Entropie und Information}
+
+Die \textit{bedingte Entropie} von $X$, gegeben $Y$ ist 
+\begin{displaymath}
+	H(X|Y) := H(XY) - H(Y)
+\end{displaymath}
+
+und die \textit{gegenseitige Information}, die $X$ "uber $Y$ gibt (und symmetrisch $Y$ "uber $X$), ist
+
+\begin{displaymath}
+	I(X;Y) := H(X) + H(Y) - H(XY)
+\end{displaymath}
+
+$H(X|Y)$ ist die restliche Unsicherheit "uber $X$, wenn $Y$ bekannt ist. Die Information $I(X;Y)$ ist die \textit{Reduktion der Unsicherheit} "uber $X$, wenn man $Y$ erf"ahrt:
+\begin{displaymath}
+	I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X) = I(Y;X)
+\end{displaymath}
+
+\begin{theorem}
+	Es gilt
+	\begin{displaymath}
+		0 \leq H(X|Y) \leq H(X)
+	\end{displaymath}
+	Mit Gleichheit links genau dann, wenn $X$ durch $Y$ bestimmt ist. Die rechte Ungleichung ist "aquivalent zu $I(X;Y)\geq 0$
+\end{theorem}
+
+\subsubsection{Kettenregel}
+
+\begin{displaymath}
+	H(X_1 X_2 \ldots X_{n}) = H(X_1\ldots X_{n-1}) + H(X_{n}|X_1\ldots X_{n-1})
+\end{displaymath}
+
+Ein rekursives Muster f"ur die Aufl"osung.
+
+\subsubsection{Bedingte Information}
+
+Die \textit{bedingte gegenseitige Information}, die $X$ "uber $Y$ gibt, gegeben $Z$ ist
+\begin{displaymath}
+	I(X;Y|Z) := H(XZ) + H(YZ) - H(XYZ)- H(Z)
+\end{displaymath}
+
+Es ist einfach zu sehen, dass $I(X;Y|Z) = H(X|Z) - H(X|YZ)$, d.h. $I(X;Y|Z)$ ist die Reduktion der Unsicherheit "uber $X$, wenn man $Y$ erf"ahrt, wobei $Z$ schon bekannt ist.
+
+\begin{theorem}
+	Es gelten folgende Ungleichungen, die zudem "aquivalent zueinander sind:
+	\begin{displaymath}
+		I(X;Y|Z) \geq 0 \qquad \mbox{und} \qquad H(X|YZ) \leq H(X|Z)
+	\end{displaymath}
+\end{theorem}
+
+Die Aussage, dass Zusatzinformation die Entropie nicht vergr"ossern kann, gilt nicht f"ur die Information: $I(X;Y|Z)>I(X;Y)$ ist m"oglich, n"amlich, wenn $R(X;Y;Z)$ negativ ist.
+
+\begin{figure}[hbt]
+	\begin{center}
+		\includegraphics[width=0.3\textwidth]{pyx/groessen_drei_ZV.eps}
+	\end{center}
+	\label{groessen_drei_ZV}
+	\caption{Informationstheoretische Gr"ossen f"ur drei Zufallsvariablen}
+\end{figure}
+
+\subsubsection{Berechnung erh"oht die Information nicht}
+
+Keine Berechnung kann die Information erh"ohen, die die Daten zu irgendeiner Frage geben.\\
+
+%TODO Moeglicherweise Markov-Kette zeichnen
+
+Die Zufallsvariablen $X, Y, Z$ bilden eine \textit{Markov-Kette}, geschrieben $X \rightarrow Y \rightarrow Z$, falls $P_{Z|XY}(z,x,y)=P_{Z|Y}(z,y)$ f"ur alle $x,y,z$ was "aquivalent ist zu $H(Z|XY) = H(Z|Y)$ oder $I(Z;X|Y) = 0$.\\
+Aus der Symmetrie $I(Z;X|Y)= I(X;Z|Y)$ folgt sofort auch die Umkehrbarkeit von Markov-Ketten: falls $X\rightarrow Y \rightarrow Z$ gilt auch $Z\rightarrow Y \rightarrow X$
+
+\begin{lemma}[Informationsverarbeitungs-Lemma]
+	Falls $X \rightarrow Y \rightarrow Z$, so gelten
+	\begin{displaymath}
+		I(X;Z) \leq I(Y;Z) \qquad \mbox{und} \qquad I(X;Z) \leq I(X;Y)
+	\end{displaymath}
+\end{lemma}
+
+\subsubsection{Perfekt sichere Verschl"usselung}
+
+Ein Klartext $M$ werde mit einem geheimen Schl"ussel $K$ zu einem Chiffrat $C$ verschl"usselt. Der Empf"anger kann mit Hilfe des Schl"ussels das Chiffrat wieder entschl"usseln. Der Gegner sieht das Chiffrat, hat aber zu Beginn keine Information "uber den Schl"ussel.\\
+
+Ein solches Verfahren heisst \textit{perfekt sicher} wenn $I(M;C)=0$, d.h. wenn das Chiffrat statistisch unabh"angig vom Klartext ist.
+
+\begin{theorem}
+	Jedes perfekt sichere Verschl"usselungssystem erf"ullt $H(K)\geq H(M)$.
+\end{theorem}
+
+%TODO Moeglicherweise Anhang
+
+\section{Datenkompression}
+
+\subsection{Codes f"ur die Darstellung von Information}
+
+
+\subsubsection{nicht-degeneriert}
+Ein \textit{Code} $C$ "uber dem Codealphabet $\mathcal{D}$ (mit $|\mathcal{D}|=D$) f"ur eine Menge $\mathcal{X}$ ist eine Abbildung von $\mathcal{X}$ auf $\mathcal{D}^\ast$ (die Menge der W"orter "uber $\mathcal{D}$). F"ur $x\in \mathcal{X}$ bezeichnet $C(x)$ das Codewort f"ur den Wert $x$ und $l_C(x)$ die L"ange von $C(x)$. Der Code $C$ heisst \textit{nicht-degeneriert}, wenn alle Codew"orter verschieden sind, d.h. wenn aus $x_1\neq x_2$ folgt, dass $C(x_1)\neq C(x_2)$, und wenn $C(x)$ f"ur kein $x\in \mathcal{X}$ das leere Wort ist.
+
+\subsubsection{eindeutig decodierbar und pr"afixfrei}
+Ein Code $C$ mit Codealphabet $\mathcal{D}$ heisst \textit{eindeutig decodierbar}, wenn die Abbildung $\mathcal{X}^\ast \rightarrow \mathcal{D}^\ast$ definiert durch $[x_1\parallel\ldots\parallel x_n] \mapsto [C(x_1)\parallel \ldots \parallel C(x_n)]$ eineindeutig ist. Der Code $C$ heisst \textit{pr"afixfrei}, wenn kein Codewort ein Pr"afix eines anderen Codewortes ist, d.h. wenn es keine zwei Codew"orter $c$ und $c'$ gibt, so dass $c=c'\parallel d$ f"ur irgendein $d\in \mathcal{D}^\ast$ mit $|d|\geq 1$.\\
+
+Jeder pr"afixfreie Code ist eindeutig decodierbar, und jeder eindeutig decodierbare Code ist nicht-degeneriert.
+
+\subsubsection{optimaler Code}
+
+Ein Code $C$ zur Codierung einer Zufallsvariable $X$ ist \textit{optimal}, wenn die mittlere Codewortl"ange
+\begin{displaymath}
+	E[l_C(X)]= \sum_{x\in\mathcal{X}}P_X(x)l_C(x)
+\end{displaymath}
+minimal ist.
+
+\subsection{Codeb"aume und die Kraft'sche Ungleichung}
+
+Ein Code ist genau dann pr"afixfrei, wenn im entsprechenden Baum alle Codew"orter Bl"atter sind. Wir nennen einen D-"aren Baum \textit{ausgef"ullt}, wenn jeder innere Knoten genau $D$ Nachfolgeknoten hat. Ein pr"afixfreier Code ist ausgef"ullt, wenn der Codebaum ausgef"ullt ist und jedem Blatt ein Codewort entspricht.\\
+
+Sei $\mathcal{B}$ die Menge der Bl"atter und $P(b)$ f"ur $b\in\mathcal{B}$ die Wahrscheinlichkeit des Blattes $b$, wobei $\sum_{b\in\mathcal{B}}P(b)=1$ gilt. Die \textit{Blattentropie} eines Baumes $T$ ist definiert als
+\begin{displaymath}
+	H_T=-\sum_{b\in \mathcal{B}}P(b)\log P(b)
+\end{displaymath}
+
+Die \textit{Tiefe} $t(b)$ eines Blattes $b$ in einem Baum $T$ ist seine Distanz von der Wurzel. Die mittlere Blatttiefe von $T$ wird mit $t_T$ bezeichnet und ist gegeben durch
+\begin{displaymath}
+	t_T=\sum_{b\in\mathcal{B}}P(b)t(b)
+\end{displaymath}
+
+\begin{theorem}[Kraft'sche Ungleichung]
+	Ein D-"arer pr"afixfreier Code mit L Codew"ortern der L"angen $l_1,\ldots,l_L$ existiert genau dann wenn $\sum^L_{i=1}D^{-l_i}\leq 1$
+\end{theorem}
+
+\subsection{Schranken f"ur die Codierung einer ZV}
+
+\begin{theorem}
+	Die mittlere Codewortl"ange $E[l_C(x)]$ eines optimalen pr"afixfreien Codes $C$ "uber einem Codealphabet $\mathcal{D}$ mit $|\mathcal{D}|=D$ f"ur eine ZV $X$ erf"ullt
+	\begin{displaymath}
+		\frac{H(X)}{\log D} \leq E[l_C(X)] < \frac{H(X)}{\log D} + 1
+	\end{displaymath}
+	F"ur den bin"aren Fall ($D=2$):
+	\begin{displaymath}
+		H(X) \leq E[l_C(X)] < H(X) + 1
+	\end{displaymath}
+	\label{mittlere_codewortlaenge}
+\end{theorem}
+
+\subsection{Optimale Codes}
+
+\begin{lemma}
+	Der Baum eines optimalen pr"afixfreien bin"aren Codes ist ausgef"ullt, d.h. er besitzt keine unbesetzten Bl"atter.
+\end{lemma}
+
+\begin{lemma}
+	Es gibt einen optimalen bin"aren pr"afixfreien Code f"ur $X$, in dem die beiden Codew"orter f"ur $x_{L-1}$ und $x_L$ sich nur im letzten Bit unterscheiden, d.h. in dessen Codebaum zwei Geschwisterbl"attern zugeordnet sind.
+\end{lemma}
+
+Aus einem bin"aren pr"afixfreien Code $C$ f"ur die Liste $[p_1,\ldots,p_L]$ von Codewort-Wahrscheinlichkeiten mit $p_1\geq p_2 \geq \ldots p_L$ kann ein Code $C'$ f"ur die Liste $[p_1,\ldots,p_{L-2},p_{L-1}+p_L]$ konstruiert werden, indem die beiden Bl"atter f"ur $p_{L-1}$ und $p_L$ entfernt und ihr gemeinsamer Vorfahre als neues Blatt verwendet wird.
+
+\begin{lemma}
+	$C$ ist ein optimaler bin"arer pr"afixfreier Code f"ur die Liste $[p_1,\ldots,p_L]$ genau dann wenn $C'$ optimal ist f"ur die Liste $[p_1,\ldots,p_{L-2},p_{L-1}+p_L]$.
+\end{lemma}
+
+\begin{theorem}[Huffman]
+	Der folgende Algorithmus liefert einen optimalen bin"aren Code f"ur die Liste $[p_1,\ldots,p_L]$ von Codewort-Wahrscheinlichkeiten.
+	\begin{enumerate}
+		\item Zeichne $L$ Bl"atter (ohne Baum) mit Wahrscheinlichkeiten $p_1,\ldots,p_L$ und markiere sie als aktiv.
+		\item F"uhre den folgenden Schritt $(L-1)$-mal aus: Fasse zwei aktive Knoten mit minimalen Wahrscheinlichkeiten in einer Gabel zusammen, aktiviere neu die Wurzel der Gabel, weise ihr die Summe der beiden Wahrscheinlichkeiten zu, und deaktiviere die beiden zusammengefassten Knoten.
+	\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[McMillan]
+	Die Codewortl"angen $l_1,\ldots,l_L$ jedes eindeutig decodierbaren Codes f"ur ein Alphabet mit $L$ Symbolen erf"ullen ebenfalls die Kraft'sche Ungleichung $\sum^L_{i=1}D^{-l_i}\leq 1$. Insbesondere existiert immer ein pr"afixfreier Code mit den gleichen Codewortl"angen.
+\end{theorem}
+
+\subsection{Nicht perfekte Datenkompression}
+
+\begin{theorem}
+	F"ur die mittlere Bitfehlerwahrscheinlichkeit bei der Decodierung eines N-Bit-Strings $X^N$ gilt
+	\begin{displaymath}
+		\bar{P}_e \geq h^{-1}(\frac{H(X^N)-E[l_C(X^N)]}{N})
+	\end{displaymath}
+	Je gr"osser also die Differenz $H(X^N)- E[l_C(X^N)]$ zwischen Entropie und mittlerer Codewortl"ange ist, desto gr"osser wird die mittlere Bitfehlerwahrscheinlichkeit.
+\end{theorem}
+
+\subsection{Diskrete Informationsquelle}
+
+\subsubsection{Definition von Informationsquellen}
+
+Eine \textit{Informationsquelle} (oder ein \textit{diskreter stochastischer Prozess}) ist eine unendliche Folge $\mathbf{X}=X_1,X_2,\ldots$ von ZV "uber einem Alphabet $\mathcal{X}$. Sie ist spezifiert durch die Liste der Wahrscheinlichkeitsverteilungen
+\begin{displaymath}
+	P_{X_1},P_{X_1X_2},P_{X_1X_2X_3},\ldots
+\end{displaymath}
+oder "aquivalenterweise, durch die Liste der bedingten Wahrscheinlichkeitsverteilungen
+\begin{displaymath}
+	P_{X_1},P_{X_2|X_1},P_{X_3|X_1X_2},\ldots
+\end{displaymath}
+
+Eine Informationsquelle $\mathbf{X}=X_1,X_2,\ldots$ hat \textit{endliches Ged"achtnis} $\mu$, falls jedes Symbol $X_n$ h"ochstens von den $\mu$ vorangehenden Symoblen $X_{n-\mu},\ldots,X_{n-1}$, nicht aber weiter von der Vergangenheit abh"angt, d.h. falls
+\begin{displaymath}
+	P_{X_n|X_1\ldots X_{n-1}} = P_{X_n|X_{n-\mu} \ldots X_{n-1}}
+\end{displaymath}
+
+f"ur $n=\mu +1, \mu+2, \ldots$. eine Quelle mit endlichem Ged"achtnis $\mu=1$ heisst \textit{Markovquelle} und eine mit $\mu=0$ heisst \textit{ged"achtnisfrei}.\\
+
+Eine Informationsquelle $\mathbf{X}=X_1,X_2,\ldots$ heisst \textit{station"ar}, falls f"ur jede L"ange $k$ eines Zeitfensters die Verteilung der $k$ entsprechenden ZV nicht von der Position des Fensters abh"angt, d.h. falls
+\begin{displaymath}
+	P_{X_1\ldots X_k}=P_{X_n\ldots X_{n+k-1}}
+\end{displaymath}
+f"ur alle $n=1,2,3,\ldots$.\\
+
+\subsubsection{Entropierate von Informationsquellen}
+
+Die \textit{Entropierate} $\bar{H}(\mathbf{X})$ einer Informationsquelle $\mathbf{X}=X_1,X_2,\ldots$ ist die mittlere Entropie pro Element der Folge
+\begin{displaymath}
+	\bar{H}(\mathbf{X})=\lim_{n \to \infty} \frac{1}{n} H(X_1 X_2 \ldots X_n)
+\end{displaymath}
+
+wenn dieser Grenzwert existiert.
+
+\subsubsection{Ged"achtnisfreie Quellen}
+
+Bei der \textit{zeitinvarianten ged"achtnisfreien Quelle} ist jedes Element $X_n$ unabh"angig von den vorherigen Elementen und alle Elemente die gleiche Verteilung besitzen: $P_{X_n}=P_X$ f"ur alle $n$.
+
+\begin{theorem}
+	F"ur einen optimalen Code $C$ f"ur die Codierung von $N$ unabh"angigen Realisierungen $X_1,\ldots,X_N$ einer ZV $X$ gilt
+	\begin{displaymath}
+		\lim_{N\to \infty}\frac{E[l_C([X_1,\ldots,X_N])]}{N}=\frac{H(X)}{\log D}
+	\end{displaymath}
+\end{theorem}
+
+\subsubsection{Markovquellen und Quellen mit endlichem Ged"achtnis}
+
+Eine Markovquelle $\mathbf{X}=X_1,X_2,\ldots$ heisst \textit{zeitinvariant}, falls die bedingte Wahrscheinlichkeitsverteilung $P_{X_n|X_{n-1}}$ nicht von $n$ abh"angt.\\
+
+Die \textit{Zustands"ubergangsmatrix} einer zeitinvarianten Markovquelle mit Alphabet $\mathcal{X}=\{v_1,\ldots,v_M\}$ ist die $M\times M$-Matrix $\mathbf{P}=[P_{ij}]$ mit
+\begin{displaymath}
+	P_{ij} = P_{X_n|X_{n-1}}(v_i,v_j)
+\end{displaymath}
+Die Spalten der Zustands"ubergangsmatrix summieren jeweils zu eins, weil sie einer (bedingten) Wahrscheinlichkeitsverteilung entsprechen.\\
+
+Eine zeitinvariante Markovquelle ist vollst"andig charakterisiert durch die Anfangsverteilunng $P_{X_1}$ und die Zustands"ubergangsmatrix. Falls man die Verteilung $P_{X_n}$ als Vektor $(P_{X_n}(v_1),\ldots,P_{X_{n-1}}(v_m))^T$ auffasst, dann gilt
+\begin{displaymath}
+	P_{X_n} = \mathbf{P}\cdotp P_{X_{n-1}}
+\end{displaymath}
+f"ur alle $n$.\\
+
+Eine Verteilung $\bar{P}_X$ "uber dem Alphabet einer Markovquelle heisst \textit{station"are Verteilung} $\bar{P}_X$, wenn sie zeitlich invariant bleibt, d.h. wenn
+\begin{displaymath}
+	\bar{P}_X = \mathbf{P} \cdotp \bar{P}_X
+\end{displaymath}
+
+Eine Markovquelle ist station"ar genau dann, wenn die Anfangsverteilung $P_{X_1}$ station"ar ist.\\
+
+Zum Bestimmen der station"aren Verteilung $\bar{P}_X$ verwendet man das Gleichungssystem $\bar{P}_X = \mathbf{P}\cdotp \bar{P}_X$ zusammen mit der Zusatzgleichung, dass sich die Werte von $\bar{P}_X$ zu 1 summieren:
+
+\begin{displaymath}
+	\left [
+		\begin{array}{ccc}
+			&	\mathbf{P} &	\\
+			1 &	1 &		1\\
+		\end{array}
+	\right ] \cdotp
+	\bar{P}_X =
+	\left [
+		\begin{array}{c}
+			\bar{P}_X \\
+			1
+		\end{array}
+	\right ], \mbox{ wobei } \bar{P}_X =
+	\left [
+		\begin{array}{c}
+			\bar{P}_X(v_1)\\
+			\vdots\\
+			 \bar{P}_X(v_M)
+		\end{array}
+	\right ]
+\end{displaymath}
+
+Das Gleichungssystem enth"alt $M+1$ Gleichungen f"ur $M$ Unbekannte, man kann eine beliebige ausser der letzten weglassen.\\
+
+Die meisten Markovquellen haben nur eine station"are Verteilung. Eine solche Markovquelle nennt man \textit{ergodisch}. Ergodisch bedeutet, dass die Quelle nur ein station"ares Verhalten hat. Zu dieser strebt sie asymptotisch aus jeder Anfangsverteilung. Eine hinreichende (aber nicht notwendige) Bedingung f"ur Ergodizit"at ist, dass alle Eintr"age der Zusands"ubergangsmatrix echt positiv sind.\\
+
+Der gr"osste Eigenwert der Zustands"ubergangsmatrix $\mathbf{P}$ einer ergodischen Markovquelle ist immer 1, und der zugeh"orige Eigenvektor ist die station"are Verteilung. Eine beliebige Anfangsverteilung der Zust"ande konvergiert exponentiell schnell zur station"aren Verteilung, und der zweitgr"osste Eigenwert von $\mathbf{P}$ ist der Exponent, der die Konvergenzgeschwindigkeit charakterisiert.\\
+
+Im folgenden Theorem ist
+\begin{displaymath}
+	H(X_n|X_{n-1}=v_j)= H([P_{1j},\ldots,P_{Mj}])
+\end{displaymath}
+die \textit{Verzweigungsentropie} im Zustand $i$ des Zustands"ubergangsdiagramms.
+
+\begin{theorem}
+	Die Entropierate einer zeitinvarianten ergodischen Markovquelle mit Zustands"ubergangsmatrix $\mathbf{P}$ und station"arer Verteilung $\bar{P}_X$ ist gegeben durch die gewichtete Verzweigungsentropie
+	\begin{displaymath}
+		\bar{H}(\mathbf{X})=-\sum_{ij}\bar{P}_X(v_j)P_{ij}\log P_{ij}=\sum_v\bar{P}_X(v)H(X_n|X_{n-1}=v)
+	\end{displaymath}
+\end{theorem}
+
+Man multipliziert also die W'keit in einem Zustand zu sein mit der Entropie welche "uber den n"achsten Zustand herrscht, danach summiert man dies "uber alle Zust"ande.
+
+\subsection{Universelle Datenkompression}
+
+Ein Datenkompressionsverfahren heisst \textit{universell} f"ur eine gegebene Klasse von Informationsquellen, wenn es, asymptotisch betrachtet, bei immer gr"osserer Wahl der Parameter (z.B. Blockl"ange), jede Quelle dieser Klasse auf die Entropierate komprimiert.
+
+\subsubsection{Pr"afixfreie Codes f"ur die ganzen Zahlen}
+
+F"ur $j \in \mathbb{N}^+$ bezeichnen wir die normale bin"are Codierung von $j$ mit $B(j)$ und deren L"ange mit
+\begin{displaymath}
+	L(j) = \lfloor \log j \rfloor + 1
+\end{displaymath}
+
+Der Code $B$ ist nicht pr"afixfrei. Um einen ersten pr"afixfreien Code $C_1$ zu erhalten, k"onnen wir dem Codewort $B(j)$ eine Folge von $L(j)-1$ Symbolen ''0'' voranstellen:
+\begin{displaymath}
+	C_1(j) = 0^{L(j)-1}\parallel B(j)
+\end{displaymath}
+
+Die L"ange des Codewortes $C_1(j)$ ist also
+\begin{displaymath}
+	L_1(j) = 2 L(j) -1 = 2\lfloor \log j \rfloor +1
+\end{displaymath}
+
+Dieser Code kann signifikant verbessert werden, wenn wir die $L(j) -1$ Symbole ''0'' durch eine pr"afixfreie Codierung von $L(j)$ ersetzen. Als pr"afixfreie Codierung k"onnen wir z.B. $C_1$ verwenden. Weil jedes Codewort in $B$ immer mit einer ''1'' beginnt, kann diese weggelassen werden. Den resultierenden Code bezeichnen wir mit $B'$ und erhalten als pr"afixfreie Codierung der positiven ganzen Zahlen:
+\begin{displaymath}
+	C_2(j) = C_1(L(j))\parallel B'(j)
+\end{displaymath}
+
+Die L"ange $L_2(j)$ von $C_2(j)$ ist also
+\begin{displaymath}
+	L_2(j) = L_1(L(j)) + L(j) -1 = 2\lfloor \log (\lfloor \log j \rfloor + 1)\rfloor + \lfloor \log j \rfloor +1
+\end{displaymath}
+
+\textit{Beispiel}:
+Codierung von $j=37$. $B(37)=100101$, $L(37)=6$, $C_1(37)=00000100101$, $C_1(L(37))=C_1(6)=00110$, $L_1(37)=11$ (dezimal), $C_2(37)=0011000101$ und $L_2(37)=10$ (dezimal).
+
+\subsubsection{Intervalll"angen-Codierung}
+
+Eine sehr effiziente Codierung f"ur station"are bin"are Quellen $\mathbf{X}=X_1,X_2,\ldots$ mit starker Asymmetrie ist die sogenannte Intervalll"angen-Codierung. Es sei $P_{X_i}(0)=1-p$ und $P_{X_i}(1)=p$ f"ur alle $i\geq 1$ und f"ur $p\ll 1/2$. Eine lange Folge solcher ZV wird codiert, indem nur die Abst"ande zwischen aufeinanderfolgenden Symbolen ''1'' codiert werden, und zwar mit einem geeigneten pr"afixfreien Code f"ur die positiven ganzen Zahlen (hier $C_2$).\\
+
+Die mittlere Anzahl Bits pro ZV ist also gegeben durch
+\begin{displaymath}
+	\frac{E[L_2(D)]}{E[D]} \leq 2p\log(1-\log p) - p \log p + p
+\end{displaymath}
+
+Die Effizienz der Codierung wird f"ur $p\to 0$ optimal:
+\begin{displaymath}	
+	\lim_{p \to 0} \frac{E[L_2(D)]}{E[D]h(p)}=1
+\end{displaymath}
+
+Wir betrachten nun die Verallgemeinerung f"ur eine $Q$-"are station"are Quelle (nicht notwendigerweise ged"achtnisfrei). Das Alphabet sei $\mathcal{A}=\{a_1,\ldots,a_Q\}$, die Quelle sei $\mathbf{Y}=Y_1,Y_2,\ldots$ mit $P_{Y_1}=P_{Y_2}=\ldots=P_Y$. Der Unterschied zur bin"aren Codierung ist, dass f"ur \textit{jedes} $y \in \mathcal{A}$ die Intervalll"ange bis zum \textit{letzten Auftreten des gleichen Symbols aus} $\mathcal{A}$ codiert werden muss. F"ur die Initialisierung nehmen wir an, dass $Y_{-i}=a_{i+1}$ f"ur $i=0,\ldots,Q-1$.
+
+\section{Kommunikation "uber fehlerbehaftete Kan"ale}
+
+\subsection{Einleitung}
+
+\subsubsection{Behandlung von Bit"ubertragungsfehlern}
+
+Bei einem \textit{bin"are symmetrische Kanal (BSK)}, welcher viele praktische "Ubertragungskan"ale gut modelliert, wird jedes gesendete Bit mit einer bestimmten W'keit $\epsilon$ (Bitfehler-W'keit genannt) invertiert und mit W'keit $1-\epsilon$ korrekt "ubertragen. Die auftretenden Fehler sind unabh"angig voneinander.
+
+\subsubsection{Shannons Antwort}
+
+F"ur jeden Kanal l"asst sich die sogenannte Kapazit"at angeben; dies ist die maximale Rate, mit der Information beliebig zuverl"assig "ubertragen werden kann.
+
+\subsection{Diskrete ged"achtnisfreie Kan"ale}
+
+Grunds"atzlich ist ein Kanal durch die bedingte W'keitsverteilung der Outputfolge, gegeben die Inputfolge, charakterisiert. Wenn wir die Symbolfolgen am Kanalinput und -output mit $X_1,\ldots,X_N$ und $Y_1,\ldots,Y_N$ bezeichnen, so wird der Kanal durch $P_{Y_1\ldots Y_N|X_1 \ldots X_N}$ charakterisiert.
+
+\subsubsection{diskreter ged"achtnisfreier Kanal (DGK)}
+
+Ein \textit{diskreter ged"achtnisfreier Kanal (DGK)} f"ur ein Inputalphabet $\mathcal{X}$ und ein Outputalphabet $\mathcal{Y}$ ist eine bedingte W'keitsverteilung
+\begin{displaymath}
+	P_{Y|X}: \mathcal{Y}\times \mathcal{X} \to \mathbb{R}^+
+\end{displaymath}
+es wird also jedes Inputsymbol unabh"angig von den fr"uheren Inputsymbolen behandelt.
+
+\subsection{Codierung und Decodierung}
+
+\subsubsection{Blockcodes}
+
+Ein \textit{Blockcode} $C$ mit Blockl"ange $N$ f"ur einen Kanal mit Inputalphabet $\mathcal{X}$ ist eine Teilmenge $C=\{\mathbf{c_1},\ldots,\mathbf{c_M}\} \subseteq \mathcal{X}^N$ der N-Tupel "uber dem Alphabet $\mathcal{X}$, wobei $\mathbf{c_1},\ldots,\mathbf{c_M}$ Codew"orter genannt werden. Die \textit{Rate} $R$ von $C$ ist definiert als
+\begin{displaymath}
+	R = \frac{\log_2 M}{N}
+\end{displaymath}
+d.h. $R$ ist gleich der Anzahl Bits, die pro Kanalbenutzung gesendet werden k"onnen.
+
+\subsubsection{Optimale Sch"atzungen}
+
+Es soll eine ZV $U$ auf Grund einer Beobachtung $V$ gesch"atzt werden. Die bedingte W'keitsverteilung $P_{V|U}$, d.h. wie die Wirkung $V$ von der Ursache $U$ abh"angt, ist bekannt. Ein \textit{Sch"atzverfahren} ist eine Funktion $f$, welche jedem Wert $v$ der Beobachtung den entsprechenden Sch"atzwert $\hat{u} = f(v)$ zuweist. Die ZV, die dem Sch"atzwert entspricht ist $\hat{U}$.\\
+Eine Sch"atzung ist optimal, wenn die W'keit eines Fehlers $P(U\neq \hat{U})$, minimal ist. Es gilt 
+\begin{displaymath}
+	P(U = \hat{U}) = \sum_v P(U = \hat{U}, V = v)
+\end{displaymath}
+wobei $\hat{U}=f(V)$ ist. Die Wahrscheinlichkeit in der Summe l"asst sich anders schreiben:
+\begin{displaymath}
+	P(U=\hat{U}) = \sum_v P_{UV}(f(v),v) = \sum_v P_{V|U}(v,f(v))P_U(f(v))
+\end{displaymath}
+
+Dieser Ausdruck soll nun durch die Wahl der Sch"atzungsfunktion $f$ maximiert werden. Dies wird erreicht, indem f"ur jeden Wert $v$ der Ausdruck in der Summe maximiert wird. Dabei muss man zwei F"alle unterscheiden:
+\begin{enumerate}
+	\item $P_U$ ist bekannt. In diesem Falll muss man f"ur jedes $v$ derjenige Wert $\hat{u}$ f"ur $f(v)$ gew"ahlt werden, f"ur welchen
+	\begin{displaymath}
+		P_{V|U}(v,\hat{u})P_U(\hat{u})
+	\end{displaymath}
+	maximal ist. Diese Sch"atzregel wird oft \textit{Minimum-Error}-Regel (ME-Regel) genannt.
+	\item $P_U$ ist nicht bekannt. Nimmt man an, alle Werte von $U$ seien gleich wahrscheinlich, d.h. $P_U(u)$ sei f"ur alle $u$ gleich und m"usse deshalb bei der Maximierung nicht beachtet werden, so erhalten wir folgende Regel. F"ur jedes $v$ wird derjenige Wert $\hat{u}$ f"ur $f(v)$ gew"ahlt, der
+	\begin{displaymath}
+		P_{V|U}(v,\hat{u})
+	\end{displaymath}
+	maximiert. Diese Sch"atzregel wird \textit{Maximum-Likelihood}-Regel (ML-Regel) genannt.
+\end{enumerate}
+
+\subsubsection{ME- und ML-Decodierung}
+
+Wenn das Codewort
+\begin{displaymath}
+	\mathbf{c_j} = [c_{j1},\ldots,c_{jN}]
+\end{displaymath}
+"uber einen DGK mit "Ubergangsverteilung $P_{Y|X}$ gesendet wird, so ist der Kanaloutput eine ZV $\mathbf{Y^N} = [Y_1,\ldots,Y_N]$ mit Wertemenge $\mathcal{Y}^N$ und W'keitsverteilung
+\begin{displaymath}
+	P_{\mathbf{Y^N}|\mathbf{X^N}}(\mathbf{y^N},\mathbf{c_j}) = \prod^N_{i=1} P_{Y|X}(y_i, c_{ji})
+\end{displaymath}
+
+Im Decoder stellt sich das Problem, f"ur ein empfangenes Kanaloutputwort
+\begin{displaymath}
+	\mathbf{y^N} = [y_1,\ldots, y_N]
+\end{displaymath}
+
+die beste Sch"atzung f"ur das gesendete Codewort zu finden. Dieser Vorgang heisst \textit{Decodierung} und entspricht dem im vorherigen Abschnitt besprochenen Sch"atzproblem, wobei $U=\mathbf{X^N}$, $V=\mathbf{Y^N}$, und $\hat{U}$ die Entscheidung des Decoders ist.
+
+\begin{theorem}[Minimum-Error Decoder]
+	Ein Decoder, der f"ur ein gegebenes Empfangswort $\mathbf{y^N}$ als Sch"atzung des gesendeten Codewortes eines derjenigen $\mathbf{c_j}\in C$ w"ahlt, welches
+	\begin{displaymath}
+		P_{\mathbf{Y^N}|\mathbf{X^N}}(\mathbf{y^N},\mathbf{c_j})\cdotp P_{\mathbf{X^N}}(\mathbf{c_j})
+	\end{displaymath}
+	maximiert, erreicht die minimale mittlere Fehlerwahrscheinlichkeit.
+\end{theorem}
+
+\begin{theorem}[Maximum-Likelihood Decoder]
+	Ein Decoder, der f"ur ein gegebenes Empfangswort $\mathbf{y^N}$ eines derjenigen $\mathbf{c_j}\in C$ als Sch"atzung des gesendeten Codewortes w"ahlt, welches
+	\begin{displaymath}
+		P_{\mathbf{Y^N}|\mathbf{X^N}}(\mathbf{y^N}, \mathbf{c_j})
+	\end{displaymath}
+	maximiert, erreicht die minimale mittlere Fehlerwahrscheinlichkeit, wenn alle Codew"orter gleich wahrscheinlich sind.
+\end{theorem}
+
+\subsection{Kanalkapazit"at und das Kanalcodierungstheorem}
+
+\subsubsection{Definition}
+
+Die \textit{Kapazit"at} eines durch $P_{Y|X}$ charakterisierten DGK ist das Maximum "uber Inputverteilungen $P_X$ von $I(X;Y)$:
+\begin{displaymath}
+	C = \max_{P_X} I(X;Y) = \max_{P_X}[H(Y)- H(Y|X)]
+\end{displaymath}
+
+Falls folgende zwei Bedingungen erf"ullt sind, ist die Kapazit"at einfach zu berechnen.
+\begin{description}
+	\item [(A)] $H(Y|X=x)$ ist f"ur alle $x$ gleich: $H(Y|X=x)=t$ f"ur alle $x$.
+	\item [(B)] $\sum_x P_{Y|X}(y,x)$ ist f"ur alle $y$ gleich.
+\end{description}
+
+\begin{theorem}
+	Die Kapazit"at eines Kanals mit Bedingung (A) ist $(\max_{P_X}H(Y))- H(Y|X=x)$ (f"ur irgendein $x$) und die Kapazit"at eines Kanals mit Bedingungungen (A) und (B) ist
+	\begin{displaymath}
+		C = \log |Y| -t
+	\end{displaymath}
+\end{theorem}
+
+Der BSK erf"ullt beide Bedingungen und hat Kapazit"at $C= 1- h(\epsilon)$. Der bin"are Ausl"oschungskanal erf"ullt Bedingung (A) und hat Kapazit"at $C=1-\delta$
+
+\subsubsection{Kapazit"at: Obergrenze f"ur die Rate}
+
+Information kann nicht mit einer Rate "uber der Kanalkapazit"at zuverl"assig "ubertragen werden.\\
+
+Wir betrachten die "Ubertragung von $K$ Informationsbits $U_1,\ldots,U_K$ durch $N$ Benutzungen eines DGK. Die \textit{"Ubertragungsrate} $R$ ist demnach
+\begin{displaymath}
+	R = \frac{K}{N} \qquad \mbox{(bits pro Kanalbenutzung)}
+\end{displaymath}
+
+Es gilt
+\begin{eqnarray}
+	H(U^K|\hat{U}^K) &	= &	H(U^K) - I(U^K; \hat{U}^K) \nonumber \\
+	&			\geq &	H(U^K)- NC \nonumber
+\end{eqnarray}
+
+d.h. die Kanal"ubertragung kann (mit oder ohne Feedback) die Unsicherheit "uber $U_1,\ldots, U_K$ beim Empf"anger nicht um mehr als $NC$ reduzieren. Damit $U^K$ durch $\hat{U}^K$ eindeutig bestimmt ist $(H(U^K|\hat{U}^K)=0)$, muss die Anzahl $N$ der Kanalbenutzungen mindestens $H(U^K)/C$ sein.
+
+\begin{theorem}[Shannon]
+	Wenn ein DGK mit Kapazit"at $C$ zur "Ubertragung echt zuf"alliger Informationsbits mit Rate $R > C$ benutzt wird, so gilt f"ur die mittlere Bitfehler-W'keit beim Empf"anger
+	\begin{displaymath}
+		h(\bar{P}_e) \geq 1 - \frac{C}{R}
+	\end{displaymath}
+\end{theorem}
+
+\subsubsection{Die Kapazit"at ist erreichbar}
+
+$R < C$ ist sowohl eine \textit{notwendige} als auch \textit{hinreichende} Bedingung f"ur zuverl"assige "Ubertragung.
+
+\begin{theorem}[Shannon]
+	Gegeben sei ein DGK mit Inputalphabet $\mathcal{X}$, Outputalphabet $\mathcal{Y}$ und Kapazit"at $C$. F"ur jede Rate $R < C$ und f"ur jedes $\epsilon > 0$ existiert f"ur gen"ugend grosse Blockl"ange $N$ ein Code $C$ mit $M=\lceil 2^{RN} \rceil$ Codew"ortern, f"ur den die maximale Decodierfehler-Wahrscheinlichkeit ("uber alle Codew"orter) kleiner als $\epsilon$ ist, d.h.
+	\begin{displaymath}
+		\max_{1 \leq j \leq M} P (\mathcal{F}| X^N = \mathbf{c_j}) \leq \epsilon
+	\end{displaymath}
+\end{theorem}
+
+\section{Elemente der Codierungstheorie}
+
+\subsection{Minimaldistanz}
+
+Wir betrachten Codes mit $M=q^K$ Codew"ortern f"ur eine ganze Zahl $K < N$ ($N$ = Blockl"ange) und f"ur $|\mathcal{X}|=	q$ (hier meist bin"are Codes $q=2$).\\
+
+Mit einem Code werden $K$ $q$-"are Zeichen in einem Codewort der L"ange $N$ codiert. Das Verh"altnis $K/N$ der Anzahl Informationssymbole und der Anzahl Codesymbole wird oft als \textit{dimensionslose Rate} bezeichnet.\\
+
+Die \textit{Hammingdistanz} $d(\mathbf{a},\mathbf{b})$ zweier W"orter $\mathbf{a}$ und $\mathbf{b}$ (gleicher L"ange "uber dem gleichen Alphabet) ist die Anzahl Positionen, in denen sich $\mathbf{a}$ und $\mathbf{b}$ unterscheiden. Die \textit{Minimaldistanz} $d_{min}(\mathcal{C})$ eines Codes $\mathcal{C}$ ist die kleinste Hammingdistanz zwischen zwei Codew"ortern.\\
+
+$r$ Fehler zu \textit{detektieren} heisst das f"ur \textit{jedes} Codewort und \textit{jedes} Fehlermuster mit h"ochstens $r$ Fehlern festgestellt werden kann, dass ein Fehler aufgetreten ist, d.h. dass die Minimaldistanz des Codes gr"osser als $r$ ist.\\
+$s$ Fehler zu \textit{korrigieren} heisst wenn f"ur jedes Codewort und f"ur jedes Fehlermuster mit h"ochstens $s$ Fehlern das Codewort wieder eindeutig gefunden werden kann. Dies ist genau dann der Fall, wenn die $d_{min} \geq 2s +1$.
+
+\begin{theorem}
+	Ein Code mit Minimaldistanz $d$ erlaubt, $d-1$ Fehler zu detektieren oder $\lfloor (d-1) / 2\rfloor$ Fehler zu korrigieren.
+\end{theorem}
+
+\subsection{Lineare Codes}
+
+Ein \textit{linearer Blockcode} mit $q^K$ Codew"ortern der Blockl"ange $N$ "uber einem endlichen K"orper $GF(q)$ ist ein Unterraum der Dimension $K$ des Vektorraumes der $N$-Tupel "uber $GF(q)$. Ein solcher Code wird als $[N,K]$-Code bezeichnet.\\
+
+Jeder lineare Code enth"alt das Nullwort $\mathbf{0}$. Die Distanz eines Codewortes $\mathbf{c}$ zu $\mathbf{0}$, d.h. die Anzahl der von 0 verschiedenen Kompontenten, wird als \textit{Hamminggewicht} $w(\mathbf{c})$ bezeichnet.
+
+\begin{theorem}
+	Die Minimaldistanz eines linearen Codes ist gleich dem minimalen Hamminggewicht eines von $\mathbf{0}$ verschiedenen Codewortes.
+\end{theorem}
+
+\subsubsection{Die Generatormatrix eines linearen Codes}
+
+Die Codierung eines \textit{Informationsvektors} $\mathbf{a}=[a_1,\ldots,a_K]$ zu einem Codewort $\mathbf{c} = [c_1,\ldots, c_N]$ kann als Multiplikation mit einer $(K\times N)$-Matrix $\mathbf{G}$, der sogenannten \textit{Generatormatrix}, betrachtet werden:
+\begin{displaymath}
+	\mathbf{c} = \mathbf{a} \cdotp \mathbf{G}
+\end{displaymath}
+
+Die Zeilen der Generatormatrix bilden eine Basis des Codes.\\
+
+Es gibt eine speziell geeignete Form einer Generatormatrix, n"amlich wenn die ersten $K$ Spalten der $(K\times K)$-Einheitsmatrix $\mathbf{I_K}$ entsprechen:
+\begin{displaymath}
+	\mathbf{G} = [ \mathbf{I_K} \vdots  \mathbf{A}]
+\end{displaymath}
+
+wobei $\mathbf{A}$ eine beliebige $K\times ( N- K )$-Matrix ist. Dies bedeutet, dass das Codwort aus den $K$ Informationssymbolen und $N-K$ angef"ugten ''Parity-Checks'' besteht. Eine solche Generatormatrix wird als \textit{systematisch} bezeichnet.
+
+\subsubsection{Die Parity-Check-Matrix eines linearen Codes}
+
+Eine $((N-K)\times N)$-Matrix $\mathbf{H}$ heisst \textit{Parity-Check-Matrix} eines linearen $[N,K]$-Codes $\mathcal{C}$, falls
+\begin{displaymath}
+	\mathbf{c} \in \mathcal{C}  \Leftrightarrow \mathbf{c}\cdotp\mathbf{H}^T = 0
+\end{displaymath}
+
+Mit anderen Worten: Die Zeilen von $\mathbf{H}$ spannen den $(N-K)$-dimensionalen Unterraum aller Vektoren ($N$-Tupel) $\mathbf{v}$ auf, f"ur die das Produkt $\mathbf{c}\cdotp \mathbf{v^T}$ mit einem beliebigen Codewort $\mathbf{c}$ aus $\mathcal{C}$ null ergibt.
+
+\begin{theorem}
+	Sei $\mathbf{I_t}$ die $(t\times t)$-Einheitsmatrix und $\mathbf{G} = [ \mathbf{I_K}\vdots \mathbf{A}]$ eine systematische Generatormatrix eines linearen Codes. Die $((N-K)\times N)$-Matrix $\mathbf{H}= [-\mathbf{A^T}\vdots \mathbf{I_{N-K}}]$ ist eine Parity-Check-Matrix des Codes.
+\end{theorem}
+
+\begin{theorem}
+	Die Minimaldistanz eines linearen Codes mit Parity-Check-Matrix $\mathbf{H}$ ist gleich der minimalen Anzahl Spalten in $\mathbf{H}$, die linear abh"angig sind.
+\end{theorem}
+
+\subsubsection{Syndromdecodierung linearer Codes}
+
+Ein gesendetes Codewort $\mathbf{c}$ werde durch ein Fehlervektor $\mathbf{e}$ verf"alscht, so resultiert aus der Multiplikation mit $\mathbf{H^T}$ ein f"ur das Fehlermuster charakteristisches Bitmuster, das sogenannte \textit{Syndrom} $\mathbf{s}$, welches unabh"angig vom Codewort ist.
+\begin{displaymath}
+	\mathbf{s} = (\mathbf{c}+\mathbf{e})\cdotp \mathbf{H^T} = \mathbf{c}\cdotp \mathbf{H^T} +  \mathbf{e}\cdotp \mathbf{H^T} = \mathbf{0} +  \mathbf{e}\cdotp \mathbf{H^T} = \mathbf{e}\cdotp \mathbf{H^T}
+\end{displaymath}
+
+Man kann $\mathbf{e}$ auf Grund des Syndroms $\mathbf{s} = \mathbf{e}\cdotp \mathbf{H^T}$ sch"atzen (ML) und danach vom empfangenen Wort subtrahieren.
+
+\subsubsection{Hamming-Codes und duale Hamming-Codes}
+
+Eine einfache Klasse von bin"aren linearen Codes sind die sogenannten \textit{Hamming-Codes}. F"ur jedes $r > 1$ gibt es ein Code der L"ange $N=2^r-1$ mit $K=N-r$ Informationsbits und Minimaldistanz 3. Jeder Hamming-Code kann einen Fehler pro Block korrigieren.\\
+
+Die $(r\times (2^r-1))$-Parity-Check-Matrix eines Hamming-Codes kann sehr einfach konstruiert werden. Sie besteht aus allen $2^r-1$ vom Nullvektor verschiedenen Spaltenvektoren.\\
+
+Ein Code $\mathcal{C}'$ heisst \textit{dual} zu einem Code $\mathcal{C}$, wenn die Generatormatrix von $\mathcal{C}'$ eine Parity-Check-Matrix von $\mathcal{C}$ ist.
+
+\begin{theorem}
+	In einem dualen Hamming-Code mit Parameter $r$ gilt
+	\begin{displaymath}
+		d_{min} = 2^{r-1}
+	\end{displaymath}
+\end{theorem}
+
+\subsection{Codes basierend auf Polynomevaluation}
+
+\begin{theorem}[Singleton Bound]
+	Die Minimaldistanz eines linearen $[N,K]$-Codes "uber $GF(q)$ ist h"ochstens $N-K+1$.
+\end{theorem}
+
+\begin{lemma}
+	Jedes Polynom vom Grad $d$ "uber einem beliebigen K"orper l"asst sich eindeutig aus den Polynomwerten an beliebigen $d+1$ St"utzstellen interpolieren.
+\end{lemma}
+
+Falls das Polynom an $\alpha_0,\ldots,\alpha_d$ ausgewertet wurde, so kann $f(x)$ wie folgt bestimmt werden:
+\begin{displaymath}
+	f(x) = \sum^d_{i=0} \beta_i L_i(x)
+\end{displaymath}
+mit
+\begin{displaymath}
+	L_i(x) = \frac{(x-\alpha_0)\ldots(x-\alpha_{i-1})(x-\alpha_{i+1})\ldots(x-\alpha_d)}{(\alpha_i-\alpha_0)\ldots(\alpha_i -\alpha_{i-1})(\alpha_i-\alpha_{i+1})\ldots(\alpha_i-\alpha_d)}
+\end{displaymath}
+
+\begin{theorem}
+	F"ur beliebige $N$ und $K \leq N$ und jeden K"orper $GF(q)$ mit $q\geq N$ ist die maximal erreichbare Minimaldistanz eines linearen $[N,K]$-Codes gleich $N-K+1$.
+\end{theorem}
+
+Dies k"onnen wir tun indem wir einen $[N,K]$-Code "uber $GF(q)$ konstruieren, indem wir die $K$ Informationssymbole als die Koeffizienten eines Polynoms vom Grad $K-1$ auffassen. Das zu diesem Informationsvektor geh"orende Codewort erh"alt man durch Auswertung des Polynoms an $N$ fixen und bekannten Stellen $x_1,\ldots,x_N$.
+
+\begin{korollar}
+	F"ur jedes $r > 0$, $N \leq r2^r$ und $K \leq N -r$ gibt es einen linearen bin"aren $[N,K]$-Code mit Minimaldistanz mindestens $n-k+1$, wobei $n=\lfloor N/r \rfloor$ und $k = \lceil K/r \rceil$.
+\end{korollar}
+
+\subsection{Codes basierend auf Polynommultiplikation}
+
+Einem Polynom
+\begin{displaymath}
+	a_d x^d + a_{d-1}x^{d-1}+\ldots + a_1 x+ a_0
+\end{displaymath}
+vom Grad $d$ entspricht ein Vektor $[a_0,\ldots,a_d]$ mit $d+1$ Komponenten. Dieses Polynom kann aber nat"urlich auch als Vektor mit $N>d+1$ Komponenten aufgefasst werden, wobei die ersten $N-d-1$ Komponenten null sind:
+\begin{displaymath}
+	[a_0,\ldots,a_d,0,\ldots,0]
+\end{displaymath}
+
+
+Ein $[N,K]$-Polynomcode "uber dem K"orper $GF(q)$ ist durch das \textit{Generatorpolynom}
+\begin{displaymath}
+	g(x) = g_{N-K}x^{N-K} + g_{N-K-1}x^{N-K-1}+\ldots+g_1x+g_0
+\end{displaymath}
+vom Grad $N-K$ "uber $GF(q)$ wie folgt definiert. Die Informationsvektoren sind die $q^K$ Polynome $i(x)$ "uber $GF(q)$ vom Grad $\leq K-1$ und das zu $i(x)$ geh"orende Codewort ist das Polynom $i(x)g(x)$.\\
+
+Die folgende Matrix ist also eine Generatormatrix dieses Codes:
+\tiny
+\begin{displaymath}
+	\left [
+	\begin{array}{ccccccccc}
+		g_0&	g_1&	g_2&	\ldots&	g_{N-K}&	0&	0&	\ldots&	0 \\
+		0&	g_0&	g_1&	\ldots&	g_{N-K-1}&	g_{N-K}&	0&	\ldots&	0 \\
+		0&	0&	g_0&	\ldots&	g_{N-K-2}&	g_{N-K-1}&	g_{N-K}&	\ldots&	0 \\
+		\vdots&	\vdots&	&	\ddots&	&	\ddots&	\ddots&	\ddots&	\hdots\\
+		0 &	0& 0& \ldots&	g_0 &	\ldots &	g_{N-K-2} &	g_{N-K-1}&	g_{N-K}\\
+	\end{array}
+	\right ]
+\end{displaymath}
+\normalsize
+
+
+\subsubsection{Codierung und Fehlerdetektion}
+
+Die Codierung entspricht einer Multiplikation des Informationspolynoms mit dem Generatorpolynom.\\
+
+Das empfangene Wort (resp. Polynom) hat also die Form
+\begin{displaymath}
+	r(x) = i(x)g(x) + e(x)
+\end{displaymath}
+
+W"ahrend die Fehlerkorrektur f"ur solche Codes nur in speziellen F"allen effizient m"oglich ist, ist eine Fehlerdetektion wie bei allen linearen Codes durch eine Pr"ufung des Syndroms sehr einfach m"oglich.\\
+Wenn keine Fehler aufgetreten sind, so kann der Empf"anger die Information $i(x)$ decodieren, indem er das empfangene Polynom $r(x)$ wieder durch $g(x)$ dividiert. Der Rest der Division (ein Polynom vom Grad h"ochstens $N-K-1$) ist gleich
+\begin{displaymath}
+	e(x) \mod g(x)
+\end{displaymath}
+und ist unabh"angig von $i(x)$. $e(x)$ ist gleich dem 0-Polynom, falls keine Fehler aufgetreten sind, oder wenn $e(x)$ ein Vielfaches von $g(x)$ ist.
+
+Oft treten Fehler aber geh"auft in sogenannten ''Bursts'' auf. Wenn alle auftretenden Fehler auf ein Fenster der L"ange $l$ konzentriert sind, so sprechen wir von einem Fehlerburst der L"ange $l$.
+
+\begin{theorem}
+	Der durch das Generatorpolynom (vom Grad $N-K$) g(x) generierte Code kann einen beliebigen Fehlerburst der L"ange h"ochstens $N-K$ detektieren (sofern nur ein solcher Burst auftritt).
+\end{theorem}
+
+\subsubsection{Fehlerdetektierende CRC-Codes}
+
+In der Praxis verwendete und standardisierte Polynome sind
+\begin{eqnarray}
+	\mbox{CRC-12} &		=&	x^{12}+x^{11}+x^3+x^2+x+1 \nonumber \\
+	\mbox{CRC-16} &		=&	x^{16}+x^{15}+x^3+x^2+1 \nonumber \\
+	\mbox{CRC-CCITT} &	=&	x^{16}+x^{12}+x^5+1 \nonumber
+\end{eqnarray}
+
+\subsection{Reed-Solomon-Codes}
+
+F"ur Reed-Solomon-Codes gibt es eine effiziente Fehlerkorrekturprozedur. RS-Codes sind lineare Codes "uber einem K"orper der Form $GF(q)$. In den meisten Anwendungen ist $q=2^d$, d.h. die K"orperelemente k"onnen als $d$-Bit-Strings dargestellt werden.
+
+\subsubsection{Definition der Reed-Solomon-Codes}
+
+Ein Reed-Solomon-Code "uber $GF(q)$ mit Parameter $t$ und Element $\alpha$ der Ordnung $N=q-1$ ist der lineare $[N,K]$-Code mit $N=q-1$ und $K=N-2t$, der aus allen Codworten $[c_0,\ldots,c_{N-1}]$ besteht, f"ur welche die Fourier-Transformierte (f"ur $\alpha$) die Form
+\begin{displaymath}
+	[\underbrace{0,\ldots,0}_{2t},C_{2t},\ldots,C_{N-1}]
+\end{displaymath}
+besitzt. Mit anderen Worten, ein Fenster der L"ange $2t$ im Frequenzbereich ist auf Null gesetzt.\\
+
+Die Minimaldistanz eines solchen Codes ist gleich $2t+1$ und es gibt auch einen effizienten Algorithmus um bis zu $t$ Fehler zu korrigieren.\\
+Ein Polynom $c(x)$ ist genau dann ein Codewortpolynom, wenn
+\begin{displaymath}
+	c(1) = c(\alpha) = c(\alpha^2) = \hdots = c(\alpha^{2t-1}) = 0
+\end{displaymath}
+
+was "aquivalent ist zur Aussage, dass das Polynom
+\begin{displaymath}
+	g(x) = (x-1)(x-\alpha)(x-\alpha^2)\hdots(x-\alpha^{2t-2})(x-\alpha^{2t-1})
+\end{displaymath}
+das Polynom $c(x)$ teilt. Somit ist ein RS-Code ein Polynomcode mit Generatorpolynom $g(x)$.
+
+\subsubsection{Effiziente Fehlerkorrektur}
+
+Eine m"ogliche Art der Codierung besteht darin, die $N-2t$ Informationssymbole direkt den Werten $C_{2t},\ldots,C_{N-1}$ der Fourier-Transformierten des Codewortes zuzuweisen und das Codewort mittels inverser Fourier-Transformation zu berechnen. Sei also
+\begin{displaymath}
+	r(x) = c(x) + e(x)
+\end{displaymath}
+das empfangene Wort, wobei $e(x)$ das Fehlermuster ist, dessen Gewicht h"ochstens $t$ sei. Man kann die Fourier-Transformierte von $r(x)$ berechnen, wobei wegen der Linearit"at
+\begin{displaymath}
+	R(x) = C(x) + E(x)
+\end{displaymath}
+gilt. Da die untersten $2t$ Koeffizienten von $C(x)$ gleich $0$ sind, kennt man also die untersten $2t$ Koeffizienten $E_0,\ldots,E_{2t-1}$ von $E(x)$. Diese Folge erf"ullt eine lineare Rekursion der L"ange gleich der Anzahl Fehler, also wegen unserer Annahme h"ochstens $t$ ist. Die Rekursionsgleichung der L"ange $t$ kann man aus den $2t$ aufeinanderfolgenden Werten $E_0,\ldots,E_{2t-1}$ bestimmen. Anschliessend kann man die restlichen Koeffizienten $E_{2t},\ldots,E_{N-1}$ von $E(x)$ gem"ass der gefundenen linearen Rekursion berechnen. Nun muss nur noch $E(x)$ von $R(x)$ subtrahieren und erh"alt $C(x)$, worin die gesendete Information enthalten ist.
+
+\subsection{Fehlerb"undel und Interleaving}
+
+Oft treten Fehler nicht unabh"angig voneinander auf, sondern treten geh"auft auf; dies bezeichnet man als \textit{Fehlerb"undel}.\\
+Im Folgenden werden wir das sogenannte \textit{Interleaving} betrachten. Dies ist eine Methode, um geh"auft auftretende Fehler "uber mehrere Codew"orter zu verteilen, so dass innerhalb eines einzelnen Codewortes nur noch wenige Fehler vorkommen, welche dann korrigiert werden k"onnen.
+
+\subsubsection{Definition}
+
+Wir bezeichnen einen Fehler als \textit{Fehlerb"undel} oder \textit{Fehlerburst} der L"ange $b$, falls alle Fehler in einem String innerhalb eines Intervalls der L"ange $b$ liegen.\\
+Das \textit{Interleaving} macht aus einem Code $\mathcal{C}$ durch Konkatenation mehrerer Codew"orter und anschliessendem Umgruppieren der einzelnen Symbole einen Code $\mathcal{C}'$ mit verbesserten Korrektureigenschaften, so dass zum Beispiel l"angere Fehlerbursts korrigiert werden k"onnen.\\
+Beim \textit{Interleaving zur Tiefe} $t$ wird aus einem linearen $[N,K]$-Code $\mathcal{C}$, der alle Fehlerb"undel bis zur L"ange $b$ korrigiert, ein $[t\cdotp N,t\cdotp K]$-Code $\mathcal{C}'$ generiert, der alle Fehlerb"undel bis zur L"ange $t\cdotp b$ korrigiert. Dazu wird dieser Code $\mathcal{C}'$  definiert als die Menge aller Codew"orter der Form
+\begin{displaymath}
+	c' = c_1^{(1)}c_1^{(2)}\hdots c_1^{(t)}c_2^{(1)}c_2^{(2)}\hdots c_2^{(t)}\hdots c_N^{(1)}c_N^{(2)}\hdots c_N^{(t)}
+\end{displaymath}
+wobei $c^{(i)}=c_1^{(i)}c_2^{(i)}\hdots c_N^{(i)}$ (f"ur $i=1,\ldots,t$) Codew"orter aus $\mathcal{C}$ sind. (Tiefgestellt bezeichnet Position im Codewort, Hochgestellt bezeichnet das $i$-te Codewort).
+
+% TODO Interleaving und CD
+%\subsubsection{Interleaving mit Frame-Verz"ogerung}
+%
+
+\appendix
+
+\section{Fourier-Transformation}
+
+\begin{displaymath}
+	\mathbf{V} = \mathbf{F} \cdotp \mathbf{v}
+\end{displaymath}
+mit
+\begin{displaymath}
+	\mathbf{F} = \left [
+		\begin{array}{ccccc}
+			\alpha^0 &	\alpha^0 &	\alpha^0 &	\ldots &	\alpha^0 \\
+			\alpha^0 &	\alpha^1 &	\alpha^2 &	\ldots &	\alpha^{1(N-1)} \\
+			\alpha^0 &	\alpha^2 &	\alpha^4 &	\ldots &	\alpha^{2(N-1)} \\
+			\alpha^0 &	\alpha^3 &	\alpha^6 &	\ldots &	\alpha^{3(N-1)} \\
+			\vdots &	\vdots &	\vdots &	\vdots &	\vdots \\
+			\alpha^0 &	\alpha^{N-1} &	\alpha^{2(N-1)} &	\ldots &	\alpha^{(N-1)^2} \\
+		\end{array}
+		\right ]
+\end{displaymath}
+
+und f"ur die Inverse Fourier-Transformation gilt:
+\begin{displaymath}
+	\mathbf{F^{-1}} = \frac{1}{N}\cdotp\left [
+		\begin{array}{ccccc}
+			\alpha^0 &	\alpha^0 &	\alpha^0 &	\ldots &	\alpha^0 \\
+			\alpha^0 &	\alpha^{-1} &	\alpha^{-2} &	\ldots &	\alpha^{-1(N-1)} \\
+			\alpha^0 &	\alpha^{-2} &	\alpha^{-4} &	\ldots &	\alpha^{-2(N-1)} \\
+			\alpha^0 &	\alpha^{-3} &	\alpha^{-6}&	\ldots &	\alpha^{-3(N-1)} \\
+			\vdots &	\vdots &	\vdots &	\vdots &	\vdots \\
+			\alpha^0 &	\alpha^{-(N-1)} &	\alpha^{-2(N-1)} &	\ldots &	\alpha^{-(N-1)^2} \\
+		\end{array}
+		\right ]
+\end{displaymath}
+
+
+%\printindex
+
+\end{document}

@@ -1,0 +1,1610 @@
+% Computer Networks summary
+% written during my studies at ETH Zuerich
+% based on the lecture of Prof. Roger Wattenhofer 
+% Copyright (C) 2004  Patrick Pletscher
+
+\documentclass[10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage[bf]{caption2}
+\usepackage{multirow}
+
+% text below figures
+\renewcommand{\captionfont}{\small\itshape}
+
+% theorems, definitions
+\newtheorem{definition}{Definition}
+
+% dimensions of document
+\textwidth = 19 cm
+\textheight = 25 cm
+\oddsidemargin = -1.5 cm
+\evensidemargin = -1.5 cm
+\hoffset = 0.0 cm
+\marginparwidth = 0.0 cm
+\topmargin = -1.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0 cm
+
+% depth of toc
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+% informations about the document
+\title{Computer Networks - Summary}
+\author{Patrick Pletscher}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{Overview}
+
+\subsubsection{Internet standards}
+\begin{description}
+	\item[RFC] Request for comments
+	\item[IETF] Internet engineering Task force
+\end{description}
+
+\subsubsection{What's a protocol?}
+\begin{definition}[Protocol]
+	Protocols define format, order of msgs sent and received among network entities, and actions taken on msg transmisson, receipt.
+\end{definition}
+
+\subsubsection{Circuit Switching}
+
+End-end resources reserved for ''call''. Bandwith link is divided into "pieces":
+\begin{itemize}
+	\item Frequency  division
+	\item Time division
+\end{itemize}
+
+performance is guaranteed, ''piece'' can be idle and call setup is required.
+
+\subsubsection{Packet switching}
+
+Each end-end data stream divided into packets, this packets share network resources and each packet uses full link bandwith.\\
+
+Good: resource sharing, no call setup\\
+Bad: overhead, congestion control and protocols needed\\
+
+2 different routing approaches:
+\begin{itemize}
+	\item datagram network (destination address determines next hop)
+	\item virtual circuit network (each packet carries tag, which determines next hop)
+\end{itemize}
+
+\subsubsection{Delay in packet switched networks}
+
+\begin{itemize}
+	\item \textbf{Transmission delay}\\
+		$R$: link bandwith (bps)\\
+		$L$: packet length (bits)
+		\begin{displaymath}
+			t_T = \frac{L}{R}
+		\end{displaymath}
+	\item \textbf{Propagation delay}\\
+		$d$: length of physical link\\
+		$s$: propagation speed ($\sim 2\times 10^8\:m/s$)\\
+		\begin{displaymath}
+			t_P = \frac{d}{s}
+		\end{displaymath}
+	\item \textbf{Queuing delay}
+		$a$: average arrival rate (packets per second)\\
+		Arrival rate $\lambda = L\cdotp a \mbox{ (bps)}$\\
+		Service rate $\mu = R \mbox{ (bps)}$\\
+		Traffic intensity: $\rho = \lambda / \mu$\\
+		if $\rho \geq 1$: average delay grows infinitely
+\end{itemize}
+
+\subsubsection{WLAN}
+
+802.11b: 11 Mbps\\
+802.11a: 54 Mbps
+
+\subsubsection{Internet protocol stack}
+
+\begin{itemize}
+	\item application (FTP, SMTP)
+	\item transport (TCP, UDP)
+	\item network (IP, routing)
+	\item link (data transfer between neighboring network elements, ex: PPP, Ethernet)
+	\item physical
+\end{itemize}
+
+\subsubsection{ISO/OSI Reference Model}
+
+7 layers instead:\\
+Applications, Presentation, Session, Transport, Network, Data Link, Physical
+
+\section{Applications}
+
+\subsection{Internet transport protocols services}
+
+\subsubsection{TCP}
+
+\begin{itemize}
+	\item connection-oriented: setup required between client, server
+	\item reliable transport between sending an receiving process
+	\item flow control: sender won't overwhelm receiver
+	\item congestion control: throttle sender when network overloaded
+	\item does not provide timing or minimum bandwith guarantees
+\end{itemize}
+
+\subsubsection{UDP}
+
+\begin{itemize}
+	\item unreliable data transfer
+	\item does not provide connection setup, reliability, flow control, congestion control, timing or bandwith guarantee
+\end{itemize}
+
+\subsection{The Web}
+
+\subsubsection{HTTP protocol}
+
+\begin{enumerate}
+	\item client initiates TCP connection (creates socket) to server, port 80
+	\item server accepts TCP connection from client
+	\item HTTP messages exchanged between browser and Web server
+	\item TCP connection closed
+\end{enumerate}
+
+$\Rightarrow$ \textit{HTTP is ''stateless''} (server maintains no information about past client requests)
+
+\subsubsection{Non-persistent vs. persistent connections}
+
+\textbf{Non-persistent}:\\
+Used in HTTP/1.0. Server parses request, responds, closes TCP connection.\\
+
+\textbf{Persistent}:\\
+Used in HTTP/1.1. On same TCP connection: server parses request, responds, parses new request,...
+
+\subsubsection{HTTP message format: Request}
+
+\begin{verbatim}
+ Request = Req_command {Header_lines} crlf
+ Req_command = "GET" | "POST" | "HEAD"
+               sp Page Version crlf
+ Page = string
+ Version = "HTTP/1.0" | "HTTP/1.1"
+ Header_lines = string ":" sp string crlf
+\end{verbatim}
+
+\subsubsection{HTTP message format: Response}
+
+\begin{verbatim}
+ Response = Status_line {Header_lines} 
+            Data crlf crlf
+ Status_line = Version sp Statuscode
+ Statuscode = integer sp string
+\end{verbatim}
+
+Examples of status codes:\\
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Code} &		\textbf{Meaning} \\ \hline
+	1xx &			Information\\ \hline
+	2xx &			Success\\ \hline
+	3xx &			Redirection\\ \hline
+	4xx &			Client error\\ \hline
+	5xx &			Server error\\ \hline
+\end{tabular}
+
+\subsection{FTP}
+
+\subsubsection{seperate control and data connection}
+
+\begin{itemize}
+	\item FTP client contacts FTP server at port 21, specifying TCP as transport protocol
+	\item two parallel TCP connections opened (control, data)
+	\item FTP server maintains ''state'': current directory, earlier authentication
+\end{itemize}
+
+\subsection{Email}
+
+user agent sends email via SMTP to ''his'' server. This server sends the email to the server which is responsable for the To-Email address (also via SMTP).
+
+\subsubsection{SMTP}
+
+\begin{itemize}
+	\item uses TCP to reliably transfer email message from client to server, on port 25
+	\item direct transfer: sending server to receiving server
+	\item three phases of transfer (handshake, transfer of message)
+	\item command/response interaction
+	\item RFC 821
+	\item SMTP uses persistent connections
+\end{itemize}
+
+\subsubsection{Mail message format}
+
+A mail consists of the following parts:
+
+\begin{itemize}
+	\item \textbf{header lines} (e.g. To:, From:, Subject:), but this are not SMTP commands, like the header of a letter, whereas SMTP commands are like the address on the envelope.
+	\item blank line
+	\item \textbf{body} the ''message'', ASCII chars only
+\end{itemize}
+
+\subsubsection{MIME}
+
+MIME: multimedia mail extension, RFC 2045, 2056. Additional lines in message header are used to declare MIME content type.
+
+\begin{verbatim}
+ [...]
+ MIME-Version: 1.0
+ Content-Type: multipart/mixed; boundary=98766789
+
+ --98766789
+ Content-Transfer-Encoding: quoted-printable
+ Content-Type: text/plain
+
+ ASCII-Message
+ --98766789
+ Content-Transfer-Encoding: base64
+ Content-Type: image/jpeg
+
+ base64 encoded data ...
+ ... base64 encoded data
+ --98766789
+\end{verbatim}
+
+\subsubsection{Mail access protocols}
+
+For the retrieval from server you can use: POP, IMAP or HTTP
+
+\subsection{DNS: Domain Name System}
+
+A map from names to IP addresses. It is implemented in hierarchy of many name servers (distributed database).
+
+\begin{itemize}
+	\item local name servers
+		\begin{itemize}
+			\item each ISP, company has local (default) name server
+			\item host DNS query first goes to local name server
+		\end{itemize}
+	\item authoritative name server
+		\begin{itemize}
+			\item for a host: stores that host's IP address, name
+			\item can perform name/address translation for that host's name
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{DNS Iterated Query}
+
+Contacted server replies with name of server to contact (''I don't know this name, but ask this server''). By contrast the \textit{Recursive query} puts burden of name resolution on contacted name server.
+
+\subsubsection{DNS resource records}
+
+RR format: \verb#(name, ttl, class, type, value)#
+
+\begin{itemize}
+	\item Type = A
+		\begin{itemize}
+			\item \verb#name# is hostname
+			\item \verb#value# is IP address
+		\end{itemize}
+	\item Type = NS
+		\begin{itemize}
+			\item \verb#name# is a domain
+			\item \verb#value# is IP address of authorative name server for this domain
+		\end{itemize}
+	\item Type = CNAME
+		\begin{itemize}
+			\item \verb#name# is alias name for some ''canonical'' (the real) name
+			\item \verb#value# is IP canonical name
+		\end{itemize}
+	\item Type = MX
+		\begin{itemize}
+			\item \verb#value# is name of mail server associated with \verb#name#
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{DNS protocol, messages}
+
+\begin{tabular}{|c|c|}
+	\hline
+	identification &		flags \\ \hline
+	number of questions &		number of answer RRs \\ \hline
+	number of authority RRs &	number of additional RRs \\ \hline
+	\multicolumn{2}{|c|}{questions} \\ 
+	\multicolumn{2}{|c|}{(variable number of questions)} \\ \hline
+	\multicolumn{2}{|c|}{answers} \\ 
+	\multicolumn{2}{|c|}{(variable number of resource records)} \\ \hline
+	\multicolumn{2}{|c|}{authority} \\ 
+	\multicolumn{2}{|c|}{(variable number of resource records)} \\ \hline
+	\multicolumn{2}{|c|}{additional information} \\ 
+	\multicolumn{2}{|c|}{(variable number of resource records)} \\ \hline
+\end{tabular}
+
+In the 16 bit identification field is a number for the query stored, reply to sender uses same number. The flags field has the following flags: query or reply, recursion desired, recursion available, reply is authoritive.
+
+\subsection{Socket programming}
+
+\begin{definition}[Socket]
+	a host-local, application-created/owned, OS-controlled interface (a ''door'') into which application process can both send and receive messages to/from another (remote or local) application process.
+\end{definition}
+
+\subsubsection{TCP client}
+
+\begin{verbatim}
+ /*
+    send line to server and receive
+    modified line 
+ */
+ import java.io.*;
+ import java.net.*;
+
+ class TCPClient {
+   public static void main(String argv[]) throws
+    Exception
+   {
+     String sentence;
+     String modifiedSentence;
+
+     BufferedReader inFromUser =
+      new BufferedReader(new InputStreamReader
+      (System.in));
+     
+     Socket clientSocket =
+      new Socket("hostname", 6789);
+
+     DataOutputStream outToServer =
+      new DataOutputStream(clientSocket.
+      getOutputStream());
+
+     BufferedReader inFromServer =
+      new BufferedReader(new
+      InputStreamReader(
+      clientSocket.getInputStream());
+
+     sentence = inFromUser.readLine();
+
+     outToServer.writeBytes(sentence + '\n');
+
+     modifiedSentence = inFromServer.readLine();
+     
+     System.out.println("FROM SERVER: "
+      + modifiedSentence);
+
+     clientSocket.close;
+   }
+ }
+\end{verbatim}
+
+\subsubsection{TCP server}
+
+\begin{verbatim}
+ /*
+    receive a line a send it back, but 
+    uppercase
+ */
+
+ import java.io.*;
+ import java.net.*;
+
+ class TCPServer {
+   public static void main(String argv[]) throws
+    Exception
+   {
+     String clientSentence;
+     String capitilizedSentence;
+
+     ServerSocket welcomeSocket =
+      new ServerSocket(6789);
+
+     while(true) {
+       Socket connectionSocket = 
+        welcomeSocket.accept();
+       ServerThread thread =
+        new ServerThread(connectionSocket);
+       thread.run();
+     }
+   }
+
+   public class ServerThread extends Thread {
+     
+     private Socket connectionSocket;
+
+     public ServerThread(Socket connectionSocket)
+     {
+       this.connectionSocket = connectionSocket;
+     }
+       
+     public void run() {
+       BufferedReader inFromClient =
+        new BufferedReader(new
+        InputStreamReader(
+        connectionSocket.getInputStream()));
+
+       DataOutputStream outToClient =
+        new DataOutputStream(
+        connectionSocket.getOutputStream());
+
+       clientSentence = inFromClient.readLine();
+       
+       capitalizedSentence =
+        clientSentence.toUpperCase() + '\n';
+
+       outToClient.writeBytes(
+        capitalizedSentence);
+     }
+   }
+ }
+\end{verbatim}
+
+\subsubsection{UDP client}
+
+\begin{verbatim}
+ import java.io.*;
+ import java.net.*;
+
+ class UDPClient {
+   public static void main(String args[]) throws
+    Exception
+   {
+     BufferedReader inFromUser =
+      new BufferedReader(new
+      InputStreamReader(System.in));
+     
+     DatagramSocket clientSocket =
+      new DatagramSocket();
+
+     InetAddress IPAddress =
+      InetAddress.getByName("hostname");
+
+     byte[] sendData = new byte[1024];
+     byte[] receiveData = new byte[1024];
+
+     String sentence = inFromUser.readLine();
+
+     sendData = sentence.getBytes();
+
+     DatagramPacket sendPacket =
+      new DatagramPacket(sendData, sendData.length,
+      IPAddress, 9876);
+
+     clientSocket.send(sendPacket);
+
+     DatagramPacket receivePacket =
+      new DatagramPacket(receiveData,
+      receiveData.length);
+
+     clientSocket.receive(receivePacket);
+
+     String modifiedSentence =
+      new String(receivePacket.getData());
+
+     System.out.println("FROM SERVER:"
+      + modifiedSentence);
+     clientSocket.close();
+   }
+ }
+\end{verbatim}
+
+\subsubsection{UDP server}
+
+\begin{verbatim}
+ import java.io.*;
+ import java.net.*;
+
+ class UDPServer {
+   public static void main(String args[]) throws
+    Exception
+   {
+     DatagramSocket serverSocket =
+      new DatagramSocket(9876);
+
+     byte[] receiveData = new byte[1024];
+     byte[] sendData = new byte[1024];
+
+     while(true)
+     {
+       DatgramPacket rececivePacket =
+        new DatagramPacket(receiveData,
+        receiveData.length);
+
+       serverSocket.receive(receivePacket);
+
+       String sentence =
+        new String(receivePacket.getData());
+
+       InetAddress IPAddress =
+        receivePacket.getAddress();
+
+       int port = receivePacket.getPort();
+       
+       String capitalizedSentence =
+        sentence.toUpperCase();
+       
+       sendData =
+        capitalizedSentence.getBytes();
+       
+       DatagramPacket sendPacket =
+        new DatagramPacket(sendData,
+        sendData.length, IPAddress,
+        port);
+       
+       serverSocket.send(sendPacket);
+     }
+   }
+ }
+\end{verbatim}
+
+
+\section{Transport}
+
+\subsection{Multiplexing/Demultiplexing}
+
+\begin{definition}[Demultiplexing]
+	Delivering received segments to correct application layer processes.
+\end{definition}
+
+\begin{definition}[Multiplexing]
+	Gathering data from multiple application processes, enveloping data with header (later used for demultiplexing).
+\end{definition}
+
+multiplexing/demultiplexing is based on sender, receiver port numbers, IP addresses.
+
+\subsection{UDP: User Datagram Protocol}
+
+\subsubsection{UDP Segment Structure}
+
+Header fields are 16 bits.\\
+
+%\begin{tabular}{|c|c|}
+%	\hline
+%	source port \# &			dest port \# \\ \hline
+%	length &			checksum \\ \hline
+%	\multicolumn{2}{|c|}{} \\ 
+%	\multicolumn{2}{|c|}{Application} \\ 
+%	\multicolumn{2}{|c|}{data} \\ 
+%	\multicolumn{2}{|c|}{message} \\
+%	\multicolumn{2}{|c|}{} \\ \hline
+%\end{tabular}\\
+
+\scriptsize
+\begin{verbatim}
+   0      7 8     15 16    23 24    31  
+   +--------+--------+--------+--------+ 
+   |     Source      |   Destination   | 
+   |      Port       |      Port       | 
+   +--------+--------+--------+--------+ 
+   |                 |                 | 
+   |     Length      |    Checksum     | 
+   +--------+--------+--------+--------+ 
+   |                                     
+   |          data octets ...            
+   +---------------- ...                 
+\end{verbatim}
+\normalsize
+
+length, in bytes of UDP segment, including header. The checksum is calculated by adding the segment contents, whereas treating segment contents as sequence of 16-bit integers. If there is a carry, forget the carry and add 1 to the result.
+\begin{displaymath}
+	 105C8 \rightarrow 05C9 
+\end{displaymath}
+After that the 1's complement of it (e.g. $110 \Rightarrow 001$) is calculated and the result is saved in the UDP checksum field. To detect errors the receiver can calculate the sum by adding all 16-bit integers (including the checksum field). If the result is $11\ldots 1$ then no errors are detected, otherwise there occured an error.
+
+\subsection{Reliable data transfer}
+
+$[$TODO$]$
+
+\subsubsection{stop-and-wait operation}
+
+send one packet and wait until ACK'ed.
+
+\begin{displaymath}
+	\mbox{Utilization } U = \frac{L/R}{RTT+L/R}
+\end{displaymath}
+
+RTT: Round trip time (time to receiver and back)
+
+\subsubsection{Pipelined protocols}
+
+Pipeling: sender allows multiple, ''in-flight'', yet-to-be-ack'ed packets. So the range of seq numbers must be increased and buffering at sender and/or receiver is required.\\
+
+There are two generic forms of pipelined protocols: Go-Back-N and Selective Repeat.
+
+\subsubsection{Go-Back-N}
+
+ACKs all packets up to and including sequence number $n$ (= cumulative ACK).
+
+\begin{itemize}
+	\item Sender
+		\begin{itemize}
+			\item ''Window'' of up to $N$ consecutive unack'ed packets allowed
+			\item timer for each in-flight packet
+			\item timeout($n$): retransmit packet $n$ and all higher seq\# packets in window
+		\end{itemize}
+	\item Receiver
+		\begin{itemize}
+			\item ACK-only: always send ACK for correctly-received pkt with highest \textit{in-order} sequence number, this may generate duplicate ACKs.
+			\item out-of-order packet are discard (no receiver buffering) and packet with highest in-order sequence number is re-ACK'ed.
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Selective Repeat}
+
+\textbf{Sender}
+\begin{itemize}
+	\item Get data from layer above: If next available sequence number in window, send packet.
+	\item timeout($n$): resend packet $n$, restart timer.
+	\item ACK($n$) in $[\mbox{sendbase, sendbase}+N]$: mark packet $n$ as received. If n smallest unACKed pkt, advance window base to next unACKed sequence number.
+\end{itemize}
+
+\textbf{Receiver}
+\begin{itemize}
+	\item pkt $n$ in $[\mbox{rcvbase, rcvbase}+N-1]$: send ACK($n$), if it is out of order: buffer, otherwise: deliver (also buffered in-order pkt) and advance window to next not-yet-received packet.
+	\item pkt $n$ in $[\mbox{rcvbase-N, rcvbase-1}]$: ACK($n$)
+	\item otherwise: ignore
+\end{itemize}
+
+\subsection{TCP}
+
+Is pipelined (send \& receive buffers).
+
+\subsubsection{TCP segment structure}
+
+%\begin{tabular}{|c|c|}
+%	\hline
+%	source port \# &	dest port \# \\ \hline
+%	\multicolumn{2}{|c|}{sequence number}\\ \hline
+%	\multicolumn{2}{|c|}{ack number}\\ \hline
+%	FLAGS &			rcvr window size \\ \hline
+%	checksum &		ptr urgent data \\ \hline
+%	\multicolumn{2}{|c|}{Options (variable length)}\\ \hline
+%	\multicolumn{2}{|c|}{} \\ 
+%	\multicolumn{2}{|c|}{Application} \\ 
+%	\multicolumn{2}{|c|}{data} \\ 
+%	\multicolumn{2}{|c|}{message} \\
+%	\multicolumn{2}{|c|}{} \\ \hline
+%\end{tabular}\\\\
+
+\scriptsize
+\begin{verbatim}
+    0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |          Source Port          |       Destination Port        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Acknowledgment Number                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Data |           |U|A|P|R|S|F|                               |
+   | Offset| Reserved  |R|C|S|S|Y|I|          Rcvr Window          |
+   |       |           |G|K|H|T|N|N|                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           Checksum            |         Urgent Pointer        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             data                              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+\end{verbatim}
+\normalsize
+
+The smallest fields in the table above are 16-bit. The counting (for the \textit{seq number} and \textit{ack number}) is done by bytes of data. The \textit{Rcvr Window} holds the \# of bytes the rcvr is willing to accept (flow control). The \textit{checksum} is calculated like in UDP. In the FLAG field the following information is stored:\\
+\begin{itemize}
+	\item \textit{header length} tells how many 32-bit words are contained in the TCP header. (4 bits)
+	\item \textit{not used}: 6 bits
+	\item \textit{Urgent pointer bit} is used to indicate a byte offset from the current sequence number at which urgent data are to be found (generally not used)
+	\item \textit{ACK bit}: is set to 1 to indicate that ACK number is valid
+	\item \textit{Push bit}: The receiver is requested to deliver the data to the application upon arrival and not to buffer it.
+	\item \textit{Reset connection bit}
+	\item \textit{SYN bit}: used to establish connections. The connection request has SYN=1 and ACK=0.
+	\item \textit{FIN bit}: used to realease a connection
+\end{itemize}
+
+
+\subsubsection{TCP sequence numbers and ACKs}
+
+Sequence numbers: byte stream ''number'' of first byte in segment's data.\\
+ACKs: Sequence number of next byte expected from other side. Cumulative ACK.
+
+\subsubsection{TCP Round Trip Time and Timeout}
+
+\begin{displaymath}
+	\mbox{EstimatedRTT} = (1-\alpha)\cdotp \mbox{Estimated RTT}+\alpha\cdotp\mbox{SampleRTT}
+\end{displaymath}
+
+This is a so called Exponential weighted moving average, a typical value: $\alpha = 0.125$.\\
+
+Setting the timeout:
+\begin{eqnarray}
+	\mbox{Timeout} &	= &	\mbox{EstimatedRTT} + 4\cdotp\mbox{Deviation} \nonumber \\
+	\mbox{Deviation} &	= &	(1-\beta)\cdotp \mbox{Deviation} \nonumber \\
+	 &			&	+ \beta\cdotp|\mbox{SampleRTT}-\mbox{EstimatedRTT}| \nonumber
+\end{eqnarray}
+
+\subsubsection{TCP: Sender}
+
+\begin{verbatim}
+ NextSeqNum = InitialSeqNum
+ SendBase = InitialSeqNum
+
+ loop(forever){
+   switch(event)
+
+   event: data received from application above
+     create TCP segment with sequence
+      number NextSeqNum
+     if (timer currently not running)
+       start timer
+     pass segment to IP
+     NextSeqNum = NextSeqNum + length(data)
+
+   event: timer timeout
+     retransmit not-yet-ack'ed segment with
+      smallest sequence number
+     start timer
+
+   event: ACK received, with ACK field value of y
+     if (y > SendBase){
+       SendBase = y
+       if (there are currently not-yet-ack'ed
+        segments)
+         start timer
+     }
+ }
+\end{verbatim}
+
+\subsubsection{TCP ACK generation}
+
+\begin{tabular}{p{4cm}|p{4cm}}
+	Event &		TCP Receiver action \\ \hline \hline
+	in-order segment arrival, &	\multirow{3}{4cm}{delayed ACK. Wait up to 500ms for next segment. If no segment, send ACK} \\ 
+	no gaps, &	\\
+	everything else already ACKed &	\\ \hline
+	in-order segment arrival, &	\multirow{4}{4cm}{immediately send single cumulative ACK, ACKing both in-order segments} \\ 
+	no gaps, &	\\
+	 &	\\
+	one delayed ACK pending &	\\ \hline
+	out-of-order segment arrival &	\multirow{3}{4cm}{send duplicate ACK, indicating seq. \# of next expected byte} \\ 
+	higher-than-expect seq \#, &	\\
+	gap detected &	\\ \hline
+	arrival of segment that partially or completely fills gap &	immediate ACK if segment starts at lower end of gap \\ \hline
+\end{tabular}
+
+\subsubsection{Fast Retransmit}
+
+Hack: If sender receives 3 ACKs for the same data, it supposes that segment after ACKed data was lost.
+
+\subsubsection{TCP Flow Control}
+
+\begin{definition}[Flow control]
+	sender won't overrun receiver's buffers by transmitting too much, too fast.
+\end{definition}
+
+\verb#RcvBuffer#: size of TCP Receive Buffer\\
+\verb#RcvWindow#: amount of spare room in Buffer\\
+
+Receiver: explicitly informs sender of (dynamically changing) amount of free buffer space, for that the \verb#RcvWindow# field in TCP segment is used.\\
+
+Sender: keeps the amount of transmitted, unACKed data less than most recently received \verb#RcvWindow#
+
+\subsubsection{TCP Connection Management}
+
+\begin{itemize}
+	\item Opening connection
+		\begin{enumerate}
+			\item client host sends TCP SYN segment to server. This specifies initial seq. number and contains no data.
+			\item server host receives SYN, replies with SYNACK segment. The server will allocate buffers and specifies server initial seq. \#.
+			\item client receives SYNACK, replies with ACK segment, which may contain data.
+		\end{enumerate}
+	\item Closing connection
+		\begin{enumerate}
+			\item client end system sends TCP FIN control segment to server
+			\item server receives FIN, replies with ACK. Goes into CLOSEWAIT state, sends FIN.
+			\item client receives FIN, replies with ACK. Enters ''timed wait'' - will respond with ACK to FINs
+			\item server receives ACK. Connection closed.
+		\end{enumerate}
+\end{itemize}
+
+
+\subsection{Principles of congestion control and Queuing theory}
+
+\begin{definition}[Congestion]
+	Too many sources sending too much data too fast for network to handle.
+\end{definition}
+
+
+\subsubsection{Some terms}
+\begin{itemize}
+	\item Each costumer spends T seconds in the box.
+	\item We assume that the system was empty at time $t=0$.
+	\item $A(t)$: Number of arrivals from time $t=0$ to time $t$.
+	\item $D(t)$: Number of departures
+	\item $N(t)$: number of costumers in the system at time $t$. $N(t) = A(t)-D(t)$
+	\item Throughput: average number of costumers/messages per second that pass through the system.
+	\item Arrival Process: $a_1$: $1^{\mbox{st}}$ arrival in system. $2^{\mbox{nd}}$ comes $a_2$ times later. So the $n^{\mbox{th}}$ customer comes at time $a_1+a_2+\ldots+a_n$.
+\end{itemize}
+
+\subsubsection{Arrivals, Departures, Throughput}
+
+The long-term arrival rate $\lambda$ is defined as:
+\begin{displaymath}
+	\lambda = \lim_{t\to\infty} \frac{A(t)}{t} \quad \mbox{cust./sec}
+\end{displaymath}
+
+And the throughput $\mu$:
+\begin{displaymath}
+	\mu = \lim_{t\to\infty}\frac{D(t)}{t} \quad \mbox{cust./sec}
+\end{displaymath}
+the average service time is $1/\mu$.
+
+\subsubsection{Offered Load (or Traffic Intensity)}
+
+Offered load is defined as:
+\begin{displaymath}
+	\rho = \frac{\lambda}{\mu}
+\end{displaymath}
+
+The system is stable if $\rho < 1$.
+
+\subsubsection{Little's Law}
+
+$E[N]$: average number of customers\\
+$E[T]$: average time spent in system\\
+
+\begin{displaymath}
+	E[N] = \lambda\cdotp E[T]
+\end{displaymath}
+
+\subsubsection{Binomial Random Variables \& Poisson RV}
+
+Suppose we had $n$ trials. Then for a series of trials, a binomial RV with parameter $(n,p)$ is the probability of having exactly $i$ arrivals out of $n$ trials with independent arrival probability $p$:
+\begin{displaymath}
+	P[X=i] = \binom{n}{i}p^i(1-p)^{n-i}
+\end{displaymath}
+
+Binomial RV can be approximated with Poisson RV. With $\lambda_{p} = np$, the distribution of a Poisson RV is
+\begin{displaymath}
+	P[X=i]=e^{-\lambda_{p}}\frac{\lambda_{p}^i}{i!}
+\end{displaymath}
+The mean is $\lambda_{p}$.\\
+
+The number of events occuring in any fixed interval of length $t$ is
+\begin{displaymath}
+	P[N(t)=k]=e^{-\lambda t}\frac{(\lambda t)^k}{k!}
+\end{displaymath}
+
+\subsubsection{Exponential RV / Memoryless Property}
+
+Modeling of the time between occurence of events, it satifies the ''memoryless property''.\\
+
+The probability of having to wait at least $h$ seconds is
+\begin{displaymath}
+	P[X>h] = e^{-\lambda h}
+\end{displaymath}
+
+\subsubsection{Kendall Notation}
+
+Queuing systems are classified by a specific notation denoting:
+\begin{enumerate}
+	\item The customer arrival pattern
+	\item The service time distribution
+	\item The number of servers
+	\item The maximum number of customers in the system (std. = $\infty$)
+	\item Calling population (std. = $\infty$)
+	\item Queuing discipline (FIFO, LIFO, etc.; std. = $\infty$)
+\end{enumerate}
+
+1 and 2 can be either: M = Markov (Poisson or Exponential), D = Deterministic, $E_k$ = Erlang with param. k, G = General.
+
+\subsubsection{M/M/1 Queue}
+
+The probability that an M/M/1 system is not idle is $\rho$.\\
+
+\begin{displaymath}
+	E[A(t)] = \lambda t \mbox{ and } E[D(t)] = \mu t
+\end{displaymath}
+
+Markovian Chains are used to describe such models. The equilibrium must balance:
+\begin{displaymath}
+	(\lambda p_i) t = (\mu p_{i+1})t \rightarrow \rho p_i = p_{i+1}
+\end{displaymath}
+
+In the equilibrium, the number of customers in the system is
+\begin{displaymath}
+	E[N] = \frac{\rho}{1-\rho} 
+\end{displaymath}
+
+and the mean time in the system
+\begin{displaymath}
+	E[T] = \frac{1}{\mu(1-\rho)}
+\end{displaymath}
+
+\subsubsection{Approaches towards congestion control}
+
+Two types of approaches usually used:
+\begin{itemize}
+	\item \textbf{End-end congestion control}
+		\begin{itemize}
+			\item no explicit feedback about congestion from network
+			\item congestion inferred from end-system observed loss, delay
+			\item approach taken by TCP
+		\end{itemize}
+	\item \textbf{Network-assisted cong. control}\\ 
+		routers provide feedback to end systems
+		\begin{itemize}
+			\item single bit indicating congestion (used in SNA, DECbit, TCP/IP ECN, ATM).
+			\item explicit rate sender should send at.
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Example for Network-Assisted Cong. Control: ATM ABR}
+
+ABR: available bit rate (so called ''elastic service''). If sender's path ''underloaded'', the sender should use available bandwith and if sender's path congested, the sender is throttled to minimum guaranteed rate. \\
+
+RM (resource management cells). This cells were sent by the sender interspersed with data cells. The following bits in RM cell were set by switches (''network assisted''): NI bit (no increase in rate = mild congestion) and CI bit (congestion indication). This RM cells were returned to sender by receiver.\\
+
+There is also a two-byte ER (explicit rate) field in RM cell, a congested switch may lower this ER value in cell and the sender's rate is the minimum supportable rate on path.\\
+
+EFCI bit in data cells: set to 1 in congested switch. If data cell preceding RM cell has EFCI set, sender sets CI bit in returned RM cell.
+
+\subsubsection{TCP Congestion Control}
+
+An end-end control (no network assistance) approach. The transmission rate is limited by congestion window size, \verb#Congwin#, over segments.\\
+
+$w$ segments, each with $MSS$ bytes sent in one $RTT$:
+\begin{displaymath}
+	\mbox{throughput} = \frac{w\cdotp MSS}{RTT} \quad \mbox{Bytes/sec}
+\end{displaymath}
+
+This TCP congestion control works by ''probing'' for usable bandwith. Ideally it is transmitted as fast as possible (=\verb#Congwin# as large as possible) without loss. The \verb#Congwin# is increased until loss. If loss occurs the \verb#Congwin# is decreased and then the probing restarts.\\
+
+This method can be divided into two ''phases'': slow start and congestion avoidance. An important variable is the \verb#Treshold# which defines where TCP switches from slow start to congestion avoidance.
+
+\subsubsection{TCP Slowstart}
+
+\begin{verbatim}
+ initialize: Congwin = 1
+ for (each segment ACKed)
+   Congwin++
+ until (loss event OR Congwin > Threshold)
+\end{verbatim}
+
+The \verb#Congwin# is exponential increased (per RTT).
+
+\subsubsection{TCP Congestion Avoidance}
+
+\begin{verbatim}
+ /* slowstart is over */
+ /* Congwin > Threshold */
+ Repeat {
+   w = Congwin
+   every w segments ACKed:
+     Congwin++
+ } until (loss event)
+ threshold = Congwin/2
+ Congwin = 1
+ Go back to slowstart
+\end{verbatim}
+
+\subsubsection{TCP Fairness}
+
+\begin{definition}[Max-Min Fairness]
+ A set of flows is max-min fair if and only if no flow can be increased without decreasing a smaller or equal flow.
+\end{definition}
+
+How do we calculate a max-min fair distribution?
+\begin{enumerate}
+	\item Find a bottleneck resource $r$ (router or link), that is, find a resource where the resource capacity $c_r$ divided by the number of flows that use the resource ($k_r$) is minimal.
+	\item Assign each flow using resource $r$ the bandwith $c_r/k_r$.
+	\item Remove the $k$ flows from the problem and reduce the capacity of the other resources they use accordingly.
+	\item If not finished, go back to step 1.
+\end{enumerate}
+
+Is TCP Fair? Yes and no. TCP has an additive increase, multipliticative (AIMD) congestion control algorithm what's good.
+
+\subsubsection{TCP latency modeling}
+
+$W$: fixed congestion window with $W$ segments\\
+$S$: MSS (bits)\\
+$O$: Object size (bits)\\
+
+Here it is assumed that no loss and no retransmission occur.
+
+\begin{itemize}
+	\item $WS/R > RTT + S/R$:
+		\begin{displaymath}
+			\mbox{latency} = 2\cdotp RTT + O/R
+		\end{displaymath}
+	\item $WS/R < RTT + S/R$:
+		\begin{eqnarray}
+			\mbox{latency} &	= &	2\cdotp RTT + O/R \nonumber\\
+			&			&	+ (K-1)[S/R + RTT - WS/R], \nonumber \\
+			&			&	\mbox{ with } K= O/WS \nonumber
+		\end{eqnarray}
+\end{itemize}
+
+\section{Network Layer}
+
+\subsection{Virtual circuits and Datagram networks}
+
+Virtual circuits need a call setup on the network layer while Datagram networks don't need a such. In today's Internet Datagram networks are used.
+
+\subsection{Routing}
+
+\begin{definition}[Routing protocol]
+	Goal: determine ''good'' path (sequence of routers) through network from source to destination.
+\end{definition}
+
+\subsubsection{Routing Algorithm classification}
+
+Global or decentralized?
+\begin{itemize}
+	\item Global
+		\begin{itemize}
+			\item all routers have complete topology, link cost info.
+			\item ''link state'' algorithms
+		\end{itemize}
+	\item Decentralized
+		\begin{itemize}
+			\item router knows physically-connected neighbors, link costs to neighbors
+			\item iterative process of computation, exchange of info with neighbors
+			\item ''distance vector'' algorithms
+		\end{itemize}
+\end{itemize}
+
+Static or Dynamic?
+\begin{itemize}
+	\item Static
+		\begin{itemize}
+			\item routes change slowly over time
+		\end{itemize}
+	\item Dynamic
+		\begin{itemize}
+			\item routes change more quickly. Periodic link update in response to link cost changes. 
+		\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Single Source Shortest Path: Algorithm idea}
+
+There are 3 groups of nodes in the network
+\begin{itemize}
+	\item To the green nodes we know the shortest path
+	\item The blue nodes are directly reachable from the green nodes
+	\item All other nodes are black
+\end{itemize}
+
+Idea
+\begin{itemize}
+	\item Start with source s as the only green node.
+	\item Color the best blue node green, one after another, until all nodes are green.
+\end{itemize}
+
+\subsubsection{Dijkstra's Algorithm (for source s and edge costs c)}
+
+\small
+\begin{verbatim}
+ s.visited := true; s.distance := 0;
+ s.pred := s; // init source s
+
+ for all nodes v in V\s do // init all other nodes
+   v.visited := false; v.distance := infty;
+   v.pred := undefined;
+ 
+ B := {} // B is the set of blue nodes
+ for all nodes v in V\s that are direct neighbors
+  of s
+   B := B + {v}; v.distance := c(s,v);
+   v.pred := s;
+
+ while B not empty do // always choose best
+  // blue node v
+   v := node in B with minimum v.distance;
+   B := B - {v};
+   v.visited := true;
+   for all neighbors w of v with 
+    w.visited = false; // update neighbors of v
+     if w not in B then
+       B := B + {w};
+       w.distance := v+c(v,w); w.pred := v;
+     if w in B then
+       if (v.distance+c(v,w) < w.distance) then
+         w.distance := v.distance+c(v,w);
+	 w.pred := v;
+ endwhile
+ 
+\end{verbatim}
+\normalsize
+
+
+\subsubsection{Dijkstra's algorithm complexity}
+
+$n$ nodes, $m$ directed edges.\\
+
+With a Fibonacci-Heap, one can implement the whole algorithm in $O(m+n\log n)$.
+
+\subsection{Distance-Vector Routing}
+
+Each node communicates only with direct neighbors, and ''asks'' them how long it takes from them to a destination.
+
+\subsubsection{From Distance Vector to Routing table}
+
+A node $x$ has for each neighbor $z$ an entry in distance vector for each destination $y$; $D^x(y,z)$ denotes the distance from $x$ to $y$ through $z$. The best route for a given destination is marked by
+\begin{eqnarray}
+	D^x(y) &	= &	\min D^x (y,z) \nonumber\\
+	D^x(y,z) &	= &	c(x,z) + D^x(y) \nonumber
+\end{eqnarray}
+
+Each node notifies neighbors \textit{only} when its least cost path to any destination changes. But this can lead to the famous Count-to-infinity problem.
+
+\subsubsection{Hierarchical Routing}
+
+Aggregate routers into groups, ''autonomous systems'' (AS). Intra-AS and Inter-AS.
+
+\subsection{The Internet Network Layer}
+
+Different protocols: Routing protocols, IP protocol, ICMP protocol.
+
+\subsubsection{IP Addressing: CIDR}
+
+Classless InterDomain Routing. The network portion of address is of arbitary length. The address format is: $a.b.c.d/x$ where $x$ denotes the number of bits in network portion of address.\\
+
+Example: 
+\begin{displaymath}
+	\underbrace{11001000\:00010111\:0001000}_{\mbox{network part}}\underbrace{000000000}_{\mbox{host part}} = 200.23.16.0/23
+\end{displaymath}
+
+\subsubsection{Getting a datagram from source to destination}
+
+If destination is in different network: look in routing table for next hop to destination, link layer sends it to this hop.
+
+\subsubsection{IP datagram format}
+
+\scriptsize
+\begin{verbatim}
+    0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Version|  IHL  |Type of Service|          Total Length         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Identification        |Flags|      Fragment Offset    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Time to Live |    Protocol   |         Header Checksum       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Source Address                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Destination Address                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+\end{verbatim}
+\normalsize
+
+IHL: Header length in bytes.\\
+Total Length: total datagram length (bytes).\\
+the second line is used for fragmentation, reassembly\\
+Protocol: is the protocol on the upper layer (e.g. TCP)\\
+The checksum is calculated like in UDP and TCP.
+
+\subsubsection{IP Fragmentation and Reassembly}
+
+Network links have MTU (max. transmission unit), which denotes the largest possible link-level frame. Large IP datagrams are divided (''fragmented'') within net if it is necessary. They were only ''reassembled'' at final destination.\\
+
+Example: 
+\scriptsize
+\begin{verbatim}
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | length=4000 | ID=x  | fragflag = 0  | offset = 0              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | length=1500 | ID=x  | fragflag = 1  | offset = 0              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | length=1500 | ID=x  | fragflag = 1  | offset = 1480           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | length=1040 | ID=x  | fragflag = 0  | offset = 2960           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+\end{verbatim}
+\normalsize
+
+\subsection{ICMP: Internet Control Message Protocol}
+
+used by hosts, routers, gateways to communicate network-level information. It is an network-layer ''above'' IP, ICMP msgs carried in IP datagrams.
+
+\subsection{DHCP}
+
+Client sends "DHCP discover" to broadcast (255.255.255.255) (src-port 68, dest-port 67), "DHCP offer" back from server to broadcast (src-port 67, dest-port 68) here the IP address x is offered, "DHCP request" from host to broadcast (src-port 68, dest-port 67), "DHCP ack" from server to host with IP address x.
+
+\subsection{NAT: Network Address Translation}
+
+\textit{outgoing datagrams}: replace (source IP address, port \#) of every outgoing datagram to (NAT IP address, new port \#), the remote clients will respond using (NAT IP address, new port \#) as destination addr.\\
+
+\textit{remember}: (in NAT translation table) every (source IP address, port \#) to (NAT IP address, new port \#) translation pair.\\
+
+\textit{incoming datagrams}: replace (NAT IP address, new port \#) in dest fields of every incoming datagram with corresponding (source IP address, port \#) stored in NAT table.
+
+\subsection{Intra-AS Routing}
+
+A.k.a Interior Gateway Protocols (IGP).\\
+
+Most common IGPs: RIP (= Routing Information Protocol), OSPF (Open Shortest Path First), IGRP (Interior Gateway Routing Protocol).
+
+\subsubsection{RIP}
+
+Distance vector algorithm. Distance metric: number of hops. The distance vectors are exchanged every 30 sec via ''advertisement''. In each advertisement: route to up to 25 destination networks within AS.\\
+
+If no advertisement heard after 180 sec $\rightarrow$ neighbor/link declared dead.
+\begin{itemize}
+	\item routes via neighbor invalidated
+	\item new advertisements sent to neighbors
+	\item poison reverse used to prevent ping-pong loops. If $Z$ routes through $Y$ to get to $X$: $Z$ tells $Y$ its ($Z$'s) distance to $X$ is infinite (so $Y$ won't route to $X$ via $Z$).
+\end{itemize}
+
+\subsubsection{RIP Table processing}
+
+RIP routing tables managed by \textit{application-level} process called route-d. Advertisements sent in UDP packets, periodically repeated.
+
+\subsection{OSPF (Open Shortest Path First)}
+
+Uses Link State algorithm, route computation using Dijkstra's algorithm, LS packet dissemination (=Ausstreuung).\\
+
+Security: all OSPF messages authenticated, so no malicious intrusion. TCP connections used.
+
+\subsection{Inter-AS routing}
+
+\subsubsection{BGP}
+
+A path vector protocol. Messages exchanged using TCP.
+
+\begin{enumerate}
+	\item Receive BGP update (announce or withdrawal) from a neighbor.
+	\item Update routing table
+	\item Does update affect active route? (Loop detection with information about the whole path, which neighbor sends; policy). If yes, send update to all neighbors that are allowed by policy.
+\end{enumerate}
+
+\subsubsection{BGP convergence}
+
+If a link \textit{comes up}, the convergence time is in the order of time to forward a message on the \textit{shortest path}.\\
+
+If a link \textit{goes down}, the convergence time is in the order of time to forward a message on the \textit{longest path}.\\
+
+A "cause tag" attachted to the withdrawal message identifying the failed link/node reduces the convergence time to the shortest path.
+
+\subsection{Router Architecture Overview}
+
+Two key router functions:
+\begin{itemize}
+	\item run routing algorithms/protocols
+	\item switch datagrams from incoming to outgoing link.
+\end{itemize}
+
+\subsubsection{Input Port Functions}
+
+Decentralized switching
+\begin{itemize}
+	\item given datagram dest., lookup output port using routing table in input port memory
+	\item goal: complete input port processing at ''line speed''
+	\item queuing: if datagrams arrive faster than forwarding rate into switch fabric
+\end{itemize}
+
+\subsection{IPv6}
+
+\scriptsize
+\begin{verbatim}
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Version| Traffic Class |           Flow Label                  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Payload Length        |  Next Header  |   Hop Limit   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   +                                                               +
+   |                                                               |
+   +                         Source Address                        +
+   |                           (128 bits)                          |
+   +                                                               +
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   +                                                               +
+   |                                                               |
+   +                      Destination Address                      +
+   |                           (128 bits)                          |
+   +                                                               +
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+\end{verbatim}
+\normalsize
+
+Next header: identify upper layer protocol for data.
+
+\section{Link layer}
+
+\subsection{Implementation}
+
+Link layer implemented in ''adapter'' (a.k.a. NIC).
+
+\subsection{Error Detection}
+
+\scriptsize
+\begin{verbatim}
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           D           |    EDC    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+\end{verbatim}
+\normalsize
+
+EDC : Error Detection and Correction bits (redundancy)\\
+D : Data protected by error checking, may include header fields.
+
+\subsubsection{Parity Checking}
+
+Only one bit. To detect single bit errors. Is set to 1 if total sum of 1's in data is even, otherwise 0.
+
+\subsubsection{Cyclic Redundancy Code}
+
+Generator polynomial $G(x) = x^{16}+x^{12}+x^5+1$.\\
+Let the whole frame (D+EDC) be polynomial $T(x)$.\\
+
+Idea: fill EDC (CRC) field such that $T(x) \mod G(x) = 0$.\\
+
+How to divide with polynomials? Example with $G(x)=x^2+1(=101)$\\
+\begin{verbatim}
+11101100 / 101 = 110110, Remainder 10
+ 100
+  011
+   111
+    100
+     010
+\end{verbatim}
+
+The subtraction is an XOR, so there is no add carry. You can only divide if the divisor is of same length.\\
+
+How to fill EDC: Calculate remainder of $D \parallel \underbrace{0\ldots 0}_{|G| -1}$ divided by $G(x)$ and afterwards T becomes:
+\begin{displaymath}
+	D \parallel D \mod G(x)
+\end{displaymath}
+
+\subsection{Multiple Access Links and Protocols}
+
+\begin{itemize}
+	\item point-to-point (single wire; e.g. PPP, SLIP)
+	\item broadcast (shared wire or medium; e.g. Ethernet, WLAN)
+	\item switched (e.g. switched Ethernet, ATM)
+\end{itemize}
+
+\subsubsection{Channel Partioning: Frequency Division Multiplex (FDM)}
+
+Seperation of the whole spectrum into smaller frequency bands. A channel gets a certain band of spectrum for the whole time. Example: broadcast radio.
+
+\subsubsection{Channel Partioning: Time Division Multiplex (TDM)}
+
+A channel gets the whole spectrum for a certain amount of time. Example: Ethernet.
+
+\subsubsection{Channel Partitioning: Time/Frequency Division Multiplex}
+
+A channel gets a certain frequency band for some time. Example: GSM.
+
+\subsubsection{Channel Partioning: Code Division Multiplexing (CDM)}
+
+Each channel has a unique code. All channels use the same spectrum at the same time. Example: UMTS.
+
+
+\subsection{Multiple Access Control (MAC) Protocols}
+
+Distributed algorithm that determines how stations share channel, i.e. determine when station can transmit. The communcation about channel sharing must use channel itself.
+
+\subsubsection{''Taking Turns'' MAC protocols}
+
+Polling
+\begin{itemize}
+	\item master node ''invites'' slave nodes to transmit in turn
+	\item Request to Send, Clear to Send messages
+	\item concerns: polling overhead, latency, single point of failure (master)
+\end{itemize}
+
+Token passing (Token Ring)
+\begin{itemize}
+	\item control token passed from one node to next sequentially
+	\item token message
+	\item concerns: token overhead, latency, single point of failure (token)
+\end{itemize}
+
+\subsubsection{''Taking Turns'' Protocols: Round Robin}
+
+\begin{itemize}
+	\item Round robin protocol: station $k$ sends after station $k-1 (\mod n)$
+	\item If a station does not need to transmit data, then it sends $\varepsilon$
+	\item There is a maximum message size $m$ that can be transmitted
+\end{itemize}
+
+\subsection{Random Access protocols}
+
+\begin{itemize}
+	\item When node has packet to send: transmit at full channel data rate $R$, no a priori coordination among nodes
+	\item Two or more transmtting nodes $\rightarrow$ ''collision''
+	\item Random access MAC protocol specifies how to detect collisions and how to recover from collisions.
+	\item Examples: ALOHA and variants, Backoff protocols (CSMA)
+\end{itemize}
+
+\subsubsection{Slotted Aloha}
+
+\begin{itemize}
+	\item Time is divided into equal size slots
+	\item Node with new arriving packet: transmit at beginning of next slot
+	\item If collision: retransmit packet in future slots with probability $p$, until successful
+\end{itemize}
+
+In slotted aloha a station can transmit successfully with probability at least $\frac{1}{e}$.\\
+
+How quickly can an application send packets to the radio transmission unit?\\
+The probability that a new packet is received by the buffer is $\lambda$; the probability that sending succeeds is $\mu = 1/e$, for any time slot. To keep the queue bounded we need $\rho = \lambda / \mu < 1$, thus $\lambda < 1/e$. This is for M/M/1.
+
+\subsubsection{Adaptive slotted aloha}
+
+Idea: change the access probability with the number of stations.\\
+
+Idea: Try to estimate the number of stations
+\begin{itemize}
+	\item If you see that nobody sends, increase $p$.
+	\item If you see that more than one sends, decrease $p$.
+\end{itemize}
+
+\subsubsection{Pure ALOHA}
+
+Packet needs transmission:  send without awaiting for beginning of slot.\\
+
+The rate is half of the slotted ALOHA.
+
+\subsubsection{Demand Assigned Multiple Access (DAMA)}
+
+Reservation:
+\begin{itemize}
+	\item a sender reserves a future time-slot
+	\item sending within this reserved time-slot is possible without collision
+	\item reservation also causes higher delays
+	\item typical scheme for satellite systems
+\end{itemize}
+
+\subsubsection{Backoff Protocol}
+
+Backoff protocols rely on ack's only. Binary exponential backoff, for example, works as follows: If a packet has collided $k$ times, we set $p = 2^{-k}$.\\
+
+For infinitely many stations this protocol isn't stable for $\lambda > 0$, but if there are only finite stations, the protocol is only unstable for $\lambda > 0.568$.
+
+\subsubsection{CSMA: Carrier Sense Multiple Access}
+
+Idea: listen before transmit. If channel sensed idle: transmit entire packet; if sensed busy, defer transmission. There exist two variants for the defering: Persistant CSMA (retry immediately with probability p when channel becomes idle), Non-persistent CSMA (retry after random interval).
+
+\subsubsection{CSMA/CD (Collision Detection)}
+
+Collisions were detected within short time and colliding transmissions were aborted, reducing channel wastage. CSMA/CD used in Ethernet.
+
+\subsection{LAN Addresses and ARP}
+
+MAC address: used to get datagram from one interface to another physically-connected interface (same LAN). Therefore 48 bit MAC addresses burned in the adapter ROM are used.\\
+
+ARP: Address Resolution Protocol. IP-Address $\rightarrow$ MAC-Address.\\
+
+Each IP node on LAN has ARP table in which the IP/MAC address mapping for some LAN nodes are stored together with the time after which the address mapping will be forgotten.\\
+
+A knows B's IP address, wants to learn physical address of B:\\
+A broadcasts ARP query packet, containing B's IP address. B replies to A with its physical layer address.
+
+\subsection{Ethernet}
+
+\subsubsection{Ethernet Frame Structure}
+
+\scriptsize
+\begin{verbatim}
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | Preamble | Dest | Source  | Type  | Data | CRC  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+\end{verbatim}
+\normalsize
+
+Preamble:\\
+7 bytes with pattern 10101010. Followed by 1 byte with pattern 10101011. They were used to synchronize receiver, sender clock rate.\\
+Addresses:\\
+6 bytes, frame is received by all adapters on a LAN and dropped if address does not match.\\
+Type (2 bytes):\\
+Indicates the higher layer protcol mostly IP (0x0800).\\
+CRC (4 bytes):\\
+checked at receiver, if error is detected, the frame is simply dropped.
+
+\subsubsection{Ethernet CSMA/CD algorithm}
+
+\begin{enumerate}
+	\item Adapter gets datagram from network layer and creates frame
+	\item If adapter senses channel idle, it starts to transmit frame. If it senses channel busy, waits until channel idle and then retransmit.
+	\item If adapter transmits entire frame without detecting another transmission, the adapter is done with frame.
+	\item If adapter detects another transmission while transmitting, aborts and sends jam signal (48 bit).
+	\item After aborting, adapter enters exponential backoff: after the m-th collision, adapter chooses a K at random from ${0,1,2,\ldots,2^m-1}$. Adapter waits $K\cdotp512$ bit times (e.g. 1/(100 Mbit)) and returns to Step 2.
+\end{enumerate}
+
+\subsubsection{CSMA/CD efficiency}
+
+\begin{displaymath}
+	\mbox{utilization} \approx \frac{1}{1 + 6.2\cdotp t_{prop}/t_{trans}}
+\end{displaymath}
+
+$t_{prop}$: max. progagation time between any two nodes in LAN\\
+$t_{trans}$: time to transmit max-size frame.\\
+Utilization goes to 1 as $t_{prop}\to 0$ or $t_{trans}\to \infty$
+
+
+\subsubsection{Interconnecting with Bridges}
+
+A bridge is a link layer device. Stores and forwards Ethernet frames. Examines frame header and selectively forwards frame based on MAC destination address.
+
+\section{Peer-To-Peer Computing}
+
+\subsection{Hashing}
+
+\subsubsection{Distributed Hashing and Linear Hashing}
+
+\begin{displaymath}
+	\mbox{key} \longmapsto .10111010101110011 \ldots \approx .73
+\end{displaymath}
+
+Arrange all hosts on a line from 0 to 1. For all documents 0.101x peer $x$ has stored the forward-pointer to the real file. Problem: if new machines join a lot of objects have to be moved. Linear hashing solves this problem by just moving a few objects to a new machine (about 1/n). It divides the files host $y$ is responsible for to host $y$ and the new host.
+
+\subsubsection{Consistent Hashing}
+
+Also the machines get hashed (IP + Port). Each machine is responsible for the files closest to it.
+
+\subsubsection{Problems}
+
+The problem with Linear and Consistent Hashing is, that every machine needs to know all the participants. Number one challange: Dynamics.
+
+\subsection{Search Tree}
+
+Peer $x$ must only know subset of others (A host in the other subtree of every node you pass when searching after your hash). It sends his search query to this host which has the same prefix as the search hash. This host sends the query further and so on.\\
+
+Time to search if tree is balanced: $O(\log n)$
+
+\subsubsection{Peer Join}
+
+Joiner must already know a peer in system (e.g. ping randomly, try some of those you met last time). After that you have to find your place in the P2P system.
+
+\subsubsection{Find your place}
+
+The random method: Choose a random bit string. Search for the bit string. Split with the current leave responsible for the bit string. Search for your neighbors.\\
+
+Time to join: 1st part $O(\log n)$, 2nd part $O(\log^2 n)$\\
+
+Since all peers chose their position randomly, the tree will more or less be balanced.
+
+\subsubsection{Leave}
+
+A Leave is detected by the neighbors in the P2P system (periodically ping).\\
+
+If a peer that left was detected, it must be replaced. If peer had sibling leaf, the sibling might just do a ''reverse split''. If not search recursively:
+\begin{enumerate}
+	\item Go down sibling tree, until you hit sibling leaves.
+	\item Make the left sibling the new common node.
+	\item Move the free right sibling to the empty spot.
+\end{enumerate}
+
+\subsection{Chord}
+
+Every peer has $\log n$ neighbors; one in about distance $2^{-k}, k= 1,2,\ldots,\log n$. Imagine a ring.
+
+\subsubsection{Skip List}
+
+\begin{itemize}
+	\item (Doubly) linked list, with sorted items
+	\item All items have additional pointers on levels $1,\ldots,k$, with probability $2^{-k}$
+	\item Search, insert, delete: Start with root, search for the right interval on highest level, then continue with lower levels.
+\end{itemize}
+
+Search, insert and delete: $O(\log n)$.
+
+\subsubsection{Skip Net}
+
+Use the skip list as a peer-to-peer architecture: Again each peer gets a random value between 0 and 1, and is then responsible for storing that interval. Instead of a root and a sentinel node, the list is short-wired as a ring.
+
+\end{document}

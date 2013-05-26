@@ -1,0 +1,128 @@
+% thevenin_norton.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{ar 1495 844 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.938in
+    \rlap{\kern 1.569in\lower\graphtemp\hbox to 0pt{b\hss}}%
+    \special{pa 1475 844}%
+    \special{pa 975 844}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{ar 975 844 20 20 0 6.28319}%
+    \special{pa 975 844}%
+    \special{pa 975 656}%
+    \special{fp}%
+    \special{pa 975 656}%
+    \special{pa 675 656}%
+    \special{fp}%
+    \special{pa 675 656}%
+    \special{pa 675 281}%
+    \special{fp}%
+    \special{pa 675 281}%
+    \special{pa 1275 281}%
+    \special{fp}%
+    \special{pa 1275 281}%
+    \special{pa 1275 656}%
+    \special{fp}%
+    \special{pa 1275 656}%
+    \special{pa 975 656}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.406in
+    \rlap{\kern 0.725in\lower\graphtemp\hbox to 0pt{\scriptsize Beliebiges\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.531in
+    \rlap{\kern 0.746in\lower\graphtemp\hbox to 0pt{\scriptsize Netzwerk\hss}}%
+    \special{pa 975 281}%
+    \special{pa 975 94}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{ar 975 94 20 20 0 6.28319}%
+    \special{pa 975 844}%
+    \special{pa 225 844}%
+    \special{fp}%
+    \special{pa 225 844}%
+    \special{pa 225 594}%
+    \special{fp}%
+    \special{ar 225 469 125 125 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.531in
+    \rlap{\kern 0.225in\lower\graphtemp\hbox to 0pt{\hss $-$\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.406in
+    \rlap{\kern 0.225in\lower\graphtemp\hbox to 0pt{\hss $+$\hss}}%
+    \special{pa 225 344}%
+    \special{pa 225 94}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.469in
+    \rlap{\kern 0.350in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$U_T$\hbox{$\:$}\hss}}%
+    \special{pa 225 94}%
+    \special{pa 975 94}%
+    \special{fp}%
+    \special{pa 975 94}%
+    \special{pa 1475 94}%
+    \special{fp}%
+    \special{pa 1350 0}%
+    \special{pa 0 0}%
+    \special{fp}%
+    \special{pa 0 0}%
+    \special{pa 0 938}%
+    \special{fp}%
+    \special{pa 0 938}%
+    \special{pa 1350 938}%
+    \special{fp}%
+    \special{pa 1350 938}%
+    \special{pa 1350 0}%
+    \special{fp}%
+    \special{ar 1495 94 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.000in
+    \rlap{\kern 1.609in\lower\graphtemp\hbox to 0pt{a\hss}}%
+    \special{pa 1663 469}%
+    \special{pa 1913 469}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 1813 444}%
+    \special{pa 1913 469}%
+    \special{pa 1813 494}%
+    \special{pa 1813 444}%
+    \special{fp}%
+    \special{ar 2723 844 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.938in
+    \rlap{\kern 2.796in\lower\graphtemp\hbox to 0pt{b\hss}}%
+    \special{pa 2703 844}%
+    \special{pa 2203 844}%
+    \special{fp}%
+    \special{pa 2203 844}%
+    \special{pa 2203 594}%
+    \special{fp}%
+    \special{ar 2203 469 125 125 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.531in
+    \rlap{\kern 2.203in\lower\graphtemp\hbox to 0pt{\hss $-$\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.406in
+    \rlap{\kern 2.203in\lower\graphtemp\hbox to 0pt{\hss $+$\hss}}%
+    \special{pa 2203 344}%
+    \special{pa 2203 94}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.469in
+    \rlap{\kern 2.328in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$U_T$\hbox{$\:$}\hss}}%
+    \special{pa 2203 94}%
+    \special{pa 2703 94}%
+    \special{fp}%
+    \special{ar 2723 94 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.000in
+    \rlap{\kern 2.836in\lower\graphtemp\hbox to 0pt{a\hss}}%
+    \special{pa 2578 0}%
+    \special{pa 2015 0}%
+    \special{fp}%
+    \special{pa 2015 0}%
+    \special{pa 2015 938}%
+    \special{fp}%
+    \special{pa 2015 938}%
+    \special{pa 2578 938}%
+    \special{fp}%
+    \special{pa 2578 938}%
+    \special{pa 2578 0}%
+    \special{fp}%
+    \hbox{\vrule depth0.938in width0pt height 0pt}%
+    \kern 2.836in
+  }%
+}%
+

@@ -1,0 +1,1225 @@
+% Algebra Zusammenfassung aus dem Informatikstudium an der ETH Zuerich
+% basierend auf der Vorlesung von Prof. Dr. Ueli Maurer
+% Copyright (C) 2003  Patrick Pletscher
+
+%This program is free software; you can redistribute it and/or
+%modify it under the terms of the GNU General Public License
+%as published by the Free Software Foundation; either version 2
+%of the License, or (at your option) any later version.
+
+%This program is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
+
+%You should have received a copy of the GNU General Public License
+%along with this program; if not, write to the Free Software
+%Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\documentclass[10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{german}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+
+\textwidth = 16.5 cm
+\textheight = 25 cm
+\oddsidemargin = 0.0 cm
+\evensidemargin = 0.0 cm
+\topmargin = 0.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0cm
+
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\title{Algebra II (Diskrete Mathematik) - Zusamenfassung}
+\author{Patrick Pletscher}
+\begin{document}
+
+\maketitle
+
+\section{Mengen}
+
+\subsection{Konzept}
+
+$A=\{a\} \Rightarrow a \in A$\\
+
+$A \subset B \Leftrightarrow \forall x (x\in A \rightarrow x\in B)$\\
+
+$A=B \Leftrightarrow A\subseteq B \land B \subseteq A$:\\
+$x\in A \Rightarrow x \in B$ und $x\in B \Rightarrow x \in A$\\
+
+$\emptyset \subseteq A:\: \forall A$\\
+
+$\emptyset$ ist eindeutig: $\emptyset \subseteq \supseteq \emptyset'$
+
+\subsection{Grundregeln der Mengenlehre}
+
+\begin{enumerate}
+ \item Idempotent\\
+  $A \cap A=A,\: A \cup A = A$
+ \item Kommutativ\\
+  $A \cap B=B\cap A,\: A\cup B=B\cup A$
+ \item Assoziativ\\
+  $A \cap(B \cap C)=(A \cap B)\cap C$\\
+  $A \cup(B \cup C)=(A \cup B)\cup C$
+ \item Absorption\\
+  $A\cap (A \cup B)=A,\: A \cup (A\cap B)=A$
+ \item Distributiv\\
+  $A \cap (B\cup C)=(A\cap B)\cup(A \cap C)$ ($\cap$ "uber $\cup$)\\
+  $A \cup (B\cap C)=(A\cup B)\cap(A \cup C)$ ($\cup$ "uber $\cap$)
+ \item Komplement"ar\\
+  $A \cap A'=\emptyset,\: A \cup A'=I$
+ \item Konsistenz\\
+  $A \cap B=A \Leftrightarrow A \subseteq B \Leftrightarrow A \cup B = B$
+\end{enumerate}
+
+
+\subsection{Operationen auf Mengen}
+
+\subsubsection{Allgemein}
+
+$\{x \in A|P(x)\}$
+
+\subsubsection{Potenzmenge}
+
+$P(A)=\{x \subseteq A\}$\\
+immer $2^n$ Elemente\\
+z.B.: $P(\{\emptyset,\{\emptyset\}\})=\{\emptyset,\{\emptyset\},\{\{\emptyset\}\},\{\emptyset,\{\emptyset\}\}\}$
+
+
+\subsubsection{Schnitt und Vereinigung}
+
+$A'$: Komplement von A\\
+$A\cap B$: A geschnitten B\\
+$A\cup B$: A vereinigt B\\
+$A\cap B=\emptyset$: A und B sind disjunkt\\
+$B-A=\{x\in B | x \notin A\}$\\
+$A\cup B - A \cap B = A \oplus B$: symm. Differenz
+
+\subsubsection{Das kartesische Produkt}
+
+{\bf Geordnete Paare}\\
+$(a,b)=(c,d) \Rightarrow a=c \land b=d$\\
+Def. $(a,b)=\{\{a\},\{a,b\}\}$\\\\
+
+{\bf Produktmenge}\\
+$A \times B = \{(a,b)|a\in A, b\in B\}$
+
+\subsection{Relationen}
+
+\subsubsection{Definition}
+$\rho\subseteq A \times B\: (a,b)\in \rho\: a\rho b$\\\\
+
+{\bf Zusammensetzung:$\rho\sigma$}\\
+$a\:\rho\sigma\:b \Leftrightarrow \exists q \in B: a \rho q \land q\sigma b$\\\\
+
+{\bf Umkehrung} von $\rho:\breve{\rho}$\\
+$\breve{\rho\sigma}=\breve{\sigma}\breve{\rho}$
+
+
+\subsubsection{"Aquivalenzrelation}
+
+Eine "Aquivalenzrelation $\rho_E$ auf eine Menge A ist eine Relation auf A so, dass f"ur alle $a,b,c\in A$ gilt:
+\begin{enumerate}
+ \item Reflexiv: $a \rho_E a$
+ \item Symmetrisch: $a \rho_E b \Leftrightarrow b \rho_E a$
+ \item Transitiv: $a \rho_E b$ und $b \rho_E c \Leftrightarrow a \rho_E c$
+\end{enumerate}
+Wenn $a \in A$, definiert [a] die "Aquivalenzklasse, die die Elemente a der Menge A enth"alt, die "aquivalent zu a sind:\\
+$[a]=\{b\in A | a \rho_E b\}$\\\\
+
+A/E = Menge aller "Aquivalenzklassen = $\{[a]|a \in A\}$\\
+z.Bsp. Modulo: $Z/E_m = \{[0],[1],\ldots,[m-1]\}$
+
+
+\subsubsection{Partielle Ordnungnen}
+
+Eine partielle Ordnung $\leq$ auf einer Menge P ist eine Relation auf P so, dass f"ur alle $x,y,z \in P$ gilt:
+\begin{enumerate}
+ \item Reflexiv: $x \leq x$
+ \item Anti-Symmetrisch: $x \leq y \land y \leq x \Leftrightarrow x = y$
+ \item Transitiv: $x \leq y \land y \leq z \Leftrightarrow x\leq z$
+\end{enumerate}
+Eine Menge P zusammen mit einer partiellen Ordnung $\leq$ auf P wird partiell geordnete Menge genannt, oder kurz Poset und wird als $[P;\leq]$ geschrieben.\\\\
+
+{\bf Spezielle Elemente in Posets}\\
+$[P;\leq]$ ist ein Poset und X ist eine Untermenge von P. Dann
+\begin{enumerate}
+ \item $y \in X$ ist das minimale (maximale) Element von X, falls $x<y$ ($x>y$) f"ur kein $x\in X$
+ \item $y \in X$ ist das kleinste (gr"osste) Element von X, falls $y\leq x$ ($y \geq x$) f"ur alle $x\in X$
+ \item $y \in P$ ist eine untere (obere) Schranke f"ur X, falls $y\leq x$ ($y \geq x$) f"ur alle $x \in X$
+ \item $y \in P$ ist die gr"osste untere Schranke (kleinste obere Schranke) von x, falls y das gr"osste (kleinste) Element von der Menge aller unteren (oberen) Schranken von X.
+\end{enumerate}
+
+\subsubsection{Verb"ande (Lattices)}
+
+x und y Elemente eines Posets $[P;\leq]$. Wir bezeichnen deren gr"osste untere Schranke als $x\land y$ (''x meet y'') und deren kleinste obere Schranke mit $x\lor y$ (''x join y'').\\
+Definition: Ein Verband ist ein Poset in welchem jedes Paar von Elementen ein Meet und ein Join hat.\\
+
+{\bf Grundregeln der Verb"ande}
+
+\begin{enumerate}
+ \item Idempotent\\
+ 	$x \land x =x,\: x \lor x = x$
+ \item Kommutativ\\
+ 	$x \land y = y \land x,\: x \lor y =y \lor x$
+ \item Assoziativ\\
+ 	$x\land (y \land z)=(x \land y)\land z$\\
+	$x \lor (y \lor z)=(x \lor y) \lor z$
+ \item Absorption\\
+ 	$x \land (x \lor y)=x,\: x \lor(x\land y)=x$
+ \item Konsistenz\\
+ 	$x\leq y \Leftrightarrow x \land y = x \Leftrightarrow x \lor y = y$
+\end{enumerate}
+
+
+\subsection{Funktionen}
+
+[..]
+
+\subsection{Russell-Paradoxon}
+
+$R=\{x|x\notin x\}$, die Menge von allen Mengen, die nicht zu sich selbst geh"oren.\\
+
+Dies f"uhrt zu einem Widerspruch: $R \in R$, wenn und nur wenn $R \notin R$\\
+
+Meistens geh"oren die Mengen nicht zu sich selber, aber es gibt auch Ausnahmen, z.B. die Menge die mehr als f"unf Elemente enth"alt, ist auch wieder eine Menge, die mehr als f"unf Elemente enth"alt.
+
+\subsection{Zermelo's Axiome}
+
+\subsubsection{Axiom 1}
+Zwei Mengen sind gleich, wenn sie die gleichen Elemente enthalten:\\
+$\forall xy (\forall z(u\in x \leftrightarrow z \in y) \rightarrow x=y)$
+
+\subsubsection{Satz 1}
+Wir haben x=y, falls und nur falls $x\subset y$ und $y \subset x$:\\
+$\forall xy(x \subset y \land y \subset x)\leftrightarrow x=y$
+
+\subsubsection{Axiom 2}
+Wenn x eine Menge und p ein Pr"adikat ist, dann existiert eine Menge y deren Elemente genau diese Elemente z von x sind, f"ur welche p(z) gilt:\\
+$\forall x \exists y \forall z (z \in y \leftrightarrow (z \in x \land p(z)))$
+
+\subsubsection{Satz 2}
+Keine Menge enth"alt alle Objekte:\\
+$\forall x \exists y (y \notin x)$
+
+\subsubsection{Axiom 2.1}
+Es existiert eine Menge, $\exists x (x=x)$\\
+So k"onnen wir auch die Menge $\emptyset := \{y\in x|y\neq y\}$
+
+\subsubsection{Axiom 3}
+F"ur zwei Mengen x und y existiert eine Menge, die x und y enth"alt.\\
+$\forall xy \exists z (x \in z \land y \in z)$
+
+\subsubsection{Lemma}
+$\{x\}=\{y\}$ gilt nur dann, wenn x=y
+
+\subsubsection{Axiom 4}
+F"ur jede Menge X gibt es eine Menge, die alle Elemente enth"alt, enthalten zumindest in einem Element von X.\\
+$\forall X \exists Y \forall xy((x \in X \land y \in x)\rightarrow y \in Y)$
+
+\subsubsection{Axiom 5}
+F"ur jede Menge x existiert eine Menge z, die als ihre Elemente alle Untermengen von x enth"alt.\\
+$\mathcal{P}(x):=\{y \in z | y \subset x\}$
+
+\section{Nat"urliche Zahlen, Induktion und Z"ahlbarkeit}
+
+\subsection{Nachfolgerfunktion f"ur Mengen}
+
+{\bf Definition} Der Nachfolger einer Menge x ist definiert als\\
+$s(x):= x \cup \{x\}$\\
+Beispiel: $s(\{a,b\})=\{a,b,\{a,b\}\}$
+
+\subsection{Definition der nat"urlichen Zahlen}
+
+${\bf 0}:= \emptyset$\\
+${\bf 1}:= s({\bf 0})=\{{\bf 0}\}=\{\emptyset\}$\\
+${\bf 2}:= s({\bf 1})=\{{\bf 0,1}\}=\{\emptyset,\{\emptyset\}\}$\\\\
+
+{\bf Definition} Eine Menge x wird als Nachfolgemenge bezeichnet wenn $\emptyset \in x$ und $s(y) \in x$ wenn immer $y \in x$:\\
+$\emptyset \in x \land \forall y(y \in x \rightarrow s(y)\in x)$\\\\
+
+{\bf Axiom}\\
+Es existiert eine Nachfolgemenge\\\\
+
+{\bf Satz}\\
+Es existiert eine Nachfolgemenge $\omega$ welche minimal ist im Sinne, dass $\omega \subset x$ f"ur alle Nachfolgemengen x.\\
+$\exists \omega \forall x (\emptyset \in x \land \forall y(y \in x \rightarrow s(y) \in x) \rightarrow \omega \subset x)$\\\\
+
+{\bf Definition} $\omega$ ist die Menge der Nat"urlichen Zahlen
+
+\subsection{Mathematische Induktion}
+
+{\bf Korollar} Wenn ein Pr"adikat p (auf eine Menge) stimmt f"ur alle Elemente einer Nachfolgemenge:\\
+\begin{enumerate}
+ \item Induktionsverankerung: p({\bf 0}) gilt und
+ \item Induktionsschritt: p(s(x)) gilt f"ur irgendeine Menge x f"ur welche p(x) gilt.
+\end{enumerate}
+
+{\bf Lemma} Keine nat"urliche Zahl ist eine Teilmenge von einem ihrer Elemente\\
+$x \in n \rightarrow n \not\subset x$\\\\
+
+{\bf Korollar} $n \notin n$ f"ur alle nat"urlichen Zahlen n.\\
+
+{\bf Lemma} Jedes Element der nat"urlichen Zahlen ist eine Teilmenge von ihr.\\
+$x \in n \rightarrow x \subset n$
+
+\subsection{Peano's Axiomatisierung der nat"urlichen Zahlen}
+
+{\bf Satz} $s(n) \neq {\bf 0}$ f"ur alle $n \in \omega$\\\\
+
+{\bf Satz} Wenn $s(m)=s(n)$, dann m=n
+
+\subsubsection{Peano's Axiome}
+
+\begin{enumerate}
+ \item $0 \in N$
+ \item $n \in N \rightarrow \widetilde{s}(n) \in N$
+ \item $A \subset N \land 0 \in A \land (n \in A \rightarrow \widetilde{s}(n)\in A) \Rightarrow A = N$
+ \item $\widetilde{s}(n) \neq 0$ f"ur alle $n \in N$
+ \item $\widetilde{s}(n)=\widetilde{s}(m)$ impliziert n = m f"ur irgendein $m,n \in N$
+\end{enumerate}
+
+\subsection{Arithmetik der nat"urlichen Zahlen}
+
+\subsubsection{Rekursionssatz}
+X eine Menge und a ein Element von x und f eine Funktion von x nach x. Dann existiert eine Funktion $g: \omega \rightarrow x$ so, dass:
+\begin{enumerate}
+ \item $g(0)=\bf{a}$ und
+ \item $g(s(n)) = f(g(n))$ f"ur alle $n \in \omega$
+\end{enumerate}
+
+\subsubsection{Addition}
+
+{\bf Definition} F"ur jedes $m \in \omega$, ist die Funktion $\sigma_m: \omega \rightarrow \omega$ definiert als:
+\begin{enumerate}
+ \item $\sigma_m({\bf 0})=m$
+ \item $\sigma_m(s(n))=s(\sigma_m(n))$ f"ur alle $n \in \omega$
+\end{enumerate}
+
+Die Nummer $\sigma_m(n)$ ist die Summe von m und n, auch geschrieben als m+n.\\\\
+
+{\bf Satz} Die Addition auf den nat"urlichen Zahlen ist assoziativ. F"ur alle $k,m,n \in \omega$ gilt:\\
+$(k+m)+n=k+(m+n)$\\\\
+
+{\bf Satz} Die Addition auf den nat"urlichen Zahlen ist kommutativ. F"ur alle $m,n \in \omega$ gilt:\\
+$m+n=n+m$
+
+
+\subsubsection{Multiplikation}
+
+{\bf Definition} F"ur jedes $m \in \omega$, ist die Funktion $p_m: \omega \rightarrow \omega$ definiert als:\\
+\begin{enumerate}
+ \item $p_m({\bf 0})={\bf 0}$
+ \item $p_m(s(n))=p_m(n)+m$ f"ur alle $n \in \omega$
+\end{enumerate}
+
+Die Nummer $p_m(n)$ ist nach Definition das Produkt von m und n, auch geschrieben als $m \cdotp n$\\
+Die Regeln k"onnen auch so geschrieben werden:\\
+- $m\cdotp {\bf 0} = {\bf 0}$\\
+- $m\cdotp s(n)= m\cdotp n + m$
+
+
+\subsubsection{Ordnungsrelation auf den nat"urlichen Zahlen}
+
+{\bf Definition} $m < n$ wenn $m \in n$, und $m \leq n$ wenn $m < n$ oder $m=n$\\\\
+
+{\bf Satz} F"ur irgendwelche Zahlen k,m und n:\\
+\begin{enumerate}
+ \item Wenn $m < n$ dann $m+k < n+k$
+ \item Wenn $m < n$ und $k\neq 0$ dann $m\cdotp k < n \cdotp k$
+ \item Wenn x eine nichtleere Menge von nat"urlichen Zahlen, dann existiert ein $m \in x$ so dass $m \leq n$ f"ur alle $n \in x$
+\end{enumerate}
+
+\subsubsection{Von den nat"urlichen Zahlen zu den Zahlen}
+
+$\xi := \{(a,b)\in \omega \times \omega | a= {\bf 0} \lor {\bf b=0}\}$\\\\
+
+$(m,{\bf 0})+(n,{\bf 0}) = (m+n,{\bf 0})$\\
+$({\bf 0},m)+({\bf 0},n)=({\bf 0},m+n)$\\
+\begin{displaymath}
+  (m,{\bf 0})+({\bf 0},n) = \left\{
+  \begin{array}{ll}
+      ({\bf 0},n-m)   & m < n \\
+      (m-n,{\bf 0})   & n \leq m
+  \end{array}
+\right.
+\end{displaymath}
+
+$(a,b)\cdotp(c,d)=(ac+bd, ad+bc)$
+
+\subsection{Gleichheit von Mengen, Z"ahlbarkeit und Unz"ahlbarkeit von Mengen}
+
+{\bf Definition} Zwei Mengen A und B werden als \textit{gleich m"achtig} bezeichnet ($A \sim B$), wenn es eine Bijektion $A \rightarrow B$ gibt. Eine Menge B dominiert eine Menge A ($A \preceq B$), wenn $A \sim C$ eine Teilmenge $C \subseteq B$ oder anders gesagt wenn eine injektive Funktion $A \rightarrow B$ existiert. Eine Menge A wird als z"ahlbar bezeichnet wenn $A \preceq \mathbb{N}$ und sonst unz"ahlbar.\\\\
+
+{\bf Satz} Eine Teilmenge einer z"ahlbaren Menge ist auch z"ahlbar.\\\\
+
+{\bf Satz} Die Menge $B=\{(m,n)| m,n \in \mathbb{N}\}$ von geordneten Paaren von nat"urlichen Zahlen ist z"ahlbar.\\\\
+
+{\bf Satz} F"ur irgendein $n \in \mathbb{N}$ und irgendeine z"ahlbare Menge S ist die Menge der n-Tupel "uber S z"ahlbar.\\\\
+
+{\bf Satz} Die Vereinigung von einer z"ahlbaren Menge und einer z"ahlbaren Menge ist z"ahlbar.\\\\
+
+{\bf Korollar} Die rationalen Zahlen $\mathbb{Q}$ sind z"ahlbar\\\\
+
+{\bf Satz} Die Menge $\mathbb{R}$ der reellen Zahlen ist unz"ahlbar. So auch die Menge $\{0,1\}^\infty$ von unendlichen Bin"arfolgen.\\\\\
+
+{\bf Satz} Jede Menge ist strikt dominiert von ihrer Potenzmenge. $A \preceq \mathcal{P}(A)$ aber $A \not\sim \mathcal{P}(A)$
+
+
+\section{Kombinatorik und Z"ahlen}
+
+\subsection{Grundlegene Z"ahl-Prinzipien}
+
+\subsubsection{Additions-, Mulitiplikations- und Bijektionsgrundsatz}
+
+Additionsgrundsatz:\\
+$\forall i,j \leq i < j \leq n: A_i\cap A_j =\emptyset \:\:\Rightarrow \:\: \mid A_1 \cup \cdots \cup A_n \mid\: =\sum^n_{i=1}\mid A_i \mid$\\\\
+
+Multiplikationsgrundsatz:\\
+$\mid A_1 \times \cdots \times A_n\mid\:=\Pi^n_{i=1}\mid A_i\mid$
+
+\subsubsection{Inklusion-Exklusion}
+
+Wenn die Mengen $A_1,\ldots,A_n$ nicht disjunkt sind, gilt:\\
+$\mid A \cup B\mid\: =\:\mid A\mid +\mid B\mid -\mid A\cap B\mid$\\
+Genereller:\\
+$\mid A \cup B \cup C\mid =\mid A\mid +\mid B \mid + \mid C \mid - \mid A \cap B \mid - \mid B \cap C \mid +\mid A \cap B \cap C\mid$\\
+Noch allgemeiner:\\
+$\mid A_1\cup \cdots \cup A_n\mid\: = \sum^n_{i=1}\mid A_i\mid - \sum_{1\leq i_1 < i_2 \leq n}\mid A_{i1}\cap A_{i2}\mid+\sum_{1\leq i_1 < i_2 < i_3 \leq n}\mid A_{i1}\cap A_{i2} \cap A_{i3} \mid - \cdots + (-1)^{n-1}\mid A_1 \cap\cdots\cap A_n\mid$\\
+Bonferroni Ungleichung:\\
+$\mid A_1 \cup \cdots \cup A_n\mid \geq \sum^n_{i=1}\mid A_i \mid - \sum_{1\leq i_1 < i_2 \leq n}\mid A_{i1}\cap A_{i2}\mid$
+
+\subsubsection{Auswahlprobleme}
+
+Wir betrachten eine Menge von n Elementen, von denen k selektiert werden.\\
+
+\begin{tabular}{|l|c|c|}
+ \hline
+  & Geordnet & Ungeordnet\\
+ \hline
+  mit Wiederh. & $n^k$ & $\binom{n+k-1}{k}$\\
+ \hline
+  ohne Wiederh. & $\Pi^{k-1}_{i=0}(n-i)$ & $\binom{n}{k}=\frac{n!}{k!(n-k)!}$\\
+ \hline
+\end{tabular}
+
+\subsubsection{Double Counting Prinzip}
+
+Es spielt keine Rolle, ob man "uber die Kolonnen oder Zeilen summiert. $\mid S \mid =\sum\limits_{a\in A}r(a)=\sum\limits_{b\in B}c(b)$
+
+\subsubsection{Pigeonhole Prinzip}
+
+Wenn n Objekte in $k<n$ Schachteln platziert werden, so enth"alt mindestens eine Schachtel ein oder mehr Objekte.
+
+\subsubsection{Binomial Koeffizienten}
+
+$\binom{n}{k}=\binom{n}{n-k}$\\
+
+\textbf{Theorem}\\
+x, y komplexe Zahlen. F"ur Zahlen $n\geq 0$ gilt:\\
+$(x+y)^n=\sum\limits^n_{k=0}\binom{n}{k}x^{n-k}y^k$\\
+
+\textbf{Pascal's Identit"at}\\
+$\binom{n}{k}=\binom{n-1}{k-1}+\binom{n-1}{k}$ wenn $n>0$\\
+
+\textbf{Theorem}\\
+$m,n\geq 0$ ganze Zahlen und $m+n>0$ und k irgendeine ganze Zahl:\\
+$\binom{n+m}{k}=\sum\limits^k_{i=0}\binom{n}{i}\binom{m}{k-i}$\\
+
+\textbf{Theorem}\\
+$n\geq 0$ und ganze Zahl, $0<k\leq n$:\\
+$(\frac{n}{k})^k\leq\binom{n}{k}<(\frac{en}{k})^k$
+
+
+\subsection{Reihen und Folgen}
+
+$(a_n)_{n\geq 0}$ wird benutzt um die Folge $(a_0,a_1,a_2,a_3,\ldots)$ zu beschreiben.
+
+\subsubsection{Erzeugende Funktionen}
+
+$G(x)=a_0+a_1x+a_2x^2+\ldots+a_kx^k+\ldots=\sum\limits^\infty_{k=0}a_kx^k$\\
+
+\textbf{Produkt}\\
+$G_1(x)G_2(x)=\sum\limits^\infty_{k=0}(\sum\limits^k_{i=0}a_ib_{k-i})x^k$\\
+
+\textbf{Wichtige erzeugende Funktionen}\\\\
+\footnotesize
+\begin{tabular}{l l l}
+ Folge &							Erz. Funktion & 				Geschl. Form\\
+ \hline
+ $(1,a,\binom{a}{2},\binom{a}{3},\binom{a}{4},\ldots)$ &	$\sum\limits^\infty_{k=0}\binom{a}{k}x^k$ &	$(1+x)^a$\\
+ $(1,1,1,1,\ldots)$ &						$\sum\limits^\infty_{k=0}x^k$ &			$\frac{1}{1-x}$\\
+ $(1,2,3,4,\ldots)$ &						$\sum\limits^\infty_{k=0}(k+1)x^k$ &		$\frac{1}{(1-x)^2}$\\
+ $(1,a,\binom{a+1}{2},\binom{a+2}{3},\ldots)$ &			$\sum\limits^\infty_{k=0}\binom{a+k-1}{k}x^k$ &	$\frac{1}{(1-x)^a}$\\
+ $(1,a,a^2,a^3,\ldots)$ &					$\sum\limits^\infty_{k=0}a^kx^k$ &		$\frac{1}{1-ax}$\\
+ $(1,\binom{b}{1}a,\binom{b+1}{2}a^2,\binom{b+2}{3}a^3,\ldots)$&	$\sum\limits^\infty_{k=0}\binom{b+k-1}{k}a^kx^k$ & $\frac{1}{(1-ax)^b}$\\
+ $(1,1,\frac{1}{2},\frac{1}{6},\frac{1}{24},\ldots)$ &		$\sum\limits^\infty_{k=0}\frac{1}{k!}x^k$ &	$e^x$\\
+ \hline
+\end{tabular}
+\normalsize
+
+\subsubsection{Lineare Rekursion}
+
+Eine linear rekursive Folge $(a_n)_{n\geq 0}$ mit Rekursionsl"ange L ist definiert bei den ersten L Elementen $a_0,\ldots,a_{L-1}$ der Folge und bei einer Rekursiongleichung:\\
+$a_n=\sum\limits^L_{i=1}c_ia_{n-i}$\\
+wobei $c_1,\ldots,c_L$ fixe Koeffizienten sind. Wir definieren das Polynom $c(x):=1-c_1x-c_2x^2-\ldots-c_Lx^L$ als das Rekursionspolynom der Reihe.\\
+
+Ansatz f"ur inhomogene Rekursionsgleichung: $a(x)c(x)=p(x)+b(x)$\\
+Wobei $a(x)$ die Fkt. ist, die man sucht, $c(x)$ das Rekursionspoly. und $b(x)$ die St"orfaktoren in der Rek.gl., $p(x)$ sind Terme die m"oglicherweise noch fehlen.
+
+
+\section{Graphen Theorie}
+
+\subsection{Grundlagen}
+
+\subsubsection{Definitionen von Graphen}
+
+Ein Graph $G=(V,E)$ besteht aus einer endlichen Menge V von Eckpunkten und einer Menge $E\subseteq \{\{u,v\}\subseteq V|u\neq v\}$ von Kanten.\\
+
+Die \textit{Nachbarn} eines Eckpunktes v ist die Menge $\Gamma(v):=\{u\in V|\{u,v\}\in E\}$.\\
+
+Der \textit{Grad} $deg(v)$ eines Eckpunktes ist: $deg(v):=\mid \Gamma(v) \mid$. Ein Graph ist k-regul"ar, wenn $deg(v)=k,\:\forall v\in V$.\\
+
+$\sum\limits_{v\in V}deg(v)=2\mid E\mid$ und die Anzahl Eckpunkte mit ungeraden Grad ist gerade.\\
+
+\textbf{Subgraph}\\
+Ein Graph $G=(V,E)$ ist ein Subgraph von einem Graph $H=(V',E')$, bezeichnet als $G\sqsubseteq H$, wenn $V\subseteq V'$ und $E\subseteq E'$.\\
+
+\textbf{Vereinigung}\\
+Die Vereinigung von zwei Graphen $G=(V,E)$ und $H=(V',E')$ ist der Graph $G\cup H:=(V\cup V',E\cup E')$\\
+
+\textbf{Komplement}\\
+Das Komplement $\bar{G}$ eines Graphes $G=(V,E)$ ist der Graph $\bar{G}=(V,\bar{E})$, wobei $\bar{E}$ aus allen Kanten besteht, die nicht in E sind.\\
+
+\textbf{Bipartit}\\
+Ein Graph $G=(V,E)$ wird als bipartit bezeichnet, wenn V in zwei disjunkte Mengen $V_1$ und $V_2$ von Knoten getrennt werden, $V=V_1\cup V_2$, so dass keine Kante zwei Knoten im gleichen Subgraph verbindet.
+
+
+\subsubsection{Isomorphismus}
+
+Zwei Graphen $G=(V,E)$ und $H=(V',E')$ sind isomorph, geschrieben $G\cong H$, wenn eine Bijektion $\pi: V \rightarrow V'$ so dass, das umbennen der Knoten von G nach $\pi$ in H resultiert, oder umgekehrt.
+
+
+\subsubsection{Spezielle Graphen}
+
+Ein \textit{kompletter Graph} von n Knoten, geschrieben $K_n$ ist ein Graph in dem jedes Paar von Knoten verbunden ist. Das Komplement"ar von $K_n$ ist der leere Graph.\\
+
+Ein \textit{(m,n)-Gittergraph} ist ein ein Graph $Mm,n$ von $mn$ Knoten mit $V=\{(i,j)|1\leq i \leq m, 1\leq j \leq n\}$ und wo $(i,j)$ und $(i',j')$ nur verbunden sind, wenn $i=i'$ und $\mid j-j' \mid=1$ oder $j=j'$ und $\mid i- i'\mid=1$.\\
+
+Ein \textit{Pfad} $P_n$ (Pfad der L"ange n) besteht aus n+1 Knoten.\\
+
+Ein \textit{Zyklus $C_n$} besteht aus n Knoten die zyklisch verbunden sind.\\
+
+Ein \textit{komplett bipartiter Graph $K_{m,n}$} ist ein Graph mit m+n Knoten, der aus zwei Teilmengen B und W der Gr"osse m bzw. n besteht und der jeden Knoten von B mit jedem Knoten von W verbindet, die aber nicht untereinander verbunden sind. 
+
+\subsubsection{Adjazenzmatrix}
+
+Die \textit{Adjazenzmatrix} $A_G=[a_{ij}]$ eines nicht orientierten Graphen $G=(V,E)$ mit $V=\{v_1,\ldots,v_n\}$ ist die bin"are $n\times n$ Matrix wobei $(a_{i,j})=1$ falls $\{v_i,v_j\}\in E$, sonst 0.
+
+
+\subsection{Pfade und Kreise}
+
+Ein \textit{Weg} von u nach v der L"ange n in einem (orientierten) Graph ist eine Reihe $(u,v_1,\ldots,v_{n-1},v)$ von Knoten so dass aufeinanderfolgende Knoten verbunden sind. Wenn die Knoten verschieden sind, wird es als \textit{Pfad} bezeichnet und wenn alle Kanten im Pfad verschieden sind, wird es als \textit{Tour} bezeichnet. Wenn der Start- und Endpunkt der gleiche ist wird der Pfad als \textit{Kreis} und eine Tour als Schleife bezeichnet.
+
+\subsubsection{Hamiltonscher Kreis}
+
+Ein Kreis in einem Graph wird als hamiltonsch bezeichnet wenn er alle Knoten besucht.\\
+
+\textbf{Theorem}\\
+Ein Graph $G=(V,E)$ f"ur welche f"ur alle nicht verbundenen Paare (u,v) von Knoten gilt, dass $deg(u)+deg(v)\geq\mid V\mid$ ist hamiltonsch. Im einzelnen falls $deg(v)\geq \mid V\mid /2$ f"ur alle $v \in V$.
+
+\subsubsection{Graucodes}
+
+Es "andert sich nur ein Bit.\\
+
+Ein Hyperkubus $Q_d$ ist hamiltonsch f"ur $d\geq 2$.\\
+
+Ein hamiltonscher Kreis in einem Hyperkubus wird als Graucode bezeichnet.
+
+\subsubsection{Euler Kreise}
+
+Ein Eulerkreis (Eulerpfad) in einem Graph ist ein Kreis (Pfad) der alle Kanten des Graphes beeinhaltet.\\
+
+\textbf{Theorem}\\
+Ein nichtorientierter Graph ist eulerisch, falls jeder Knoten einen geraden Grad hat. Ein orientierter Graph ist eulerisch falls f"ur jeden Knoten gilt, dass die In-Grade gleich den Out-Graden sind.
+
+\subsection{B"aume}
+
+Ein Baum ist ein verbundener Graph ohne Zyklus. Ein Wald ist ein Graph ohne Zyklen, die Vereinigung von verschiedenen B"aumen mit disjunkten Knotenmengen. Ein Blatt ist ein Knoten mit Grad 1.\\
+
+\textbf{Lemma}\\
+Ein Baum mit $m\geq 2$ Knoten hat mindestens 2 Bl"atter.\\
+
+\textbf{Theorem}\\
+F"ur einen Graphen G mit m Knoten, sind die folgenden Aussagen "aquivalent:\
+\begin{enumerate}
+ \item G ist ein Baum
+ \item G hat m-1 Kanten und keine Zyklen
+ \item G hat m-1 Kanten und ist verbunden
+\end{enumerate}
+
+Ein \textit{Spannbaum} eines verbundenen Graphen G ist ein Subgraph von G welcher ein Baum ist und alle Knoten von G enth"alt.
+
+
+\subsection{Planare Graphen}
+
+\subsubsection{Definition}
+Ein Graph ist planar, falls er in der Ebene so gezeichnet werden kann, dass sich keine Kanten kreuzen.\\
+
+Die Graphen $K_4$ und $K_{2,3}$ sind planar. $K_5$ und $K_{3,3}$ sind es nicht. Der Hyperkubus $Q_d$ ist nur planar, falls $d\leq 3$.
+
+\subsubsection{Euler's Formeln und Bedingungen f"ur Planarit"at}
+
+Ein planarer Graph unterteilt die Ebene in disjunkte \textit{Regionen}, eine davon ist unendlich. Der Grad einer Region ist die Anzahl Kanten von denen sie begrenzt wird.\\
+
+\textbf{Theorem}\\
+Jeder verbundene Graph $G=(V,E)$ unterteilt die Ebene in $r:=\mid E \mid-\mid V\mid+2$ Regionen.\\
+
+\textbf{Lemma}\\
+F"ur jeden verbundenen Graphen $G=(V,E)$, ist die Summe der Grade der Regionen gleich $2\mid E\mid$.\\
+
+\textbf{Theorem}\\
+Jeder verbundene planare Graph $G=(V,E)$ mit $\mid V \mid \geq 3$ erf"ullt: $\mid E \mid \leq 3\mid V\mid -6$. Wenn G bipartit ist, dann gilt: $\mid E \mid\leq 2 \mid V \mid -4$.\\
+
+\textbf{Korollar}\\
+$K_n$ ist nur planar, wenn $n\leq 4$\\
+
+\textbf{Korollar}\\
+$K_{3,3}$ ist nicht planar.
+
+\subsubsection{Kuratowski's Theorem}
+
+Ein Graph H ist eine Untereinheit eines Graphen G, falls H aus G erhalten werden kann, wenn man neue Knoten auf Kanten von G einf"ugt.\\
+
+\textbf{Lemma}\\
+Wenn ein Graph eine Untereinheit eines nicht-planaren Graphen enth"alt, dann ist er nicht-planar.\\
+
+\textbf{Theorem (Kurotowski)}\\
+Ein Graph ist nur planar falls er keine Untereinheit von $K_5$ oder $K_{3,3}$ enth"alt.
+
+\subsubsection{Regul"are Polyeder}
+
+Ein Polyeder ist reg"ular wenn f"ur irgendwelche $m,n \geq 3$ jeder Knoten genau m Fl"achen (und es folgt m Kanten) und jede Fl"ache ist ein regul"ares n-gon.\\
+
+\textbf{Theorem}\\
+Es gibt genau f"unf regelm"assige Polyeder, wobei (m,n) (3,3), (3,4), (4,3), (3,5) oder (5,3) ist.
+
+
+\subsection{Graphenf"arbung}
+
+\textbf{Definition}\\
+Einen Graphen $G=(V,E)$ zu f"arben (\textit{Knotenf"arbung}) heisst die Knotenmenge $V$ in k Mengen zu unterteilen, so dass keine zwei Knoten der gleichen Farbe verbunden sind. Eine solche F"arbung wird als k-F"arbung bezeichnet. Die chromatische Nummer $\chi(G)$ von G ist die F"arbung mit minimalem k.\\
+
+\textbf{Lemma}\\
+Wenn $G \preceq H$, dann gilt $\chi(G) \leq \chi(H)$.\\
+
+\textbf{Theorem}\\
+$\chi(G)\leq 4$ f"ur jeden planaren Graphen G.\\
+
+\textbf{Definition}\\
+Einem Graphen G die \textit{Kanten zu f"arben} bedeutet, dass sich keine gleichfarbigen Kanten in einem Knoten treffen d"urfen. Die minimale Anzahl Farben wird durch $\chi'(G)$ bezeichnet.\\
+
+\textbf{Theorem}
+\begin{enumerate}
+ \item Wenn d der maximale Index eines Graphen ist, so ist $\chi'(G)=d$ oder $\chi'(G)=d+1$. F"ur bipartite Graphen gilt $\chi'(G)=d$.
+ \item $\chi'(K_n)=n$ wenn n ungerade ist $\chi'(K_n)=n-1$ wenn n gerade ist.
+\end{enumerate}
+
+\section{Zahlentheorie}
+
+\subsection{Die ganzen Zahlen: Axiome und Grundlagen}
+
+Die Menge der ganzen Zahlen $\mathbb{Z}$ ist eine Menge mit zwei Operationen, Addition (+) und Multiplikation ($\cdotp$) und einer Ordnungsrelation ($\leq$).
+
+\subsubsection{Addition und Multiplikation}
+
+\textbf{Axiome} Die folgenden Gleichungen halten f"ur alle $a,b,c\in \mathbb{Z}$.
+\begin{description}
+ \item [I1.] Kommutativit"at von + und $\cdotp$
+  \begin{enumerate}
+   \item $a+b=b+a$
+   \item $ab=ba$
+  \end{enumerate}
+ \item [I2.] Assoziativit"at von + und $\cdotp$
+  \begin{enumerate}
+   \item $(a+b)+c=a+(b+c)$
+   \item $(ab)c=a(bc)$
+  \end{enumerate}
+ \item [I3.] Existenz eines Neutralelements f"ur + und $\cdotp$
+  \begin{enumerate}
+   \item Es existiert $0\in\mathbb{Z}$ so dass $a+0=a$ f"ur alle a
+   \item Es existiert $1\in\mathbb{Z}$ so dass $a\cdotp1=a$ f"ur alle a
+  \end{enumerate}
+ \item [I4.] Distributivit"at von $\cdotp$ "uber +
+  \begin{enumerate}
+   \item $a(b+c)=ab+ac$
+  \end{enumerate}
+ \item [I5.] Existenz von Negativen\\
+  F"ur jedes $a\in \mathbb{Z}$ existiert $-a\in\mathbb{Z}$, so dass $a+(-a)=0$
+ \item [I6.] Keine Nicht-Null Nullteiler\\
+  $ab=0\Rightarrow a=0\lor b=0$
+\end{description}
+
+\subsection{Diskussion der Axiome}
+
+\textbf{Axiom I7}: Es gibt eine Zahl die nicht Null ist. $\exists a: a\neq 0$\\
+
+\textbf{Lemma}: $1\neq 0$\\
+
+\subsection{Einfache Fakten}
+
+Das folgende Theorem gilt f"ur irgendeinen Integrit"atsbereich, 1., 2. und 3. gelten f"ur jeden kommutativen Ring, da wir nur Axiome \textbf{I1} bis \textbf{I5} benutzen.\\
+
+\textbf{Theorem} Die folgenden Aussagen gelten f"ur irgendwelche ganzen Zahlen a,b,c:\\
+\begin{enumerate}
+ \item Aufhebungsgesetz f"ur +: $a+b=a+c\Rightarrow b=c$
+ \item Eigenschaften von 0
+  \begin{enumerate}
+   \item 0 ist eindeutig
+   \item $-0=0$
+   \item $0a=a0=0$
+  \end{enumerate}
+ \item Eigenschaften von Negativen
+  \begin{enumerate}
+   \item -a ist eindeutig f"ur ein gegebenes a
+   \item $(-a)b=-ab$
+   \item $(-a)(-b)=ab$
+  \end{enumerate}
+ \item 1 ist eindeutig, wenn ab=a f"ur alle a, dann ist b=1
+ \item Aufhebungsgesetz f"ur $\cdotp$: $a\neq 0\land ab=ac\Rightarrow b=c$
+\end{enumerate}
+
+
+\subsubsection{Die Ordnungsrelation}
+
+\textbf{Axiom} Es gibt eine Ordnungsrelation $\leq$ auf $\mathbb{Z}$ so dass f"ur alle $a,b,c\in\mathbb{Z}$ gilt:
+\begin{description}
+ \item [I8] $a\leq b\Rightarrow a+c\leq b+c$
+ \item [I9] $a\leq b \land 0 \leq c\Rightarrow ac\leq bc$
+ \item [I10] Die nicht-negativen Zahlen, $\mathbb{N}=\{ n\in\mathbb{Z}|0\leq n\}$, sind strikt geordnet durch $\leq$. Jeder nicht-leere Untermenge S von $\mathbb{Z}$ hat mindest ein kleinstes Element $z\in S$.
+\end{description}
+
+\textbf{Theorem} Die folgenden Aussagen gelten f"ur alle ganzen Zahlen $a,b,c\in \mathbb{Z}$:
+\begin{enumerate}
+ \item $0\leq a\Rightarrow -a \leq 0$
+ \item $a\leq b \land c\leq 0\Rightarrow bc\leq ac$
+ \item $0\leq a^2$
+ \item $0\leq 1$ (da $0 < 1$)
+ \item Es gibt keine ganze Zahl zwischen 0 und 1. $\not\exists a: 0<a<1$
+ \item Die ganzen Zahlen $1,1+1,1+1+1,\ldots$ sind alle disjunkt, darum gibt es unendlich viele Integers.
+\end{enumerate}
+
+$\mid a\mid \cdotp \mid b \mid =\mid ab\mid$ und $\mid a+b \mid\leq \mid a\mid + \mid b\mid$\\
+
+\textbf{Axiom I11} Alle Zahlen sind mit 0 vergleichbar:$\forall a: a\leq 0\lor 0\leq a$
+
+\subsection{Teiler und Division}
+
+\subsubsection{Teiler}
+
+F"ur Integers a und b mit $a\neq 0$ sagen wir dass a b teilt, geschrieben $a|b$, wenn eine Zahl c existiert, so dass $b=ac$.\\
+
+\textbf{Lemma} Wenn $a|b$, dann ist der Integer c mit $b=ac$ eindeutig und wird geschrieben als $c=\frac{b}{a}$\\
+
+\textbf{Theorem} a,b and c sind Integers:
+\begin{enumerate}
+ \item Wenn $a|b$ und $b|c$ dann $a|c$
+ \item Wenn $a|b$, dann $a|bc$ f"ur alle Integers c
+ \item Wenn $a|b$ und $a|c$, dann $a|(b+c)$
+ \item Wenn $a|b$ und $c|(b/a)$, dann $c|b$ und $a|(b/c)$
+ \item Die einzigen Teiler von 1 sind 1 und -1
+ \item Wenn $a|b$ und $b|a$, dann a=b oder a=-b
+\end{enumerate}
+
+
+\subsubsection{Division mit Rest}
+
+\textbf{Theorem (Euklid)}\\
+F"ur alle Integer a und $d\neq 0$ existiert eindeutige Integers a und r die erf"ullen:\\
+$a=dq+r$ und $0\leq r \leq \mid d \mid$\\
+Dabei wird a als Dividend, d als Divisor, q als Quotient und r als Rest bezeichnet. Der Rest r wird oft geschrieben als $R_d(a)$ oder $a mod d$.
+
+\subsubsection{Gr"osste gemeinsame Teiler}
+
+\textbf{Definition} F"ur gegebene Integers a und b, das Ideal generiert von a und b, geschrieben $(a,b)$ ist die Menge \\
+$(a,b):=\{ua+vb|u,v\in\mathbb{Z}\}$\\
+"Ahnlich gilt f"ur eine einzige Ganzzahl:\\
+$(a):=\{ua|u\in\mathbb{Z}\}$
+Es gilt z.Bsp.: $(4,6)=(2),\:(3,7)=(1)$\\
+
+\textbf{Lemma} F"ur $a,b\in\mathbb{Z}$ (nicht beide 0), existiert $d\in\mathbb{Z}$, so dass $(a,b)=(d)$\\
+
+\textbf{Definition} F"ur Integers a und b (nicht beide 0), ein Integer d wird als gr"osster gemeinsamer Teiler d von a und b bezeichnet, falls jeder gemeinsame Teiler von a und b d teilt, also $d|a,d|b$ und $c|a\land c|b\Rightarrow c|d$.\\
+
+\textbf{Lemma} $a,b \in \mathbb{Z}$. Wenn $(a,b)=(d)$ dann ist d der gr"osste gemeinsame Teiler von a und b, anders geschrieben $gcd(a,b)=ua+vb$ f"ur $u,v\in\mathbb{Z}$.\\
+
+\textbf{Definition} Wenn $gcd(a,b)=1$ dann sind a und b relativ prim oder coprim.
+
+\subsubsection{Euklid's erweiterter GCD Algorithmus}
+
+\textbf{Euklid GCD Algorithmus}\\
+$\sigma_1:=a;\:\sigma_2:=b;$\\
+$u_1:=1;\:u_2:=0;$\\
+$v_1:=0;\:v_2:=1;$\\
+\textbf{while} $\sigma_2>0$ \textbf{do begin}\\
+ $\:q:=\:\sigma_1$ \textbf{div} $\sigma_2;$\\
+ $\:r:=\sigma_1-q\sigma_2;$\\
+ $\:\sigma_1:=\sigma_2;\:\sigma_2:=r;$\\
+ $\:t:=u_2;\:u_2:=u_1-qu_2;\:u_1:=t;$\\
+ $\:t:=v_2;\:v_2:=v_1-qv_2;\:v_1:=t;$\\
+\textbf{end;}\\
+$d:=\sigma_1;\:u=u_1;\:v:=v_1$\\
+
+\textbf{Theorem} Dieser Algorithmus berechnet f"ur gegebene nichtnegative a und b mit $a\geq b$ (nicht beide 0), die Integers $d=gcd(a,b)$, wie auch u und v, die $ua+vb=gcd(a,b)$ erf"ullen.
+
+
+\subsection{Faktorisierung in Primzahlen}
+
+\subsubsection{Das Fundamentale Theorem der Arithmetik}
+
+\textbf{Definition} Eine positive Ganzzahl p > 1 wird als prim bezeichnet, falls alle positiven Divisoren von p 1 und p sind. Alle Integer gr"osser 1 welche nicht prim sind werden als composite bezeichnet. 1 ist weder prim noch composite.\\
+
+\textbf{Theorem} Wenn p eine Primzahl ist, welche das Produkt $x_1 x_2\cdots x_n$ von Integers $x_1,\ldots,x_n$ teilt, dann teilt p eine davon, $p|x_i$ f"ur $i\in\{1,\ldots,n\}$\\
+
+\textbf{Theorem} Jede positive Ganzzahl kann eindeutig (bis auf die Ordnung der Faktoren) als das Produkt von Primzahlen geschrieben werden.
+
+\subsubsection{Irrationalit"at von Wurzeln}
+
+\textbf{Theorem} $\sqrt{2}$ ist irrational.
+
+\subsubsection{Kleinste gemeinsame Vielfache}
+
+\textbf{Definition} Das kleinste gemeinsame Vielfache l von zwei positiven Integers a und b, geschrieben $l=lcm(a,b)$ oder $[a,b]$, ist das gemeinsame Vielfache von a und b welches jedes gemeinsame von a und b  teilt, $a|l,\:b|l$ und $a|l'\land b|l'\Rightarrow l|l'$.\\
+
+$a=\prod\limits_i p_i^{e_i}$ und $b=\prod\limits_i p_i^{f_i}$\\
+
+$(a,b)=gcd(a,b)=\prod\limits_i p_i^{min(e_i,f_i)}$\\
+$[a,b]=lcm(a,b)=\prod\limits_i p_i^{max(e_i,f_i)}$\\
+
+$gcd(a,b)\cdotp lcm(a,b)=ab$\\
+$(a,b,c)[ab,ac,bc]=abc$\\
+$(a,[b,c])=[(a,b),(a,c)]$ und $[a,(b,c)]=([a,b],[a,c])$\\
+$([a,b],[a,c],[b,c])=[(a,b),(a,c),(b,c)]$
+
+\subsection{Grundlegendes "uber Primzahlen}
+
+\subsubsection{Dichte von Primzahlen}
+
+\textbf{Theorem} Es gibt unendlich viele Primzahlen.\\
+
+\textbf{Theorem} L"ucken zwischen Primzahlen k"onnen willk"urlich gross sein, f"ur jedes $k\in \mathbb{N}$ existiert ein $n\in\mathbb{N}$, so dass die Menge $\{n,n+1,\ldots,n+k-1\}$ keine Primzahl beinhaltet.
+
+\textbf{Definition} Die Primzahlz"ahlfunktion $\pi:\mathbb{R}\rightarrow \mathbb{N}$ wird wiefolgt definiert: F"ur jede reelle Zahl x ist $\pi(x)$ gleich der Anzahl Primzahlen, die kleiner oder gleich x sind.\\
+
+\textbf{Theorem} $\lim\limits_{x\rightarrow \infty}\frac{\pi(x)\ln(x)}{x}=1$
+
+\subsubsection{Bemerkungen zum Primzahltesten}
+
+\textbf{Theorem} Jede composite Integer n hat einen primen Divisor $\leq \sqrt{n}$
+
+\subsection{Kongruenzen und modulare Arithmetik}
+
+\subsubsection{modulare Kongruenz}
+
+\textbf{Definition} F"ur $a,b,m\in\mathbb{Z}$ mit $m\geq 1$, sagen wir dass a kongruent zu b modulo m ist, wenn m a-b dividiert. Wir schreiben $a\equiv_m b \Leftrightarrow m|(a-b)$\\
+
+\textbf{Lemma} F"ur $m\geq 1$, $\equiv_m$ ist eine "Aquivalenzrelation auf $\mathbb{Z}$.\\
+
+\textbf{Lemma} Wenn $a\equiv_m b$ und $c\equiv_m d$, dann $a+c \equiv_m b+d$ und $ac\equiv_m bd$.\\
+
+\textbf{Korollar} $f(x_1,\ldots,x_k)$ ist ein Polynomal mit k Variablen und Integer Koeffizienten, und $m\geq 1$. Wenn $a_i\equiv_m b_i$ f"ur $1\leq i\leq k$, dann $f(a_1,\ldots,a_k)\equiv_m f(b_1,\ldots,b_k)$.
+
+\subsubsection{Modulare Arithmetik}
+
+Es gibt m "Aquivalenzklassen von der "Aquivalenzrelation $\equiv_m$, n"amlich $[0],[1],\ldots,[m-1]$. Jede "Aquivalenzklasse $[a]$ hat einen Repres"antant $R_m(a)\in[a]$ in der Menge $Z_m:=\{0,\ldots,m-1\}$.\\
+
+\textbf{Lemma} $a,b,m \in \mathbb{Z}$ mit $m\geq 1$.
+\begin{enumerate}
+ \item $a\equiv_m R_m(a)$
+ \item $a\equiv_m b \Leftrightarrow R_m(a)=R_m(b)$
+\end{enumerate}
+
+\textbf{Lemma} $a,b,m\in \mathbb{Z}$ mit $m\geq 1$
+\begin{enumerate}
+ \item $R_m(a+b)=R_m(R_m(a)+R_m(b))$
+ \item $R_m(ab)=R_m(R_m(a)\cdotp R_m(b))$
+\end{enumerate}
+
+
+\subsubsection{Die Kongruenz $ax\equiv_m b$ und multiplikative Inverse}
+
+\textbf{Lemma} Wenn $gcd(a,m)=1$, dann gibt es eine eindeutige L"osung x zu der Kongruenzgleichung $ax\equiv_m 1$.\\
+
+\textbf{Definition} Die eindeutige L"osung x der Kongruenzgleichung $ax\equiv_m 1$ wird als multiplikatives Inverserses von a modulo m bezeichnet. Es wird auch die Notation $x\equiv_m a^{-1}$ oder $x\equiv_m 1/a$ benutzt.\\
+
+\textbf{Lemma} Die Kongruenzgleichung $ax\equiv_m b$ hat $d=gcd(a,m)$ L"osungen in $\mathbb{Z}_m$ wenn $d|b$ und Null L"osungen, wenn $d \not | b$.
+
+\subsubsection{Der chinesische Restwertsatz}
+
+\textbf{Theorem} $m_1,m_2,\ldots,m_r$ paarweise relative Primzahlen und $M=\prod\limits^r_{i=1}m_i$. F"ur jede Liste $a_1,\ldots,a_r$ mit $0\leq a_i < m_i$ f"ur $1\leq i\leq r$, das System von Kongruenzgleichungen\\
+\begin{center}
+$x\equiv_{m_1} a_1$\\
+$x\equiv_{m_2} a_2$\\
+$\ldots$\\
+$x\equiv_{m_r} a_r$\\
+\end{center}
+f"ur x hat eine eindeutige L"osung x f"ur welche gilt $0\leq x < M$.\\
+$M_i=M/m_i$
+$M_iN_i\equiv_{m_i}1$\\
+$\Rightarrow x=R_M(\sum\limits^r_{i=1}a_iM_iN_i)$
+
+\subsection{Einige Anwendungen}
+
+\subsubsection{Diffie-Hellman Protokoll}
+
+\footnotesize
+\begin{tabular}{p{2cm}cp{2cm}}
+  \textbf{Alice} &	\textbf{insecure channel} &	\textbf{Bob}\\
+  w"ahle $x_A$ zuf"allig aus $\{0,\ldots,p-2\}$ & & 	w"ahle $x_B$ zuf"allig aus $\{0,\ldots,p-2\}$\\
+  $y_A:=R_p(g^{x_A})$ &	&				$y_B:=R_p(g^{x_B})$\\
+  &			$\rightarrow\:y_A$ &		\\
+  &			$y_B\:\leftarrow$ &		\\
+  $k_{AB}:=R_p(y_B^{x_A})$ & &				$k_{BA}:=R_p(y_A^{x_B})$
+\end{tabular}
+\begin{center}
+ $k_{AB}\equiv_p y_B^{x_A}\equiv_p (g^{x_B})^{x_A}\equiv_p g^{x_A x_B}\equiv_p k_{BA}$
+\end{center}
+\normalsize
+
+\section{Algebra}
+
+\subsection{Einf"uhrung}
+
+\subsubsection{Algebraische Systeme}
+
+\textbf{Definition} Eine \textit{Operation} auf eine Menge S ist eine Funktion $S^n\rightarrow S$, wobei $n\geq 0$ als arity der Operation bezeichnet wird..\\
+
+\textbf{Definition} Eine Algebra ist ein Paar $\langle S; \Omega \rangle$, wobei $S$ eine Menge und $\Omega$ eine Liste von Operationen auf S ist.\\
+
+\textbf{Definition} Der Typ einer Algebra $\langle S;\Omega\rangle$ ist die Liste von Arities von den Operationen.\\
+
+Beispiele:
+\begin{enumerate}
+ \item $\langle \mathbb{Z};+,\cdotp,-,0,1\rangle$
+ \item $\langle\mathbb{Z}_m;\oplus\rangle$ Integers modulo m mit Addition modulo m als einziger bin"aren Operation. Wir k"onnen auch $\langle\mathbb{Z}_m;\oplus,0\rangle$ schreiben, der Typ davon w"are $(2,0)$.
+\end{enumerate}
+
+\subsection{Halbgruppen, Monoide, Gruppen}
+
+\subsubsection{Neutralelemente}
+
+\textbf{Definition} Ein links $[$rechts$]$ neutrales Element einer Algebra $\langle S;*\rangle$ ist ein Element $e\in S$, so dass $e*a=a\:[a*e=a]$ f"ur alle $a\in S$. Wenn $e*a=a*e=a$ f"ur alle $a\in S$, dann wird $e$ einfach als Neutralelement bezeichnet.\\
+
+\textbf{Lemma} Wenn $\langle S;*\rangle$ ein links und ein rechts neutrales Element hat, so sind sie gleich. Da $\langle S;*\rangle$ h"ochstens ein Neutralelement haben kann.
+
+\subsubsection{Assozitivit"at, Halbgruppen und Monoide}
+
+\textbf{Definition} Eine \textit{Halbgruppe} ist eine Algebra $\langle S;*\rangle$ welche das Assoziativit"atsgesetz erf"ullt: $a*(b*c)=(a*b)*c$ f"ur alle $a,b,c\in S$. Beispiele von Halbgruppen sind: $\langle\mathbb{Z};+ \rangle,\:\langle\mathbb{Z};\cdotp \rangle,\:\langle\mathbb{Q};+ \rangle,\:\langle\mathbb{Q};\cdotp \rangle,\:\langle\mathbb{R};+ \rangle,\:\langle\mathbb{R};\cdotp \rangle,\:\langle\mathbb{Z}_m;\oplus \rangle,\:\langle\mathbb{Z}_m;\odot \rangle$.\\
+
+\textbf{Lemma} Das Element $a_1*a_2*\ldots*a_n$ ($a_1,\ldots,a_n\in S$) in einer Halbgruppe $\langle S;*\rangle$ ist eindeutig definiert und unabh"angig von der Ordnung in welcher die Elemente kombiniert werden.\\
+
+\textbf{Definition} Ein Monoid ist eine Algebra $\langle M;*,e\rangle$, so dass $\langle M;*\rangle$ eine Halbgruppe ist mit einem Neutralelement e.\\
+
+\subsubsection{Inverse und Gruppen}
+
+\textbf{Definition} Ein links $[$rechts$]$ inverses Element eines Elementes $a$ in einer Algebra $\langle S;*,e\rangle$ mit Neutralelement e ist ein Element $b\in S$, so dass $b*a=e\:[a*b=e]$.  Wenn $b*a=a*b=e$, dann wird b einfach als Inverses von a bezeichnet·\\
+
+\textbf{Lemma} in einem Monoid $\langle M;*,e\rangle$, wenn $a\in M$ eine links und rechts Inverse hat, so sind sie gleich. $a$ hat h"ochstens eine Inverse.\\
+
+\textbf{Definition} Eine \textit{Gruppe} ist eine Algebra $\langle G;*,\hat{},e$ (vom Typ $(2,1,0)$) so dass $\langle G;*,e\rangle$ ein Monoid ist und jedes Element $a$ ein inverses Element $\hat{a}$ besitzt.\\
+
+Gruppenaxiome: $\langle G;*\rangle$ ist eine Gruppe, wenn $*$ eine Operation auf G ist, so dass:
+\begin{description}
+ \item[G1] $*$ ist assoziativ
+ \item[G2] Es existiert ein Neutralelement $e$, so dass $a*e=e*a=a\forall a \in G$
+ \item[G3] Jedes $a\in G$ ein Inverses Element $\hat{a}$ besitzt, $a*\hat{a}=\hat{a}*a=e$
+\end{description}
+
+F"ur eine gegebene Struktur R, die Addition und Multiplikation unterst"utzt, beschreibt $R[x]$ die Menge der Polynome mit Koeffizienten in R. $\langle \mathbb{Z}[x];+\rangle$, $\langle \mathbb{Q}[x];+\rangle$ und $\langle \mathbb{R}[x];+\rangle$ sind abelsche Gruppen, wobei + die polynmielle Addition ist. $\langle \mathbb{Z}[x];\cdotp\rangle$, $\langle \mathbb{Q}[x];\cdotp\rangle$ und $\langle \mathbb{R}[x];\cdotp\rangle$ sind abelsche Monoide, das NE ist das Polynom 1.\\
+
+\textbf{Definition} Eine Gruppe $\langle G;*\rangle$ (oder Monoid oder Halbgruppe) wird als kommutativ oder abelsch bezeichnet, falls $*$ kommutativ ist, $a*b=b*a\:\forall a,b\in G$.\\
+
+\textbf{Lemma} F"ur eine Gruppe $\langle G;*,\hat{},e\rangle$, gilt f"ur alle $a,b,c\in G$:
+\begin{enumerate}
+ \item $\widehat{(\hat{a})}=a$
+ \item $\widehat{a*b}=\hat{b}*\hat{a}$
+ \item Linksaufhebungsgesetz: $a*b=a*c\Rightarrow b=c$.
+ \item Rechtsaufhebungsgesetz: $b*a=c*a\Rightarrow b=c$.
+ \item Die Gleichung $a*x=b$ hat eine eindeutige L"osung f"ur irgendein a und b. So auch die Gleichung $x*a=b$.
+\end{enumerate}
+
+\subsubsection{Direkte Produkte}
+
+\textbf{Definition} $\langle S_1;\Omega_1\rangle,\ldots,\langle S_n;\Omega_n\rangle$ sind n Algebren vom gleichen Typ. Ihr direktes Produkt ist die Algebra $\langle S;\Omega\rangle$ vom selben Typ, wobei $S=S_1\times\ldots\times S_n$ und wobei jede Operation $\omega\in\Omega$ komponentenweise fu"r die i-te Komponente die dazugeh"orige Operation in $\langle S_i;\Omega_i\rangle.$\\
+
+\textbf{Definition} Das direkte Produkt von n Gruppen\\
+$\langle G_1;*_1,\hat{}^{(1)},e_1\rangle,\ldots,\langle G_n;*_n,\hat{}^{(n)},e_n\rangle$\\
+ist die Algebra\\
+$\langle G_1\times\cdots\times G_n;\star,\hat{},(e_1,\ldots,e_n)\rangle$\\
+wobei\\
+$(a_1,\ldots,a_n)\star(b_1,\ldots,b_n)=(a_1*_1 b_1,\ldots,a_n*_n b_n)$\\
+und $\widehat{(a_1,\ldots,a_n)}=(\hat{a_1}^{(1)},\ldots,\hat{a_n}^{(n)})$.
+
+
+\subsubsection{Unteralgebren und Untergruppen}
+
+\textbf{Definition} Eine Untermenge T von S wird als abgeschlossen unter einer n-"aren Operation $\omega$ auf S bezeichnet, falls $a_1,\ldots,a_n\in T\Rightarrow\omega(a_1,\ldots,a_n)\in T$.\\
+
+\textbf{Definition} $\langle S;\Omega\rangle$ ist eine $\Omega$-Algebra. Eine Untermenge T von S ist eine $\Omega$-Unteralgebra von $\langle S;\Omega\rangle$, geschrieben $\langle T;\Omega\rangle\leq\langle S;\Omega\rangle$ oder einfach $T\leq S$, wenn T abgeschlossen ist unter allen $\omega\in\Omega$.\\
+
+\textbf{Definition} Eine Subalgebra einer Gruppe (Halbgruppe, Monoid etc.) wird als Untergruppe (Unterhalbgruppe, Untermonoid etc.), wenn es selber eine Gruppe (Halbgruppe, Monoid etc.) ist.\\
+
+\textbf{Definition} Gegeben eine Algebra $\langle S;\Omega\rangle$ und eine Untermenge $T\subseteq S$ von S, die Unteralgebra generiert bei $T$, geschrieben $\langle T\rangle$, ist der Abschluss von T unter allen Operationen in $\Omega$. Wenn $T=\{t_1,\ldots,t_k\}$ schreiben wir auch $\langle t_1,\ldots,t_k\rangle$ statt $\{\langle t_1,\ldots,t_k\rangle\}$.\\
+
+\textbf{Lemma} F"ur eine Gruppe $\langle G;*,\hat{},e\rangle$ und eine Untermenge $H\subseteq G$ (mit $H\neq \emptyset$), $\langle H;*,\hat{},e\rangle$ ist eine Untergruppe von $\langle G;*,\hat{},e\rangle$ wenn $a*\hat{b}\in H\:\forall a,b\in H$.\\
+
+\subsubsection{Isomorphismus}
+
+\textbf{Definition} Zwei Algebren $\langle S;\Omega\rangle$ und $\langle S';\Omega'\rangle$ vom selben Typ sind \textit{isomorph}, geschrieben $\langle S;\Omega\rangle\cong\langle S';\Omega'\rangle$ wenn eine Bijektion $\psi:S\rightarrow S'$ existiert, so dass f"ur jede n-"are Operation $\omega\in\Omega$ und dazugeh"orende $\omega'\in\Omega'$ $\psi(\omega(a_1,\ldots,a_n))=\omega'(\psi(a_1),\ldots,\psi(a_n))$.
+
+
+\subsubsection{Die Ordnung von Elementen}
+
+$n\in\mathbb{Z},\: a^n$ ist rekursiv definiert als:
+\begin{itemize}
+ \item $a^0=e$
+ \item $a^n=a\cdotp a^{n-1}$
+ \item $a^n=(a^{-n})^{-1}=(a^{-1})^n$ f"ur $n\leq -1$
+\end{itemize}
+
+$a^m\cdotp a^n=a^{m+n}$ und $(a^m)^n=a^{mn}$.\\
+
+\textbf{Definition} G eine Gruppe und a ein Element von G, die Ordnung von a, geschrieben $ord(a)$, ist das kleinste $m\geq 1$, so dass $a^m=e$, wenn ein solches m existiert, sonst $ord(a)=\infty$. Bei Definition: $ord(e)=1$. Wenn $ord(a)=2$ f"ur ein a, dann $\hat{a}=a$.\\
+
+\textbf{Lemma} In einer endlichen Gruppe G hat jedes Element eine endliche Ordnung.\\
+
+\textbf{Lemma} Wenn G eine Gruppe ist und $a\in G$ endliche Ordnung hat, dann gilt f"ur $m\in\mathbb{Z}$: $a^m=a^{R_{ord(a)}(m)}$ und ausserdem ist $\langle a\rangle=\{e,a,a^2,\ldots,a^{ord(a)-1}\}$ die kleinste Untergruppe von G, die a enth"alt und ist abelsch.\\
+
+\textbf{Definition} Eine Gruppe $G=\langle g\rangle$ generiert bei einem Element $g\in G$ wird als zyklisch bezeichnet und g wird als Generator von G bezeichnet.\\
+
+\textbf{Lemma} Eine zyklische Gruppe der Ordnung n ist isomorph zu $\langle \mathbb{Z}_n,\oplus\rangle$ (und folglich abelsch) und hat $\varphi(n)$ Generatoren.
+
+\subsubsection{Nebengruppen und Lagrange's Theorem}
+
+\textbf{Definition} G eine Gruppe, $H\leq G$ eine Untergruppe von G und $a\in G$. Die Menge $H*a:=\{h*a|h\in H\}$ wird als rechte Nebengruppe und "ahnlich wird $a*H:=\{a*h|h\in H\}$ als linke Nebengruppe von H bezeichnet. Wenn G abelsch ist, dann $a*H=H*a$, welche als Nebengruppe bezeichnet wird.\\
+
+\textbf{Lemma} G eine Gruppe, $H\leq G$ eine Untergruppe von G, dann gilt:
+\begin{enumerate}
+ \item H ist selber eine rechte/linke Nebengruppe von H.
+ \item Irgendwelche zwei rechte/linke Nebengruppen sind entweder gleich oder disjunkt.
+ \item Wenn H endlich, dann haben alle Nebengruppen gleiche Kardinalit"at $|H|$.
+\end{enumerate}
+
+\textbf{Definition} F"ur eine endliche Gruppe G, wird $|G|$ als die Ordnung der Gruppe bezeichnet.\\
+
+\textbf{Theorem} G eine endliche Gruppe und $H\leq G$ eine Untergruppe von G. Dann teilt die Ordnung von H die Ordnung von G, $|H|$ teilt $|G|$.\\
+
+\textbf{Korollar} G eine endliche Gruppe. Dann teilt $ord(a)\:|G|\:\forall a\in G$.\\
+
+\textbf{Korollar} G eine endliche Gruppe. Dann $a^{|G|}=e\:\forall a\in G$.\\
+
+\textbf{Korollar} Jede Gruppe mit primer Ordnung ist zyklisch und jedes Element ausser $e$ ist ein Generator.
+
+
+\subsubsection{Die Gruppe $\mathbb{Z}^*_m$}
+
+\textbf{Definition} $\mathbb{Z}_m^*:=\{a\in\mathbb{Z}_m| gcd(a,m)=1\}$. Die Eulerfuktion $\varphi:\mathbb{Z}^+\rightarrow\mathbb{Z}^+$ ist definiert als die Kardinalit"at von $\mathbb{Z}_m^*$: $\varphi(m)=|\mathbb{Z}_m^*|$.\\
+
+\textbf{Lemma} Wir haben $\varphi(m)=m\cdotp\prod\limits_{p|m}(1-\frac{1}{p}).$ (p prim).\\
+"Aquivalent, wenn $m=\prod\limits^r_{i=1}p_i^{e_i}$, dann $\varphi(m)=\prod\limits^r_{i=1}(p_i-1)p_i^{e_i-1}$\\
+
+\textbf{Lemma} $\langle\mathbb{Z}_m^*;\odot,^{-1},1\rangle$ ist eine Gruppe.\\
+
+\textbf{Lemma} $\langle\mathbb{Z}_m -\{0\};\odot,^{-1},1\rangle$ ist eine Gruppe wenn und nur wenn m prim ist.\\
+
+\textbf{Korollar (Fermat,Euler)} F"ur alle $m\geq 2$ und alle a mit $gcd(a,m)=1$, $a^{\varphi(m)}\equiv_m 1$. Im speziellen, f"ur jede Primzahl p und jedes a, dass nicht durch p teilbar ist $a^{p-1}\equiv_p 1$.\\
+
+\textbf{Theorem} Die Gruppe $\mathbb{Z}_m^*$  ist zyklisch wenn und nur wenn $m=2,m=4,m=p^e$ oder $m=2p^e$, wobei p eine ungerade Primzahl ist und $e\geq 1$.\\
+
+\textbf{Theorem} Jede abelsche Gruppe G ist isomorph zu einem direkten Produkt einer Liste von zyklischen Gruppen, wobei die Ordnung von jeder Gruppe die Ordnung der in der Liste nachfolgenden Gruppe teilt.
+
+\subsubsection{RSA Public-Key}
+
+\textbf{Theorem} G eine endliche Gruppe (mit Neutralelement 1) und $e \in \mathbb{Z}$ ein gegebener Exponent, der relativ zu $|G|$ prim ist ($gcd(e,|G|)=1$). Die (eindeutige) e-te Wurzel von $y\in G$, namentlich $x\in G$ befriedigend $x^e=y$, kann ausgerechnet werden gem"ass\\
+$x=y^d$,\\
+wobei d das multiplikative Inverse von e modulo $|G|$ ist,\\
+$d\equiv_{|G|}e^{-1}$.\\
+\footnotesize
+\begin{tabular}{p{2cm}cp{2cm}}
+  \textbf{Alice} &	\textbf{insecure channel} &	\textbf{Bob}\\
+  Generiere Primzahlen p und q $m=p\cdotp q$, $f=(p-1)(q-1)$ & & 	\\
+  w"ahle e, $d\equiv_f e^{-1}$&	$\rightarrow\:m,e$ &	Klartext $x\in\{1,\ldots,m-1\}$	\\
+  $x=R_m(y^d)$&			$y\:\leftarrow$ &	Verschl"usselt $y=R_m(x^e)$\\
+\end{tabular}
+\normalsize
+\subsection{Ringe und K"orper}
+
+\subsubsection{Definition einer Ringes}
+
+\textbf{Definition} Ein Ring $\langle R;+,-,0,\cdotp,1\rangle$ ist ein algebraisches System f"ur welches gilt:
+\begin{enumerate}
+ \item $\langle R;+,-,0\rangle$ ist eine abelsche Gruppe
+ \item $\langle R;\cdotp,1\rangle$ ist ein Monoid
+ \item $a(b+c)=ab+ac$ und $(b+c)a=ba+ca$ f"ur alle $a,b,c\in R$ (links und rechts distributiv)
+\end{enumerate}
+
+Ein Ring wird als kommutativ bezeichnet, falls die Multiplikation kommutativ ist ($ab=ba$). Das multiplikative Neutralelement 1 wird als Einheit von R bezeichnet.\\
+
+\textbf{Theorem} F"ur jeden Ring $\langle R;+,-,0,\cdotp,1\rangle$ gilt:
+\begin{enumerate}
+ \item $0a=a0=0\:\forall a \in R$
+ \item $(-a)b=-ab$
+ \item $(-a)(-b)=ab$
+ \item Wenn R mehr als ein Element hat, dann ist $1\neq 0$
+\end{enumerate}
+
+\subsubsection{Integrit"atsbereich und K"orper}
+
+\textbf{Definition} Ein Element $a\neq 0$ eines Ringes R wird als Nullteiler bezeichnet, wenn $ab=0$ f"ur ein $b\neq 0 \in R$.\\
+
+\textbf{Defintion} Ein Element $u\neq 0$ von einem Ring wird als Einheit bezeichnet, wenn u invertierbar ist (uv=1 f"ur $v\in R\:(v=u^{-1})$). Die Menge der Einheiten von R wird geschrieben als $U(R)$.\\
+
+\textbf{Lemma} F"ur ein Ring R ist $U(R)$ eine multiplikative Gruppe.\\
+
+\textbf{Definition} Ein Integrit"atsbereich ist ein nichttrivaler kommutativer Ring ohne Nullteiler: $ab=0\Rightarrow a=0\lor b=0$.\\
+
+\textbf{Definition} Ein Polynom $a(x)$ "uber einem Ring R in welchen das unbestimmte x ein formaler Ausdruck der Form $a(x)=\sum\limits^n_{i=0}a_i x^i$ ist, f"ur positive Integer n. Wir schreiben die Menge der Polynome (in X) "uber R als $R[x]$.\\
+
+\textbf{Lemma} Wenn R ein Ring ist, dann ist $R[x]$ auch ein Ring. Die Einheiten von $R[x]$ sind die konstanten Polynome welche Einheiten von R sind.\\
+
+\textbf{Lemma} Wenn D ein Integrit"atsbereich ist, so ist es auch $D[x]$.\\
+
+\textbf{Definition} Ein \textit{K"orper} ist ein nichttrivaler, kommutativer Ring F in welchem jedes nicht-Null Element eine Einheit ist, in anderen Worten so, dass $\langle F-\{0\};\cdot,^{-1},1\rangle$ eine abelsche Gruppe ist.\\
+
+\textbf{Theorem} $\mathbb{Z}_m$ ist ein K"orper wenn und nur wenn m prim ist.\\
+
+\textbf{Lemma} Ein K"orper ist ein Integrit"atsbereich.
+
+\subsubsection{Quotientenk"orper}
+
+$a/b+c/d=(ad+bc)/bd$\\
+$(a/b)\cdotp(c/d)=(ac)/(bd)$\\
+
+\textbf{Theorem} F"ur ein Integrit"atsbereich $D$, $Q(D)$ mit Addition und Multiplikation wie oben ist ein K"orper, wobei $0=0/1,\:1=1/1,\:-(a/b)=(-a)/b$ und $(a/b)^{-1}=b/a$ (wenn $a\neq 0$).
+
+\subsection{Polynome "uber einem K"orper}
+
+$a(x)=a_dx^d+a_{d-1}x^{d-1}+\ldots+a_1x+a_0$\\
+
+Der Grad $deg(a(x))$ von $a(x)$ ist das kleinste i f"ur welches $a_i\neq 0$. Das spezielle Polynom 0 hat Grad ''minus unendlich''.
+
+\subsubsection{Teilbarkeitseigenschaft in $F[x]$}
+
+\textbf{Theorem} F sei ein K"orper. F"ur irgendein $a(x)$ und $b(x)\neq 0$ in $F[x]$ existiert ein eindeutiges $q(x)$ (der Quotient) und $r(x)$, so dass\\
+$a(x)=b(x)q(x)\cdotp +r(x)$ und $deg(r(x))<deg(b(x))$\\
+
+Der K"orper mit p Elementen wird geschrieben als $GF(p)$
+
+\subsubsection{Teiler und Irreduzible Polynome}
+
+\textbf{Definition} F ein K"orper. F"ur $a(x),b(x)\in F[x]$, $b(x)$ teilt $a(x)$, geschrieben $b(x)|a(x)$, wenn $a(x)=b(x)\cdotp c(x)$ f"ur ein $c(x)\in F[x]$.\\
+
+\textbf{Definition} Ein Polynom $a(x)\in F[x]$ wird als \textit{monic} bezeichnet, wenn der f"uhrende Koeffizient 1 ist.\\
+
+\textbf{Definition} Ein Polynom $a(x)\in F[x]$ wird als $irreduzibel$ bezeichnet, wenn es nur von konstanten Polynomen und konstanten Vielfachen von $a(x)$ geteilt wird.
+
+\subsubsection{Polynome als Funktionen}
+
+Ein Polynom $a(x)\in F[x]$ kann als Funktion $F\rightarrow F$ interpretiert werden, wenn wir die Auswertung von $a(x)$ in $\alpha \in F$ in gewohnter Weise definieren. Dies definiert eine Funktion $F\rightarrow F:\alpha\mapsto a(\alpha)$.\\
+
+
+\textbf{Definition} $a(x)\in F[x]$. Ein Element $\alpha \in F$ f"ur welches $a(\alpha)=0$ wird als Wurzel von $a(x)$ bezeichnet.\\
+
+\textbf{Lemma} $\alpha \in F$ ist eine Wurzel von $a(x)$ wenn und nur wenn $x-\alpha$ $a(x)$ teilt.\\
+
+\textbf{Definition} Wenn $\alpha$ eine Wurzel von $a(x)$ ist, dann ist seine Vielfachheit die h"ochste Potenz von $x-\alpha$ die $a(x)$ teilt.\\
+
+\textbf{Korollar} Ein Polynom $a(x)$ von Grad 3 "uber einem K"orper F ist irreduzibel wenn und nur wenn es keine Wurzel hat.\\
+
+\textbf{Theorem} F"ur ein Integrit"atsbereich D hat ein nicht-null Polynom $a(x)\in D[x]$ vom Grad d h"ochstens d Wurzeln, z"ahlende Vielfache.\\
+
+\subsubsection{Polynom Interpolation}
+
+\textbf{Lemma} Ein Polynom $a(x)\in F[x]$ vom Grad d ist eindeutig bestimmt durch d+1 Werte von $a(x)$, i.e. durch $a(\alpha_1),\ldots,a(\alpha_{d+1})$ f"ur disjunkte $\alpha_1,\ldots,\alpha_{d+1}\in F$.
+
+\subsubsection{Analogien zwischen $\mathbb{Z}$ und $F[x]$, Euklidischer Bereich}
+
+\textbf{Definition} F"ur $a,b\in D$, b teilt a in D, geschrieben $b|a$, wenn $a=bc$ f"ur ein c. Ausserdem werden a,b als \textit{associates} bezeichnet, geschrieben $a\sim b$, wenn $a=ub$ f"ur eine Einheit $u\in D$. Eine Nicht-Einheit $p\in D -\{0\}$ ist prim wenn immer $p=ab$, dann ist entweder a oder b eine Einheit.\\
+
+\textbf{Lemma} $a\sim b\Leftrightarrow a|b\land b|a$.\\
+
+\textbf{Definition} Ein \textit{Euklidischer Bereich} ist ein Integrit"atsbereich zusammen mit einer \textit{Grad Funktion}: $D^*\rightarrow \mathbb{N}$, wobei gilt:
+\begin{enumerate}
+ \item $d(ab)\geq d(a)$ f"ur alle nicht-Null $a,b\in D$
+ \item F"ur jedes $a$ und $b \neq 0$ in D existiert q und r, so dass $a=bq+r$ und $d(r)<d(b)$ oder $r=0$.
+\end{enumerate}
+
+\textbf{Theorem} In einem Euklidischen Bereich kann jedes Element eindeutig (bis auf associates) in Primzahlen faktorisiert werden.
+
+\subsubsection{Der Ring $F[x]_{m(x)}$}
+
+$a(x)\equiv_{m(x)} b(x)\Leftrightarrow m(x)|(a(x)-b(x))$\\
+
+\textbf{Lemma} Kongruenz modulo $m(x)$ ist eine "Aquivalenzrelation auf $F[x]$ und jede "Aquivalenzklasse hat einen eindeutigen Repr"asentent vom Grad kleiner als $deg(m(x))$.\\
+
+\textbf{Definition} $m(x)$ ein Polynom vom Grad d "uber F. Dann \\
+$F[x]_{m(x)}=\{a(x)\in F[x] \mid deg(a(x))<d\}$\\
+$F[x]^*_{m(x)}=\{a(x)\in F[x]_{m(x)} \mid gcd(a(x),m(x))=1\}$\\
+
+\textbf{Lemma} $F[x]_{m(x)}$ ist ein Ring mit Addition und Multiplikation modulo m(x).\\
+
+\textbf{Theorem} Der Ring $F[x]_{m(x)}$ ist ein K"orper wenn und nur wenn $m(x)$ irreduzibel ist.\\
+
+\textbf{Definition} Ein K"orper $F[x]_{m(x)}$ wird als \textit{ausgeweiteter K"orper} von F bezeichnet und $F$ wir als Unterk"orper von $F[x]_{m(x)}$ bezeichnet.\\
+
+\subsubsection{Endliche K"orper}
+
+\textbf{Theorem} F"ur jede Primzahl p und jedes $d\geq 1$ existiert ein irreduzibles Polynom vom Grad d in $GF(p)[x]$. Im Besonderen existiert ein endlicher K"orper mit $p^d$ Elementen.\\
+
+\textbf{Theorem} Es existiert ein endlicher K"orper mit q Elementen wenn und nur wenn q eine Potenz einer Primzahl ist. Ausserdem irgendwelche K"orper gleicher Gr"osse q sind isomorph, i.e. jeder endliche K"orper ist ein ausgeweiteter K"orper von $GF(p)$ f"ur eine Primzahl p.\\
+
+\textbf{Theorem} Die multiplikative Gruppe von jedem endlichen K"orper GF(q) ist zyklisch.
+
+\subsection{Anwendungen von endlichen K"orpern}
+
+\subsubsection{Secret Sharing}
+
+\textbf{Definition} Ein \textit{(t,n)-secret sharing Schema} f"ur einen endlichen Bereich $\mathcal{S}$ ist eine Methode um einen geheimen Wert $s\in\mathcal{S}$ so unter $P_1,\ldots,P_n$ Gruppen aufzuteilen, so dass irgendwelche t von den Gruppen den Schl"ussel s rekonstruieren k"onnen, aber t-1 (oder weniger) keine Information dar"uber haben.\\
+
+\textbf{Theorem} $n<q$ und jede Gruppe $P_i$ zu einem eindeutigen Element $\alpha_i$ von $GF(q)$ zugeh"orig. Wenn $a_1,\ldots,a_{t-1}$ uniform und zuf"allig von GF(q) gew"ahlt werden und jede Gruppe $P_i$ erh"alt einen Teil $a(\alpha_i)$, wobei das Polynom $a(x)\in GF(x)$ definert ist durch\\
+$a(x):=a_{t-1}x^{t-1}+\ldots+a_1x+s$\\
+dann ist das ein (t,n)-secret sharing Schema.\\
+
+\subsubsection{Fehlerkorrigierungs Codes}
+
+\textbf{Definition} Die \textit{Verschl"usselungsfunktion} E eines Fehlerkorrigierungs-Codes f"ur ein Alphabet $\mathcal{A}$ nimmt k Informationssymbole $a_0,\ldots,a_{k-1}\in \mathcal{A}$ von $\mathcal{A}$ und verschl"usselt diese in eine Liste $c_0,\ldots,c_{n-1}$ von $n>k$ Symbolen in $\mathcal{A}$ (das Codewort).\\
+$E:\mathcal{A}^k\rightarrow \mathcal{A}^n:[a_0,\ldots,a_{k-1}]\mapsto E(a_0,\ldots,a_{k-1})=[c_0,\ldots,c_{n-1}]$\\
+Anstatt der Verschl"usselungsfunktion betrachtet man oft die Menge $\mathcal{C}$ von Codew"ortern, welche als Fehlerkorrigierungs-Code bezeichnet wird:\\
+$\mathcal=\{E(a_0,\ldots,a_{k-1})|a_0,\ldots,a_{k-1}\in \mathcal{A}\}$\\
+
+\textbf{Definition} Ein \textit{(n,k)-Fehlerkorrigierungs-Code} (oder (n,k)-Code) $\mathcal{C}$ "uber einem Alphabet $\mathcal{A}$ mit $|\mathcal{A}|=q$ ist eine Untermenge der Kardinalit"at $q^k$ von $\mathcal{A}^n$.\\
+
+\textbf{Definition} Die \textit{minimale Distanz} eine Fehlerkorrigierungs-Codes $\mathcal{C}$ ist die minimale \textit{Hamming Distanz} zwischen zwei Codew"ortern, wobei die Hamming Distanz definiert ist als die Nummer von Positionen an welchen die zwei Codew"orter verschieden sind.\\
+
+\textbf{Definition} Eine \textit{Dekodierfunktion} D nimmt eine beliebige Liste $[r_0,\ldots,r_{n-1}]\in \mathcal{A}^n$ von Symbolen und dekodiert diese zu einem Informationsvektor $[a_0,\ldots,a_{k-1}]$. In anderen Worten\\
+$D:\mathcal{A}^n\rightarrow\mathcal{A}^k:[r_0,\ldots,r_{n-1}]\mapsto[a_0,\ldots,a_{k-1}]$.\\
+
+\textbf{Definition} Ein Code $\mathcal{C}$ kann t Fehler korrigieren wenn eine Dekodierfunktion D existiert, so dass wenn man $[r_0,\ldots,r_{n-1}]$ von einem beliebigen Codewort $[c_0,\ldots,c_{n-1}]$ erh"alt wenn man beliebige t Positionen "andert, dann\\
+$E(D([r_0,\ldots,r_{n-1}]))=[c_0,\ldots,c_{n-1}]$\\
+
+\textbf{Theorem} Ein Code $\mathcal{C}$ mit minimaler Distanz d kann t Fehler korrigieren, wenn und nur wenn $d\geq 2t+1$.\\
+
+\textbf{Theorem} $\mathcal{A}=GF(q)$ (i.e. $\mathcal{A}$ hat eine K"orper Struktur) und $\alpha_0,\ldots,\alpha_{n-1}$ beliebige disjunkte Elemente von $GF(q)$. Die Encode Funktion:
+$E(a_0,\ldots,a_{k-1})=[a(\alpha_0),\ldots,a(\alpha_{n-1})]$,\\
+wobei $a(x)$ das Polynom\\
+$a(x):=a_{k-1}x^{k-1}+\ldots+a_1x+a_0$.\\
+Dieser Code hat die minimale Distanz n-k+1.
+
+\end{document}

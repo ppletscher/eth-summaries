@@ -1,0 +1,61 @@
+% quellenumwandlung.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{pa 875 800}%
+    \special{pa 875 550}%
+    \special{fp}%
+    \special{pa 875 550}%
+    \special{pa 825 550}%
+    \special{pa 825 300}%
+    \special{pa 925 300}%
+    \special{pa 925 550}%
+    \special{pa 875 550}%
+    \special{fp}%
+    \special{pa 875 300}%
+    \special{pa 875 50}%
+    \special{fp}%
+    \graphtemp=\baselineskip\multiply\graphtemp by 1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.550in
+    \rlap{\kern 0.875in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$20 k\Omega$\hbox{$\:$}\hss}}%
+    \special{pa 875 50}%
+    \special{pa 625 50}%
+    \special{fp}%
+    \special{pa 625 50}%
+    \special{pa 625 100}%
+    \special{pa 375 100}%
+    \special{pa 375 0}%
+    \special{pa 625 0}%
+    \special{pa 625 50}%
+    \special{fp}%
+    \special{pa 375 50}%
+    \special{pa 125 50}%
+    \special{fp}%
+    \special{pa 125 50}%
+    \special{pa 125 300}%
+    \special{fp}%
+    \special{ar 125 425 125 125 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.362in
+    \rlap{\kern 0.125in\lower\graphtemp\hbox to 0pt{\hss $+$\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.487in
+    \rlap{\kern 0.125in\lower\graphtemp\hbox to 0pt{\hss $-$\hss}}%
+    \special{pa 125 550}%
+    \special{pa 125 800}%
+    \special{fp}%
+    \special{pa 305 175}%
+    \special{pa 305 675}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 330 575}%
+    \special{pa 305 675}%
+    \special{pa 280 575}%
+    \special{pa 330 575}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.425in
+    \rlap{\kern 0.305in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$45 V$\hbox{$\:$}\hss}}%
+    \hbox{\vrule depth0.800in width0pt height 0pt}%
+    \kern 0.925in
+  }%
+}%
+

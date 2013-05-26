@@ -1,0 +1,1981 @@
+% Informatik III Zusammenfassung aus dem Informatikstudium an der ETH Zuerich
+% basierend auf der Vorlesung von Prof. Dr. David Basin 
+% Copyright (C) 2003  Patrick Pletscher
+
+\documentclass[german,10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+
+\textwidth = 16.5 cm
+\textheight = 25 cm
+\oddsidemargin = 0.0 cm
+\evensidemargin = 0.0 cm
+\topmargin = 0.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0cm
+
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\newcommand{\natsemarr}[1]{\ensuremath{-\hspace*{-1.52mm}[#1]\hspace*{-1.61mm}\rightarrow}}
+
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{satz}{Satz}[section]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Bemerkung}
+
+\title{Informatik III - Zusamenfassung}
+\author{Patrick Pletscher}
+\begin{document}
+
+\maketitle
+
+\section{Einf"uhrung in Haskell}
+
+\subsection{Grundbegriffe der funktionalen Programmierung}
+
+\begin{itemize}
+ \item Funktionen und Werte
+ \begin{itemize}
+  \item Funktionen berechnen Werte
+  \item Funktionen k"onnen selbst als Werte betrachtet werden
+ \end{itemize}
+ \item Keine Seiteneffekte: f(x) ergibt immer das gleiche Ergebnis
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{ggT als funktionales Programm}
+
+\begin{verbatim}
+ ggt x y
+   | x == y    = x
+   | y > x     = ggt y x
+   | otherwise = ggt (x-y) y
+\end{verbatim}
+
+Anstatt anzugeben, \textit{wie} etwas berechnet wird, gibt man an, \textit{was} berechnet werden soll.\\
+
+Das Programm besteht aus mehreren F"allen:
+\begin{verbatim}
+ Name x1 ... xn
+    | guard1 = fall1
+      :
+    | guradm = fallm
+\end{verbatim}
+
+\subsubsection{Typen}
+
+Entweder der User gibt Typen mit Funktions-Definitionen an, z.B.
+\begin{verbatim}
+ ggt :: Int -> Int -> Int
+\end{verbatim}
+oder das System berechnet die Typen selbst.
+
+\subsubsection{Typ Int}
+
+\begin{itemize}
+ \item Beschr"ankt auf 32bit
+ \item Funktionen sind meist Pr"afixform, also:
+  \begin{verbatim}
+   ? mod 7 2
+  \end{verbatim}
+  Man kann das Ganze aber auch Infix schreiben:
+  \begin{verbatim}
+   ? 7 'mod' 2
+  \end{verbatim}
+  Eine Infix Binary-Funktion heisst ''Operator''.
+\end{itemize}
+
+\subsubsection{Typ Bool}
+
+\begin{itemize}
+ \item Werte: True, False
+ \item Operatoren (infix) \verb#&&, ||, not#
+\end{itemize}
+
+\subsubsection{Typ Tupel}
+
+\textit{Beispiel}: Student hat Name, Martikelnummer, Anfangsjahr\\
+
+\begin{tabular}{ll}
+ Rekord-Typ:&	\verb#(String, Int, Int)#\\
+ mit Element:&	\verb#("Fritz", 1234, 2002)#
+\end{tabular}
+
+\subsubsection{Muster und Funktionsdefinition}
+
+Funktionsdefinition mit Muster \verb#mi# und Guards \verb#gi# kann kombiniert werden:
+\begin{verbatim}
+ fun m1 m2 ... mn
+   | g1   = e1
+     :
+   | gm   = em
+   | otherwise = e  ---optional!
+\end{verbatim}
+
+\subsubsection{Lokale Reichweite mit let und where}
+
+\begin{itemize}
+ \item \verb#let#
+ \begin{verbatim}
+ let x1 = e1
+     :
+     xn = en
+ in e
+ \end{verbatim}
+ 
+ \verb#let# baut einen Ausdruck von anderen aus:
+ \begin{itemize}
+  \item \verb#xi# kann sowohl Variable oder Funktionen (lokal) binden
+  \item Eine Definition kann auch andere benutzen
+ \end{itemize}
+
+ \textit{Beispiel}
+ \begin{verbatim}
+ f x = let sq y = y * y
+           in sq x + sq x
+ \end{verbatim}
+ Wir k"onnen f auswerten, aber nicht sq.
+
+ \item \verb#Where#
+ \begin{verbatim}
+ f p1 p2 .. pk
+    | g1 = e1
+    | g2 = e2
+      :
+    | gk = ek
+   where
+     v1 a1 ... an = r1
+     v2 = r2
+     :
+ \end{verbatim}
+
+ \begin{itemize}
+  \item \verb#where# wird direkt nach einer Funktionsdefinition gegeben
+  \item Man kann Bindings "uber mehrere Guards definieren
+ \end{itemize}
+
+ \textit{Beispiel}
+ \small
+ \begin{verbatim}
+ maxThreeOccurs n m p = (maxVal, eqCount)
+  where maxVal = maxiThree n m p
+        eqCount = equalCount maxVal n m p
+
+ maxiThree a b c = max a (max b c)
+
+ equalCount val n m p = isN + isM + isP
+  where isN = if n == val then 1 else 0
+        isM = if m == val then 1 else 0
+        isP = if p == val then 1 else 0
+ \end{verbatim}
+ \normalsize
+\end{itemize}
+
+\subsection{Korrektheit}
+
+\subsubsection{Terminierung}
+
+Falls die Funktion $f$ durch andere Funktionen $g_1,\ldots,g_k$ definiert wird und diese $g_i$ terminieren, dann terminiert $f$.\\
+
+Das Problem sind \textit{Rekursionen}:\\
+Hinreichende Terminationsbedingung: Argumente werden entlang einer \textit{wohlfundierten} Ordnung kleiner. Wobei eine Ordnung $>$ wohlfundiert ist, wenn es keine unendlich absteigende Ketten gibt $x_1>x_2>x_3>\ldots$. Beispiel: $>\mathbb{N}$, Gegenbeispiele: $>\mathbb{Z},>\mathbb{R}$\\
+
+\textit{Beispiel:} Fakult"at einer Zahl
+\begin{verbatim}
+ fac 0 = 1
+ fac n = n * fac (n-1)
+\end{verbatim}
+
+\verb#fac n# hat nur \verb#fac (n-1)# als rekursiven Aufruf und $n>n-1$, wobei $>$ die Ordnung "uber den nat"urlichen Zahlen ist.
+
+\subsubsection{Korrektheit - Richtiges Verhalten}
+
+Basiert auf einfacher Idee: Funktionen sind Gleichungen, man kann also mathematische Methoden und auch logische Kalk"ule benutzen, so z.Bsp.:
+\begin{itemize}
+	\item''Excluded Middle'': f"ur alle Aussagen $P$ gilt immer:
+		\begin{displaymath}
+			P \lor\not P
+		\end{displaymath}
+	\item Fallunterscheidung: Gegeben sei $Q \lor R$. F"ur $P$ m"ussen wir zeigen:
+		\begin{enumerate}
+			\item Aus der Annahme $Q$ folgt P und
+			\item Aus der Annahme $R$ folgt P
+		\end{enumerate}
+	\item Induktion.
+\end{itemize}
+
+\section{Listen}
+
+\subsection{Listentypen}
+
+Listentyp, aufgebaut mit Listentyp-Konstruktor:\\
+Wenn $T$ ein Typ ist, dann ist $[T]$ ein Typ.\\
+
+Elemente von $[T]$:
+\begin{itemize}
+	\item Leere Liste $[]::[T]$
+	\item Wenn $a::T$ und $l::[T]$, dann $(a:l)::[T]$
+\end{itemize}
+
+Abk"urzung: $1:(2:(3:[]))$ wird als $[1,2,3]$ geschrieben.\\
+
+Weitere Abk"urzungen:
+\begin{verbatim}
+? [3..6]
+[3,4,5,6]::[Int]
+
+? [6..3]
+[]::[Int]
+\end{verbatim}
+
+\verb#[n,p..m]# heisst Zahlen von $n$ zu $m$ in Schritten $p-n$:
+\begin{verbatim}
+? [7,6..3]
+[7,6,5,4,3]::[Int]
+
+? [0.0, 0.3 .. 1.0]
+[0.0, 0.3, 0.6, 0.9] :: [Double]
+\end{verbatim}
+
+\subsection{Standardfunktion "uber Listen}
+
+\subsubsection{length}
+\begin{verbatim}
+ length [] = 0
+ length (a:x) = 1 + length x
+\end{verbatim}
+
+\subsubsection{Append (nicht nur f"ur Strings)}
+\begin{verbatim}
+ [] ++ y = y
+ (a:x) ++ y = a:(x++y)
+\end{verbatim}
+
+\subsection{Muster}
+
+Ein Muster wird wie folgt induktiv definiert:
+\begin{description}
+	\item[Konstante]
+	\item[Variable]
+	\item[Tupel]: $(p_1,\ldots,p_k)$, wobei auch $p_i$ Muster sind
+	\item[Liste]: $(p_1:p_2)$ wobei auch $p_i$ Muster sind
+	\item['Wild cards']: \_
+\end{description}
+
+Aber ein Muster muss \textit{linear} sein: jede Variable darf nur maximal ein Mal vorkommen.
+
+\subsection{Musteranpassung}
+
+Argument $a$ wird einem Muster $p$ erfolgreich angepasst gdw $p$ ist:
+\begin{description}
+	\item[Konstante]: $a=p$
+	\item[Variable] $x$: erfolgt immer mit Zuordnung $x=a$
+	\item[Tupel] $(p_1,\ldots,p_k)$: $a=(a_1,\ldots,a_k)$ und $a_i$ an $p_i$ angepasst wird.
+	\item[Liste] $(p_1:p_2)$: $a$ ist eine nicht leere Liste und $p_1$ wird dem Kopf von $a$ angepasst und $p_2$ wird dem Rest von $a$ angepasst.
+	\item['Wild cards']: immer, aber keine Bedingung (fungiert nur als Test) 
+\end{description}
+
+\begin{verbatim}
+ zip (a:x) (b:y) = (a,b) : zip x y
+ zip _ _ = []
+\end{verbatim}
+
+\subsubsection{Insertion Sort}
+
+\begin{verbatim}
+ isort :: [Int] -> [Int]
+ isort [] = []
+ isort (a:x) = ins a (isort x)
+
+ ins :: Int -> [Int] -> [Int]
+ ins a [] = [a]
+ ins a (b:y)
+  | a <= b = a:(b:y)
+  | otherwise = b:(ins a y)
+\end{verbatim}
+
+\subsection{Listen-Komprehension}
+
+Notation f"ur sequenzielle Verarbeitung der Listen, welche mit Tests kombiniert werden kann.
+\begin{verbatim}
+ [2*a | a <- l, b1(a), ..]
+\end{verbatim}
+
+\subsubsection{Quicksort}
+
+\begin{verbatim}
+ q [] = []
+ q (a:x) = q [y | y<-x, y <=a] ++
+   [a] ++ q[y |y<-x, y>a]
+\end{verbatim}
+
+\section{Abstraktion}
+
+\subsection{Funktionen h"oherer Stufe}
+
+Argumente d"urfen selber Funktionen sein.
+\begin{verbatim}
+ (Int -> Int) -> [Int] -> [Int]
+\end{verbatim}
+
+\subsubsection{map}
+
+\begin{verbatim}
+-- higher order (function f is an argument)
+ map :: (a -> b) -> [a] -> [b]
+ map f [] = []
+ map f (a:x) = f a : map f x
+\end{verbatim}
+
+"Ahnlichkeit mit Listenkomprehension:
+\begin{verbatim}
+ map f l = [f a | a <- l]
+\end{verbatim}
+
+\subsubsection{foldr}
+
+rechts-assoziatives Fold:
+\begin{displaymath}
+	foldr (\oplus)\ e\ [l_1,\ldots,l_n] = l_1 \oplus (l_2,\ldots\oplus(l_n\oplus e))
+\end{displaymath}
+
+\begin{verbatim}
+ foldr :: (a -> b -> b) ->  b -> [a] -> b
+ foldr f e [] = e
+ foldr f e (x:xs) = f x (foldr f e xs)
+\end{verbatim}
+
+Damit kann man z.Bsp. concat definieren:
+\begin{verbatim}
+ concat xs = foldr (++) [] xs
+ ? concat [[1,2,3],[4],[5,6]]
+ [1,2,3,4,5,6] :: [Int]
+\end{verbatim}
+
+\subsubsection{foldl}
+
+links-assoziatives Fold:
+\begin{displaymath}
+	foldl (\oplus)\ e\ [l_1,\ldots,l_n] = ((e\oplus l_1)\oplus l_2)\ldots\oplus l_n
+\end{displaymath}
+
+\begin{verbatim}
+ foldl :: (a -> b -> a) -> a -> [b] -> a
+ foldl f e [] = e
+ foldl f e (x:xs) = foldl f (f e x) xs
+\end{verbatim}
+
+\subsection{Typen und Polymorphismus}
+
+Polymorphe Typen enthalten Typvariablen:
+\begin{verbatim}
+ length :: [t] -> Int
+\end{verbatim}
+
+Definition: Ein Typ $w$ f"ur $f$ ist ein \textit{allgemeiner} (auch \textit{prinzipaler}) Typ gdw. f"ur alle Typen $s$ f"ur $f$, $s$ eine Instanz von $w$ ist.
+
+\subsection{Funktionen als Werte}
+
+Funktionen k"onnen als Werte geliefert werden. So z.Bsp. Funktionskomposition:
+\begin{displaymath}
+	(f\circ g) x = f(g x)
+\end{displaymath}
+\begin{verbatim}
+ (.) :: (b -> c) -> (a -> b) -> (a -> c)
+ (f . g) x = f (g x)
+\end{verbatim}
+
+\subsection{$\lambda$-Ausdr"ucke}
+
+Beispiel:
+\begin{verbatim}
+ ? map (\x -> x * 2) [2,3,4]
+ [4,6,8] :: Int
+
+ ? foldr (\x y -> x * y) 1 [1,2,3,4]
+ 24 :: Int
+\end{verbatim}
+
+\subsection{Partielle Anwendung}
+
+Jede Funktion nimmt genau ein Argument\\
+\verb#multiply :: Int -> Int -> Int# bedeutet\\
+\verb#multiply :: Int -> (Int -> Int)#\\
+
+\verb#(multiply 2)# ist z.Bsp. eine Funktion, die ein Argument nimmt und als Resultat die Verdoppelung ist.
+
+\subsection{Mehrere Argumente vs. Tupeln}
+
+\begin{verbatim}
+ f :: (Int,Int) -> Int
+ f (x,y) = x * y + 17
+
+ g :: Int -> Int -> Int
+ g x y = x * y +17
+\end{verbatim}
+
+Tupel-Argumente: keine partielle Auswertung.\\
+
+Aber "aquivalent im folgenden Sinn:
+\begin{verbatim}
+ curry :: ((a,b) -> c) -> a -> b -> c
+ uncurry :: a -> b -> c -> (a,b) -> c
+
+ curry f    = f' where f' x1 x2 = f (x1,x2)
+ uncurry f' = f  where f(x1,x2) = f' x1 x2
+\end{verbatim}
+
+Beispiele
+\begin{verbatim}
+ ? f (3,4)
+ 29 :: Int
+
+ ? curry f 3 4
+ 29 :: Int
+\end{verbatim}
+
+\section{Programmierung h"oherer Ordnung}
+
+\subsection{Filter}
+
+\begin{verbatim}
+ filter :: (a -> Bool) -> [a] -> [a]
+ filter p [] = []
+ filter p (h:t)
+   | p h = h:rest
+   otherwise = rest
+               where rest = filter p t
+\end{verbatim}
+
+\subsection{Abstrahieren allgemeiner Operationen}
+
+Map: Funktionale Anwendung auf jedes Element.\\
+Filter: Selektion\\
+Fold: Kombination von Elementen
+
+\subsection{Map und Filter versus Komprehension}
+
+Map und Filter k"onnen mit Komprehension implementiert werden
+\begin{verbatim}
+ map f l = [f x | x <- l]
+ filter p l = [x | x <- l, p x]
+\end{verbatim}
+
+Auch die Umkehrung gilt auch: \verb#[e | p <- s]#
+\begin{verbatim}
+ let fn p = e in map fn s
+\end{verbatim}
+
+Guards erfordern Filter: \verb#[e | p <- s, g]# "ubersetzt als
+\begin{verbatim}
+ let fn p = e
+     pred p = g
+ in map fn (filter pred s)
+\end{verbatim}
+
+\subsection{zipWith}
+
+\begin{verbatim}
+ zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+ zipWith f (x:xs) (y:ys) = f x y : zipWith f xs ys
+ zipWith f _ _ = []
+\end{verbatim}
+
+\section{Typklassen und Polymorphismus}
+
+\subsection{Typklassen}
+
+\begin{verbatim}
+ allEqual :: Eq a => a -> a -> a -> Bool
+ allEqual x y z = (x == y) && (y == z)
+\end{verbatim}
+
+Funktioniert f"ur genau die Typen $a$, die zur Klasse $Eq$ geh"oren.\\
+
+$Eq$ ist die Gleichheitsklasse, eine Klasse definiert eine Menge von Typen.
+
+\subsubsection{Definition der Eq Klasse}
+
+\begin{verbatim}
+ class Eq a where
+     (==), (/=) :: a -> a -> Bool
+     x /= y      = not (x==y)
+\end{verbatim}
+
+Eine Definition beeinhaltet:
+\begin{description}
+	\item[Klassenname:] $Eq$
+	\item[Signatur:]Liste von Namen und Typen
+	\item[(Optional Standard-) Definition:] kann sp"ater "uberschrieben werden
+\end{description}
+
+Elemente von Klassen heissen \textit{Instanzen}.
+
+\subsubsection{Instanzen}
+
+Durch eine Definition von Signaturfunktionen wird ein Typ in einer Klasse instanziert.
+
+\begin{verbatim}
+ instance Eq Bool where
+   True == True = True
+   False == False = True
+   _ == _ = False
+\end{verbatim}
+
+\subsubsection{Ageleitete Klassen}
+
+\begin{verbatim}
+ class Eq a => Ord a where
+   (<), (>), (<=), (>=) :: a -> a -> Bool
+   max, min :: a -> a -> a
+
+   x < y = (x <= y && x /= y)
+   x >= y = y <= x
+   x > y = y <= x && x/= y
+
+   max x y | x <= y    = y
+           | otherwise = x
+   min x y | x <= y    = x
+           | otherwise = y
+\end{verbatim}
+
+Wenn $a$ zu $Ord$ geh"ort, dann muss $a$ auch zu $Eq$ geh"oren. Funktionen f"ur $Eq$ werden vererbt, einige neue m"ussen gegeben werde:
+\begin{verbatim}
+ Instance Ord Int where (<=) = primeLeInt
+\end{verbatim}
+
+\subsection{Typisierung}
+
+Ziel von Typisierung:
+\begin{itemize}
+	\item schnell entscheidbare statische Analyse
+	\item erlaubt so viel Allgemeinheit und Wiederverwendbarkeit wie m"oglich.
+	\item Keine Laufzeitfehler: Subjektreduktion
+		\begin{displaymath}
+			\mbox{Sei } e \hookrightarrow e' \mbox{ und } \vdash e :: \tau\mbox{. Dann gilt auch } \vdash e' :: \tau
+		\end{displaymath}
+\end{itemize}
+
+\subsubsection{Mini-Haskell - Syntax}
+
+Programme sind Terme (Sie Variablen $\mathcal{V}$ und Zahlen $\mathcal{Z}$ gegeben)
+\begin{eqnarray}
+	t&	::= &	\mathcal{V}\ |\ \lambda x.t\ |\ (t_1 t_2)\ | \nonumber \\
+	 &	&	true\ |\ false\ |\ \mathbf{iszero(}t\mathbf{)}\ | \nonumber \\
+	 &	&	\mathcal{Z}\ |\ t_1 + t_2\ |\ t_1 \times t_2\ |\ \mathbf{if}\ t_0\ \mathbf{then}\ t_1\ \mathbf{else}\ t_2\ | \nonumber \\
+	 &	&	(t_1,t_2)\ |\ \mathbf{fst(}t\mathbf{)}\ |\ \mathbf{snd(}t\mathbf{)} \nonumber
+\end{eqnarray}
+
+\subsubsection{Typisierung}
+
+Typen ($\mathcal{V}_{\mathcal{T}}$ ist die Menge von Typ Variablen, $a, b, \ldots$)
+\begin{displaymath}
+	\tau ::= \mathcal{V}_{\mathcal{T}}\ |\ Bool\ |\ Int\ |\ (\tau, \tau)\ |\ \tau \rightarrow \tau
+\end{displaymath}
+
+Notation des Typsystems basiert auf Typurteilen $A \vdash e :: \tau$
+\begin{itemize}
+	\item $A$ ist 'Symboltabelle': Abbildung von Identifikatoren auf Typen
+	\item $e$ ist ein Ausdruck
+	\item $\tau$ ist ein Typ
+\end{itemize}
+
+\subsubsection{Regeln f"ur Kern $\lambda$-Kalk"ul}
+
+\begin{itemize}
+	\item Symboltabelle Axiom: $\ldots,x:\tau,\ldots\vdash x ::\tau$
+	\item Abstraktion ($x \not\in A)$:
+		\begin{displaymath}
+			\frac{A,x:\sigma \vdash t :: \tau}{A\vdash \lambda x.t::\sigma \rightarrow \tau}
+		\end{displaymath}
+	\item Applikation:
+		\begin{displaymath}
+			\frac{A\vdash t_1 :: \sigma \rightarrow \tau\qquad A \vdash t_2 ::\sigma}{A \vdash (t_1 t_2)::\tau}
+		\end{displaymath}
+		Die Applikation vereingt sich links. Bsp. $xyz$ steht f"ur $(xy)z$
+\end{itemize}
+
+\subsubsection{Weitere Typregeln f"ur mini-Haskell}
+
+\begin{itemize}
+	\item Basistypen
+		\begin{displaymath}
+			A \vdash n :: Int
+		\end{displaymath}
+		\begin{displaymath}
+			A\vdash true :: Bool
+		\end{displaymath}
+		\begin{displaymath}
+			A \vdash false :: Bool
+		\end{displaymath}
+	\item Operationen ($\mathbf{op}\in \{+,\times\}$)
+		\begin{displaymath}
+			\frac{A \vdash t :: Int}{A\vdash \mathbf{iszero(}t\mathbf{)}:: Bool}
+		\end{displaymath}
+		\begin{displaymath}
+			\frac{A \vdash t_1 :: Int \qquad A \vdash t_2 :: Int}{A \vdash t_1\ \mathbf{op}\ t_2 :: Int}
+		\end{displaymath}
+		\begin{displaymath}
+			\frac{A\vdash t_0 :: Bool \qquad A \vdash t_1 :: \tau \qquad A \vdash t_2 :: \tau}{A\vdash \mathbf{if }\ t_0\ \mathbf{then}\ t_1\ \mathbf{else}\ t_2 :: \tau}
+		\end{displaymath}
+	\item Tupeln
+		\begin{displaymath}
+			\frac{A \vdash t_1 :: \tau_1 \qquad A \vdash t_2 :: \tau_2}{A\vdash (t_1,t_2)::(\tau_1,\tau_2)}
+		\end{displaymath}
+		\begin{displaymath}
+			\frac{A\vdash t::(\tau_1,\tau_2)}{A \vdash \mathbf{fst}(t)::\tau_1}
+		\end{displaymath}
+		\begin{displaymath}
+			\frac{A\vdash t::(\tau_1,\tau_2)}{A \vdash \mathbf{snd}(t)::\tau_2}
+		\end{displaymath}
+\end{itemize}
+
+\section{(Algebraische) Datentypen}
+
+\subsection{Algebraische Datentypen}
+
+Anstatt gegebene Typen zu verwenden, kann ein Typ deklariert werden, der die Objekte 'direkt' modelliert.
+
+\subsubsection{Aufz"ahlungstypen (Verbunde)}
+
+\small
+\begin{verbatim}
+	data Season = Spring | Summer | Fall | Winter
+\end{verbatim}
+\normalsize
+
+Syntax:
+\begin{itemize}
+	\item f"angt mit Keyword \verb#data# an
+	\item gibt verschiedene eindeutig genannte Konstruktoren
+	\item erster Buchstabe von Konstruktoren muss gross sein
+\end{itemize}
+
+\subsubsection{Produkttypen}
+
+\small
+\begin{verbatim}
+ data People = Person Name Age
+ type Name = String
+ type Age = Int
+\end{verbatim}
+\normalsize
+
+\subsubsection{Aufz"ahlungs- und Produkttypen}
+
+Kombinationen m"oglich
+\small
+\begin{verbatim}
+ data Shape = Circle Float |
+              Rectangle Float Float
+\end{verbatim}
+\normalsize
+
+\begin{itemize}
+	\item Konstruktoren dienen als Funktionen
+		\small
+		\begin{verbatim}
+		 ? Rectangle
+		 <<function>> :: Float -> Float -> Shape
+		\end{verbatim}
+		\normalsize
+	\item Beispiele von Fuktionen:
+		\small
+		\begin{verbatim}
+		 area :: Shape -> Float
+		 area (Circle r) = pi * r * r
+		 area (Rectangle h w) = h * w
+		\end{verbatim}
+		\normalsize
+\end{itemize}
+
+\subsubsection{Integration mit Klassen}
+
+Klasseninstanz kann explizit kreiert werden:
+\small
+\begin{verbatim}
+ data Foo = D1 | D2 | D3
+
+ instance Eq Foo where
+   D1 == D1 = True
+   D2 == D2 = True
+   D3 == D3 = True
+   _  == _  = False
+\end{verbatim}
+\normalsize
+
+In einigen F"allen k"onnen Klasseninstanzen automatisch \textit{abgeleitet} werden.
+\small
+\begin{verbatim}
+ data Foo = D1 | D2 | D3
+            deriving (Eq, Ord, Enum, Show)
+\end{verbatim}
+\normalsize
+
+\subsection{Allgemeine Definition}
+
+\begin{eqnarray}
+	data\ T&	= &	\nonumber\\
+	&		&	Con_1 T_{11} \ldots T_{1k_1}\nonumber\\
+	&		&	|Con_1 T_{21} \ldots T_{2k_2}\nonumber\\
+	&		&	\vdots\nonumber\\
+	&		&	Con_n T_{n1} \ldots T_{nk_n}\nonumber
+\end{eqnarray}
+
+$T_{ij}$ sind andere Typen, m"oglicherweise auch T (rekursiv).\\
+
+\subsubsection{Rekursivtypen}
+
+\small
+\begin{verbatim}
+ data Expr = Lit Int | Add Expr Expr |
+             Sub Expr Expr
+\end{verbatim}
+\normalsize
+
+\subsection{B"aume}
+
+\small
+\begin{verbatim}
+data Tree t = Leaf | Node t (Tree t) (Tree t)
+             deriving (Eq, Ord, Show)
+\end{verbatim}
+\normalsize
+
+\subsection{Programmierung h"oherer Ordnung mit Datentypen}
+
+Vorgehensweise vieler Funktionen h"oherer Ordnung verallgemeinbar
+\small
+\begin{verbatim}
+ mapTree :: (t -> u) -> Tree t -> Tree u
+ mapTree f Leaf = Leaf
+ mapTree f (Node x t1 t2) =
+     Node (f x) (mapTree f t1) (mapTree f t2)
+\end{verbatim}
+\normalsize
+
+\subsection{treeFold}
+
+\small
+\begin{verbatim}
+ treeFold :: (a -> b -> b -> b) -> b -> Tree a -> b
+
+ treeFold f e Leaf = e
+ treeFold f e (Node x l r) =
+   f x (treeFold f e l) (treeFold f e r)
+\end{verbatim}
+\normalsize
+
+\subsubsection{Von B"aumen zu Listen}
+
+\small
+\begin{verbatim}
+ preorder t = treeFold (\x y z -> [x] ++ y ++ z) [] t
+ 
+ inorder t = treeFold (\x y z -> y ++ [x] ++ z) [] t
+
+ postorder t = treeFold (\x y z -> y++ z ++ [x]) [] t
+\end{verbatim}
+\normalsize
+
+\section{Programmierung mit verz"ogerter Auswertung}
+
+Haskell basiert auf verz"ogerter Auswertung: Ein Argument wird nur ausgef"uhrt, wenn es gebraucht wird.\\
+
+M"ogliches Problem: Duplizierte Berechnung, z.B. \verb#h x = x + x#.
+\begin{itemize}
+	\item Dieselben Ausdr"ucke w"urden hier zwei Mal ausgewertet.
+	\item Kann vermieden werden: Beide k"onnen gleichzeitig reduziert werden.
+	\item Implementierungsidee: Ausdr"ucke werden als Graphen anstatt als B"aume modelliert.
+\end{itemize}
+
+\subsection{Auswertung - Diverses}
+
+Funktionen werden von aussen nach innen ausgef"uhrt und sonst von links nach rechts.
+
+\section{Substitution}
+
+\begin{eqnarray}
+	free(x) &		= &	\{ x \} \nonumber\\
+	free(\lambda x. M) &	= &	free(M) - \{ x \} \nonumber\\
+	free(M N) &		= &	free(M) \cup free(N) \nonumber
+\end{eqnarray}
+
+\subsection{$\lambda$-Kalk"ul - Substitution}
+
+$M[x \leftarrow N]$ bedeutet: $x$ wird durch $N$ in $M$ ersetzt.
+
+\begin{enumerate}
+	\item $x[x \leftarrow N] = N$
+	\item $y[x \leftarrow N] = y$, falls $y \neq x$
+	\item $(PQ)[x \leftarrow N] = (P[x \leftarrow N]Q[x \leftarrow N])$
+	\item $(\lambda x.P)[x \leftarrow N]=\lambda x.P$
+	\item $(\lambda y.P)[x \leftarrow N]=\lambda y. (P[x \leftarrow N])$, falls $y\neq x$ und $y \not \in FV(N)$
+	\item $(\lambda y.P)[x \leftarrow N]=\lambda z. ((P[y\leftarrow z])[x\leftarrow N])$ falls $y\neq x$ und $y \in FV(N)$, wobei $z\not\in FV(NP)$
+\end{enumerate}
+
+\section{Semantik von Programmiersprachen - "Ubersicht}
+
+\subsection{Semantik (statisch vs. dynamisch)}
+
+\subsubsection{Statische Semantik}
+
+Was muss zur Compilezeit "uberpr"uft werden?
+
+\begin{itemize}
+	\item Typregeln, Typ"uberpr"ufung
+	\item statische Analyse (z.B. Definite Assignment)
+	\item Aufl"osung von Namen
+	\item Aufl"osung von Methoden (f"ur "uberladene Methoden)
+\end{itemize}
+
+\subsubsection{Dynamische Semantik}
+
+Was geschieht zur Laufzeit?
+\begin{itemize}
+	\item Ausf"uhrung des Programms
+	\item Was definiert den Zustand eines Programms?
+	\item Was ist der Effekt eines Programms auf den Zustand?
+\end{itemize}
+
+\subsection{Dynamische Semantik}
+
+\subsubsection{Denationelle Semantik}
+
+Programme = mathematische Objekte\\
+
+\begin{itemize}
+	\item Ein Programm wird betrachtet als (partielle) Funktion in einem mathematischen Raum.
+	\item Gut f"ur deklarative Sprachen (funktionale Programmierung).
+	\item Zu kompliziert f"ur objekt-orientierte Sprachen mit Vererbung, Exception Handling, Threads.
+\end{itemize}
+
+\subsubsection{Operationelle Semantik}
+
+Varianten:
+\begin{itemize}
+	\item Nat"urliche Semantik (Big-Step Semantics)
+	\item SOS (Structural Operational Semantics)
+	\item ASMs (Gurevich Abstract State Machines)
+\end{itemize}
+
+\subsection{Eine einfache imperative Programmiersprache}
+
+Nur zwei Typen: \verb#boolean, integer#
+
+\subsubsection{Bedeutung der Anweisungen (informale Semantik)}
+
+\small
+\begin{tabular}{|l|p{4cm}|}
+	\hline
+	\verb#skip# &		Mache nichts (leere Anweisung) \\ \hline
+	$x$\verb#:=# $e$ &	Weise $x$ den Wert von $e$ zu. \\ \hline
+	$s_1\ ;\ s_2$ &		F"uhre zuerst $s_1$ aus, danach $s_2$ \\ \hline
+	\verb#if# $b$ \verb#then# $s_1$ \verb#else# $s_2$ \verb#end# &	Falls $b$ wahr ist, f"uhre $s_1$ aus, sont $s_2$.\\ \hline
+	\verb#while# $b$ \verb#do# $s$ \verb#end# &	Solange $b$ wahr ist, f"uhre $s$ aus. \\ \hline
+	\verb#var# $x$ \verb#:=# $e$ \verb#in# $s$ \verb#end# &		Erzeuge eine neue lokale Variable $x$ mit dem Wert $e$ und f"uhre $s$ aus.\\ \hline
+	$p$\verb#(#$\vec{e},\vec{z}$\verb#)# &		Rufe die Prozedur $p$ mit den Werten von $\vec{e}$ und den Variablen $\vec{z}$ auf.\\ \hline
+\end{tabular}\\
+\normalsize
+
+Bedingung: Die Variablen in $\vec{z}$ m"ussen paarweise verschieden sein.
+
+\section{Nat"urliche Semantik von Programmen}
+
+Idee: Zu einem Programm $\pi$ definiert man induktiv Tripel
+\begin{displaymath}
+%	\sigma -\hspace{-1.52mm}[s]\hspace{-1.61mm}\rightarrow \sigma'
+	\sigma \natsemarr{s} \sigma'
+\end{displaymath}
+
+mit der Bedeutung:\\
+Die Ausf"uhrung der Anweisung $s$ terminiert f"ur $\pi$ und f"uhrt den Anfangszustand $\sigma$ "uber in den Endzustand $\sigma'$.
+
+\subsection{Regeln der nat"urlichen Semantik}
+
+Die nat"urliche Semantik eines Programms wird durch Regeln
+\begin{displaymath}
+	\frac{\varphi_1 \hdots \varphi_n}{\psi}\  Condition
+\end{displaymath}
+
+Dabei sind $\varphi_1,\ldots,\varphi_n$ und $\psi$ Tripel
+\begin{displaymath}
+	\sigma \natsemarr{s} \sigma'
+\end{displaymath}
+wobei $\sigma,\sigma'\in State$ und $s\in Stm.$\\
+
+Bedeutung der Regel:\\
+Falls $Condition$ und $\varphi_1,\ldots,\varphi_n$, dann $\psi$.
+
+\onecolumn
+
+\subsection{Nat"urliche Semantik}
+
+\begin{displaymath}
+	\frac{}{\sigma \natsemarr{\mbox{\tt skip}} \sigma}
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{}{\sigma \natsemarr{x \mbox{\tt :=} e} \sigma[x \mapsto \mathcal{A}[e]\sigma]}
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{\sigma \natsemarr{s_1} \sigma' \qquad \sigma' \natsemarr{s_2} \sigma''}{\sigma \natsemarr{s_1;s_2} \sigma''}
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{\sigma \natsemarr{s_1}\sigma'}{\sigma \natsemarr{\mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end}}\sigma'} \mbox{ falls } \mathcal{B}[b]\sigma = 1
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{\sigma \natsemarr{s_2}\sigma'}{\sigma \natsemarr{\mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end}}\sigma'} \mbox{ falls } \mathcal{B}[b]\sigma = 0
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{\sigma \natsemarr{s} \sigma' \qquad \sigma' \natsemarr{\mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}}\sigma''}{\sigma\natsemarr{\mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}}\sigma''} \mbox{ falls } \mathcal{B}[b]\sigma = 1
+\end{displaymath}\\
+
+\begin{displaymath}
+	 \frac{}{\sigma\natsemarr{\mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}}\sigma} \mbox{ falls } \mathcal{B}[b]\sigma = 0
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{\sigma[x\mapsto \mathcal{A}[e]\sigma]\natsemarr{s} \sigma'}{\sigma \natsemarr{\mbox{\tt var}\ x\ \mbox{\tt :=}\ e\ \mbox{\tt in}\ s\ \mbox{end}}\sigma'[x\mapsto\sigma(x)]} \mbox{ falls } x \in \textsf{dom}(\sigma)
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{\sigma[x\mapsto \mathcal{A}[e]\sigma]\natsemarr{s} \sigma'}{\sigma \natsemarr{\mbox{\tt var}\ x\ \mbox{\tt :=}\ e\ \mbox{\tt in}\ s\ \mbox{\tt end}}\sigma' \backslash \{ x\mapsto\sigma'(x)\} } \mbox{ falls } x \not\in \textsf{dom}(\sigma)
+\end{displaymath}\\
+
+\begin{displaymath}
+	\frac{\{\vec{x}\mapsto \mathcal{A}[\vec{e}]\sigma, \vec{y} \mapsto \sigma(\vec{z})\} \natsemarr{s} \sigma'}{ \sigma \natsemarr{p(\vec{e};\vec{z})} \sigma [\vec{z}\mapsto \sigma'(\vec{y})]}
+\end{displaymath}
+\begin{center}
+	f"ur \tt{procedure} $p(\vec{x};\vec{y})$ \tt{begin} $s$ \tt{end}
+\end{center}
+
+\twocolumn
+
+\subsection{Die zugewiesenen Variablen}
+
+\begin{displaymath}
+	\mbox{AV}(\mbox{\tt skip}) = \emptyset
+\end{displaymath}
+\begin{displaymath}
+	\mbox{AV}(x\ \mbox{\tt :=}\ e) = \{x\}
+\end{displaymath}
+\begin{displaymath}
+	\mbox{AV}(s_1 \mbox{\tt ;}\ s_2) = \mbox{AV}(s_1)\cup \mbox{AV}(s_2)
+\end{displaymath}
+\begin{displaymath}
+	\mbox{AV}(\mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end}) = \mbox{AV}(s_1)\cup \mbox{AV}(s_2)
+\end{displaymath}
+\begin{displaymath}
+	\mbox{AV}(\mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}) = \mbox{AV}(s)
+\end{displaymath}
+\begin{displaymath}
+	\mbox{AV}(\mbox{\tt var}\ x\ \mbox{\tt :=}\ e\ \mbox{in}\ s\ \mbox{\tt end}) = \mbox{AV}(s) \backslash \{x\}
+\end{displaymath}
+\begin{displaymath}
+	\mbox{AV}(p(\vec{e};\vec{z})) = \{ \vec{z}\}
+\end{displaymath}
+
+Die Menge AV($s$) ist eine Obermenge der Variablen, die von der Anweisung $s$ zur Laufzeit tats"achlich ge"andert werden.
+
+\subsection{Technische Details}
+
+Die nat"urliche Semantik erh"alt den Definitionsbereich der Zust"ande.
+
+\begin{lemma}
+	Falls $\sigma \natsemarr{s}\sigma'$,\hfill dann ist $\textnormal{\textsf{dom}}(\sigma)=\textnormal{\textsf{dom}}(\sigma')$.
+\end{lemma}
+
+Die nat"urliche Semantik von deterministischen Programmen ist deterministisch.
+\begin{lemma}
+	Falls $\sigma \natsemarr{s}\sigma'$ und $\sigma \natsemarr{s} \sigma''$,\hfill dann ist $\sigma' = \sigma''$.
+\end{lemma}
+
+Nur zugewiesene Variablen werden ge"andert.
+\begin{lemma}
+	Falls $\sigma \natsemarr{s} \sigma'$ und\hfill $x\in \textsf{dom}(\sigma)\backslash \mbox{AV}(s)$, dann ist $\sigma'(x)=\sigma(x)$.
+\end{lemma}
+
+\subsection{Koinzidenz}
+
+\begin{lemma}
+	Falls $\sigma$ und $\tau$ auf den Variablen von $e$ "ubereinstimmen, dann ist $\mathcal{A}[e]\sigma = \mathcal{A}[e]\tau$.
+\end{lemma}
+
+\begin{lemma}
+	Falls $\sigma$ und $\tau$ auf den Variablen von $b$ "ubereinstimmen, dann ist $\mathcal{B}[b]\sigma = \mathcal{B}[b]\tau$.
+\end{lemma}
+
+\begin{lemma}
+	Sei $V$ eine Menge von Variablen, welche die freien Variablen von $s$ umfasst. Falls $\sigma$ und $\tau$ auf $V$ "ubereinstimmen und $\sigma \natsemarr{s} \sigma'$,\hfill dann gibt es ein $\tau'$ so, dass $\tau \natsemarr{s} \tau'$\hfill und $\tau$ und $\tau'$ auf $V$ "ubereinstimmen.
+\end{lemma}
+
+\subsection{Semantische "Aquivalenz von Programmen}
+
+\begin{definition}
+	Zwei Anweisungen $s_1$ und $s_2$ sind \textit{semantsich "aquivalent} (geschrieben: $s_1 \equiv s_2$), falls f"ur alle Zust"ande $\sigma$ und $\sigma'$ gilt:
+	\begin{displaymath}
+		\sigma \natsemarr{s_1} \sigma' \quad \Leftrightarrow \quad \sigma \natsemarr{s_2} \sigma'
+	\end{displaymath}
+\end{definition}
+
+\section{ASM Semantik von Programmen}
+
+Idee: Ein Cursor wandert in kleinen Schritten durch den abstrakten Syntaxbaum des Programms und f"uhrt dabei Aktionen aus.
+
+\subsection{Transitionsregeln der ASM-Semantik}
+
+\subsubsection{Leere Anweisung}
+\small
+$^{\blacktriangledown}\mbox{\tt skip} \rightarrow  ^{\blacktriangle}\!\!\mbox{\tt skip}$
+\normalsize
+
+\subsubsection{Zuweisung}
+\small
+\begin{tabbing}
+$^{\blacktriangledown}(x\ \mbox{\tt :=}\ e) \rightarrow$ \= 	$^{\blacktriangle}(x\ \mbox{\tt :=}\ e)$ \\
+\>								$\mbox{\sffamily store}(\mbox{\sffamily env}(x)) := \mathcal{A}[e](\mbox{\sffamily store}\circ\mbox{\sffamily env})$
+\end{tabbing}
+\normalsize
+
+\subsubsection{Sequenzielle Komposition}
+\small
+\begin{tabbing}
+ $^{\blacktriangledown}(s_1\ ;\ s_2)\:$ \=		$\rightarrow\:$ \=	$^{\blacktriangledown}s_1$\\
+ $(^{\blacktriangle}s_1\ ;\ s_2)$ \>			$\rightarrow$ \>	$^{\blacktriangledown}s_2$\\
+ $(s_1\ ;\ ^{\blacktriangle}s_2)$ \>			$\rightarrow$ \>	$^{\blacktriangle}(s_1\ ;\ s_2)$
+\end{tabbing}
+\normalsize
+
+\subsubsection{If-Then-Else-Anweisung}
+\small
+\begin{tabbing}
+ $^{\blacktriangledown} \mbox{\tt if}\ $\=$b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end} \rightarrow$\\
+ \>	$\mbox{\textbf{if}}\ \mathcal{B}[b](\mbox{\sffamily store} \circ \mbox{\sffamily env}) = 1\ \mbox{\textbf{then}}\ ^{\blacktriangledown} s_1\ \mbox{\textbf{else}}\ ^{\blacktriangledown} s_2$
+\end{tabbing}
+
+$\mbox{\tt if}\ b\ \mbox{\tt then}\ ^{\blacktriangle}s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end} \rightarrow$
+$^{\blacktriangle} \mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end}$\\
+
+$\mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ ^{\blacktriangle} s_2\ \mbox{\tt end} \rightarrow$
+$^{\blacktriangle} \mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end}$
+\normalsize
+
+\subsubsection{While-Anweisung}
+
+\small
+\begin{tabbing}
+ $^{\blacktriangledown} \mbox{\tt w}$\=$\mbox{\tt hile}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end} \rightarrow$\\
+ \>	$\mbox{\textbf{if}}\ \mathcal{B}[b](\mbox{\sffamily store}\circ\mbox{\sffamily env}) = 1\ \mbox{\textbf{then}}\ ^{\blacktriangledown} s\ \mbox{\textbf{else}}\ ^{\blacktriangle} \mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}$
+\end{tabbing}
+
+$\mbox{\tt while}\ b\ \mbox{\tt do}\ ^{\blacktriangle}s\ \mbox{\tt end} \rightarrow$
+$^{\blacktriangledown} \mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}$
+\normalsize
+
+\subsubsection{Lokale Variablendeklaration}
+\small
+\begin{tabbing}
+  $^{\blacktriangledown}\mbox{\tt var}\ x\ \mbox{:=}\ e\ \mbox{\tt in}\ s\ \mbox{\tt end} \rightarrow ^{\blacktriangledown}\!\!s$\\
+  \qquad \= \quad \= \kill
+  \>	$\mbox{\textbf{let}}\ \alpha\ = \mbox{\textbf{new}}(\mbox{\sffamily Adr})\ \mbox{\textbf{in}}$\\
+  \> \>		$\mbox{\sffamily store}(\alpha):= \mathcal{A}[e](\mbox{\sffamily store} \circ \mbox{\sffamily env})$\\
+  \> \>		$\mbox{\sffamily env}(x) := \alpha$
+\end{tabbing}
+
+$\mbox{\tt var}\ x\ \mbox{\tt :=}\ e\ \mbox{\tt in}\ ^{\blacktriangle} s\ \mbox{\tt end} \rightarrow ^{\blacktriangle}\!\!\mbox{\tt var}\ x\ \mbox{\tt :=}\ e\ \mbox{\tt in}\ s\ \mbox{\tt end}$
+\normalsize
+
+\subsubsection{Prozeduraufruf}
+\small
+\begin{tabbing}
+  $^{\blacktriangledown}p(\vec{e};\vec{z})\rightarrow \mbox{\tt procedure}\ p(\vec{x};\vec{y})\ \mbox{\tt begin} ^{\blacktriangledown}\!\!s\ \mbox{\tt end}$\\
+  \qquad \= \quad \= \kill
+  \>	$\mbox{\textbf{let}}\ \vec{v}\ = \mathcal{A}[\vec{e}](\mbox{\sffamily store}\circ\mbox{\sffamily env})\ \mbox{\textbf{and}}\ \vec{\alpha} = \mbox{\textbf{new}}(\mbox{\sffamily Adr})\ \mbox{\textbf{in}}$\\
+  \> \>		$\mbox{\sffamily frames} := push(\mbox{\sffamily frames},\langle \mbox{\sffamily pos},\mbox{\sffamily env} \rangle)$\\
+  \> \>		$\mbox{\sffamily store}(\vec{\alpha}):= \vec{v}$\\
+  \> \>		$\mbox{\sffamily env} := \{\vec{x} \mapsto \vec{\alpha}, \vec{y} \mapsto \mbox{\sffamily env}(\vec{z})\}$
+\end{tabbing}
+\normalsize
+
+\subsubsection{R"uckkehr von einem Prozeduraufruf}
+\small
+\begin{tabbing}
+  $\mbox{\tt procedure}\ p(\vec{x};\vec{y})\ \mbox{\tt begin} ^{\blacktriangle}s\ \mbox{\tt end}\rightarrow$\\
+  \qquad \= \quad \= \kill
+  \>	$\mbox{\textbf{let}}\ \langle oldpos, oldenv\rangle\ = top(\mbox{\sffamily frames})\ \mbox{\textbf{in}}$\\
+  \> \>		$\mbox{\sffamily frames} := pop(\mbox{\sffamily frames})$\\
+  \> \>		$\mbox{\sffamily pos} := oldpos$\\
+  \> \>		$\mbox{\sffamily env} := oldenv$\\
+  \> \>		$\mbox{\sffamily mode} := \mbox{\sffamily up}$
+\end{tabbing}
+\normalsize
+
+\subsection{Nat"urliche Semantik $\Rightarrow$ ASM-Semantik}
+
+\begin{theorem}
+	Falls in der nat"urlichen Semantik $\sigma \natsemarr{s}\sigma'$ herleitbar ist und $\mathfrak{A}$ ein ASM-Zustand ist mit
+	\begin{itemize}
+		\item $\mathfrak{A}(\mbox{\sffamily pos}) = ^{\blacktriangledown}\!\!s$
+		\item $\sigma \subseteq \mathfrak{A}(\mbox{\sffamily store})\circ \mathfrak{A}(\text{\sffamily env})$
+	\end{itemize}
+	dann erreicht die ASM-Semantik nach endlich vielen Schritten einen Zustand $\mathfrak{B}$ so, dass
+	\begin{itemize}
+		\item $\mathfrak{B}(\mbox{\sffamily pos}) = ^{\blacktriangle}\!\!s$
+		\item $\sigma ' \subseteq \mathfrak{B}(\mbox{\sffamily store})\circ\mathfrak{B}(\mbox{\sffamily env})$
+		\item $\mathfrak{A}(\mbox{\sffamily env})\subseteq \mathfrak{B}(\mbox{\sffamily env})$
+		\item $\mathfrak{A}(\mbox{\sffamily frames})= \mathfrak{B}(\mbox{\sffamily frames})$
+	\end{itemize}
+	und f"ur alle Adressen $\alpha \in \mbox{\sffamily dom}(\mathfrak{A}(\mbox{\sffamily store}))\backslash \mbox{\sffamily ran}(\mathfrak{A}(\mbox{\sffamily env}))$ gilt
+	\begin{displaymath}
+		\mathfrak{B}(\mbox{\sffamily store})(\alpha) = \mathfrak{A}(\mbox{\sffamily store})(\alpha)\ \mbox{\sffamily und } \alpha \not \in \mbox{\sffamily ran}(\mathfrak{B}(\mbox{\sffamily env}))
+	\end{displaymath}
+\end{theorem}
+
+\section{Compilation auf virtuelle Maschine}
+
+\subsection{Instruktionen der VM (informale Beschreibung)}
+
+\small
+\begin{tabular}{|l|p{4.2cm}|}
+	\hline
+	\tt{const}$(i)$ &		Lege die Konstante $i$ auf den Operandenstack.\\ \hline
+	\tt{load}$(n)$ &		Lade den Wert der $n$ten lokalen Variable auf den Operandenstack.\\ \hline
+	\tt{loada}$(n)$ &		Lade die Adresse der $n$ten lokalen Variable auf den Operandenstack.\\ \hline
+	\tt{loadi} &			Nimm die Adresse zuoberst auf dem Operandenstack und lade den Wert, der an der Adresse gespeichert ist, auf den Operandenstack.\\ \hline
+	\tt{store}$(n)$ &		Speichere den obersten Wert des Operandenstacks als Wert der $n$ten lokalen Variablen.\\ \hline
+	\tt{storei} &			Nimm den obersten Wert des Operandenstacks und die darunterliegende Adresse und speichere den Wert an der Adresse.\\ \hline
+	\tt{prim}$(op)$ &		Nimm die obersten zwei Werte des Operandenstacks und ersetze sie durch das Resultat der Operation $op$. \\ \hline
+	\tt{goto}$(i)$ &		Springe zur $i$ten Instruktion.\\ \hline
+	\tt{cond}$(op,i)$ &		Teste mittels $op$ den obersten Wert des Operandenstacks. Falls der Test wahr ist, springe zu $i$.\\ \hline
+	\tt{invoke}$(p,n,k)$ &		Rufe die Prozedur $p$ mit $n$ Argumenten und $k$ lokalen Variablen auf.\\ \hline
+	\tt{return} &			Kehre zur"uck zum Prozeduraufruf.\\ \hline
+\end{tabular}
+\normalsize
+
+\subsection{Instruktionen der VM (ASM-Semantik)}
+
+\begin{tabbing}
+ $V$\=$M = \mbox{\textbf{case}}\ code(\mbox{\sffamily pc})\ \mbox{\textbf{of}}$ \\
+ \>	\tt{co}\=\tt{nst}$(i) \rightarrow$ \\
+ \>	\>	\sffamily{opd}$:=$\sffamily{opd}$\cdotp [i]$\\
+ \>	\>	\sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{load}$(n)\rightarrow$\\
+ \>	\>	\sffamily{opd}$:=$\sffamily{opd}$\cdotp [$\sffamily{mem}$($\sffamily{loc}$(n))]$\\
+ \>	\>	\sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{loada}$(n)\rightarrow$\\
+ \>	\>	\sffamily{opd}$:=$\sffamily{opd}$\cdotp [$\sffamily{loc}$(n))]$\\
+ \>	\>	\sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{loadi}$\rightarrow$\\
+ \>	\>	\textbf{le}\=\textbf{t}$\ rest\cdotp[\alpha]=$ \sffamily{opd}\ \textbf{in}\\
+ \>	\>	\>	\sffamily{opd}$:=rest\cdotp [$\sffamily{mem}$(\alpha))]$\\
+ \>	\>	\>	\sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{store}$(n)\rightarrow$\\
+ \>	\>	\textbf{let}$\ rest\cdotp[v]=$ \sffamily{opd}\ \textbf{in}\\
+ \>	\>	\>	\sffamily{mem}$($\sffamily{loc}$(n))$:=$v$\\
+ \>	\>	\>	\sffamily{opd}$:=rest$\\
+ \>	\>	\>	\sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{storei}$\rightarrow$\\
+ \>	\>	\textbf{let}$\ rest\cdotp[\alpha,v]=$ \sffamily{opd}\ \textbf{in}\\
+ \>	\>	\>	\sffamily{mem}$(\alpha)$:=$v$\\
+ \>	\>	\>	\sffamily{opd}$:=rest$\\
+ \>	\>	\>	\sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{prim}$(op)\rightarrow$\\
+ \>	\>	\textbf{let}$\ rest\cdotp[v_1,v_2]=$ \sffamily{opd}\ \textbf{in}\\
+ \>	\>	\>	\sffamily{opd}$:=rest\cdotp[v_1\ \overline{op}\ v_2]$\\
+ \>	\>	\>	\sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{goto}$(i)\rightarrow$ \sffamily{pc} $:= i$\\
+ \>	\tt{cond}$(op,i)\rightarrow$\\
+ \>	\>	\textbf{let}$\ rest\cdotp[v]=$ \sffamily{opd}\ \textbf{in}\\
+ \>	\>	\>	\sffamily{opd}$:=rest$\\
+ \>	\>	\>	\textbf{if}$\ \overline{op}(v)\ $ \textbf{then}\ \sffamily{pc} $:=i$\\
+ \>	\>	\>	\textbf{else}\ \sffamily{pc}$:=$\sffamily{pc}$+1$\\
+ \>	\tt{invoke}$(p,n,k)\rightarrow$\\
+ \>	\>	\textbf{let}$\ rest\cdotp[v_1,\ldots,v_n]=$ \sffamily{opd}\ \textbf{in}\\
+ \>	\>	\>	\sffamily{stack}$:= push($\sffamily{stack},$\langle$\sffamily{pc},\sffamily{loc}$\rangle)$\\
+ \>	\>	\>	\sffamily{pc}$:=first(p)$\\
+ \>	\>	\>	\sffamily{opd}$:=[]$\\
+ \>	\>	\>	\sffamily{loc}$:=\{ 1\mapsto \alpha_1,\ldots,n+k\mapsto\alpha_{n+k}\}$\\
+ \>	\>	\>	\textbf{forall}\ $i\in[1,\ldots,n]$\ \textbf{do}\ \sffamily{mem}$(\alpha_i):=v_i$\\
+ \>	\>	\textbf{where}\ $\alpha_1,\ldots,\alpha_{n+k}=$ \textbf{new}$($\sffamily{Adr}$,n+k)$\\
+ \>	\tt{return}$\rightarrow$\\
+ \>	\>	\textbf{let}$\ \langle pc',loc' \rangle=top($ \sffamily{stack}$)$\ \textbf{in}\\
+ \>	\>	\>	\sffamily{stack}$:=pop($\sffamily{stack}$)$\\
+ \>	\>	\>	\sffamily{pc}$:= pc' + 1$\\
+ \>	\>	\>	\sffamily{loc}$:=loc'$\\
+ \>	\>	\>	\sffamily{opd}$:=[]$\\
+\end{tabbing}
+
+
+\subsection{Compilation der arithmetischen Ausdr"ucke}
+
+Funktion: $\mbox{CA}:\mbox{\sffamily Aexp} \rightarrow \mbox{\sffamily{List(Instr)}}$\\
+
+Gegeben sei die Anzahl von den lokalen Variablen und eine Zuordnung von Nummern zu lokalen Variablen und formalen Parametern einer Prozedur.\\
+
+Falls $x\in \mbox{\sffamily Var}$, dann ist $\bar{x}\in \mbox{\sffamily VarNr}$.\\
+
+\subsubsection{F"ur lokale Variablen und Werteparameter $x$}
+
+\begin{tabbing}
+ CA\=$(x) =$ \\
+ \>	\tt{load}$(\bar{x})$
+\end{tabbing}
+
+\subsubsection{F"ur Variablenparameter $x$}
+
+\begin{tabbing}
+ CA\=$(x) =$ \\
+ \>	\tt{load}$(\bar{x})$\\
+ \>	\tt{loadi}
+\end{tabbing}
+
+\subsubsection{F"ur Konstanten $i$}
+
+\begin{tabbing}
+ CA\=$(i) =$ \\
+ \>	\tt{const}$(i)$
+\end{tabbing}
+
+\subsubsection{F"ur bin"are Operatoren $op$}
+
+\begin{tabbing}
+ CA\=$(e_1\ op\ e_2) =$ \\
+ \>	CA$(e_1)$\\
+ \>	CA$(e_2)$\\
+ \>	\tt{prim}$(op)$
+\end{tabbing}
+
+\subsection{Compilation der Boolschen Ausdr"ucke}
+
+Funktionen $\mbox{CB}_i: \mbox{\sffamily{Bexp}}\times\mbox{\sffamily Pc}\rightarrow \mbox{\sffamily{List(Instr)}}$\\
+
+$\mbox{CB}_1(b,lab)$: Falls $b$ wahr ist, springe zu $lab$, sonst ans Ende von $b$.\\
+$\mbox{CB}_0(b,lab)$: Falls $b$ falsch ist, springe zu $lab$, sonst ans Ende von $b$.
+
+\begin{tabbing}
+ CB\=$_1(e_1\ op\ e_2,lab) =$ \\
+ \>	CA$(e_1)$\\
+ \>	CA$(e_2)$\\
+ \>	\tt{prim}$(op)$\\
+ \>	\tt{cond}$($\tt{ne},$lab)$
+\end{tabbing}
+
+\begin{tabbing}
+ CB\=$_1($\tt{not }$b,lab) =$ \\
+ \>	CB$_0(b,lab)$\\
+\end{tabbing}
+
+\begin{tabbing}
+ CB\=$_0(e_1\ op\ e_2,lab) =$ \\
+ \>	CA$(e_1)$\\
+ \>	CA$(e_2)$\\
+ \>	\tt{prim}$(op)$\\
+ \>	\tt{cond}$($\tt{eq},$lab)$
+\end{tabbing}
+
+\begin{tabbing}
+ CB\=$_0($\tt{not }$b,lab) =$ \\
+ \>	CB$_1(b,lab)$\\
+\end{tabbing}
+
+\begin{tabbing}
+ CB\=$_1(b_1\ $ \tt{and}$ \ b_2,lab) =$ \\
+ \>	CB$_0(b_1,end)$\\
+ \>	CB$_1(b_2,lab)$\\
+ $end:$
+\end{tabbing}
+
+\begin{tabbing}
+ CB\=$_1(b_1\ $ \tt{or}$ \ b_2,lab) =$ \\
+ \>	CB$_1(b_1,lab)$\\
+ \>	CB$_1(b_2,lab)$
+\end{tabbing}
+
+\begin{tabbing}
+ CB\=$_0(b_1\ $ \tt{and}$ \ b_2,lab) =$ \\
+ \>	CB$_0(b_1,lab)$\\
+ \>	CB$_0(b_2,lab)$
+\end{tabbing}
+
+\begin{tabbing}
+ CB\=$_0(b_1\ $ \tt{or}$ \ b_2,lab) =$ \\
+ \>	CB$_1(b_1,end)$\\
+ \>	CB$_0(b_2,lab)$\\
+ $end:$
+\end{tabbing}
+
+\subsection{Compilation der Anweisungen}
+
+Funktion $\mbox{CS}:\mbox{\sffamily Stm} \rightarrow \mbox{\sffamily List(Instr)}$
+
+\subsubsection{F"ur lokale Variablen und Werteparameter $x$}
+
+\begin{tabbing}
+ CS\=$(x := e) =$ \\
+ \>	CA$(e)$\\
+ \>	\tt{store}$(\bar{x})$
+\end{tabbing}
+
+\subsubsection{F"ur Variablenparameter $x$}
+
+\begin{tabbing}
+ CS\=$(x := e) =$ \\
+ \>	\tt{load}$(\bar{x})$\\
+ \>	CA$(e)$\\
+ \>	\tt{storei}
+\end{tabbing}
+
+\subsubsection{Leere Anweisung}
+
+CS (\texttt{skip}) $= []$ 
+
+\subsubsection{Sequentielle Komposition}
+
+\begin{tabbing}
+ CS\=$(s_1\ ;\ s_2) =$ \\
+ \>	CS$(s_1)$\\
+ \>	CS$(s_2)$
+\end{tabbing}
+
+\subsubsection{If-Anweisung}
+
+\begin{tabbing}
+ CS(\tt{if} \=$\ b\ $ \tt{then} $\ s_1\ $ \tt{else} $\ s_2\ $ \tt{end})$ =$ \\
+ \>	CB$_0(b, else)$\\
+ \>	CS$(s_1)$\\
+ \>	\tt{goto}$(end)$\\
+ $else:$\>	CS$(s_2)$\\
+ $end:$
+\end{tabbing}
+
+\subsubsection{Lokale Variablendeklaration}
+
+\begin{tabbing}
+ CS\=(\tt{var} $\ x:=e\ $ \tt{in} $\ s\ $ \tt{end})$ =$ \\
+ \>	CA$(e)$\\
+ \>	\tt{store}$(\bar{x})$\\
+ \>	CS$(s)$
+\end{tabbing}
+
+\subsubsection{While-Anweisung}
+
+\begin{tabbing}
+ CS\=(\tt{while} \=$\ b\ $ \tt{do} $\ s\ $ \tt{end})$ =$ \\
+ \>	\>	\tt{goto}$(test)$\\
+ \>	$whl:$	\>	CS$(s)$\\
+ \>	$test:$	\>	CB$_1(b,whl)$
+\end{tabbing}
+
+\subsubsection{Prozeduraufruf ($p$ mit $k$ lokalen Variablen)}
+
+\begin{tabbing}
+ CS\=$(p(e_1,\ldots,e_m;z_1,\ldots,z_n)) =$ \\
+ \>	CA$(e_1)$\\
+ \>	$\ \vdots$\\
+ \>	CA$(e_m)$\\
+ \>	CV$(z_1)$\\
+ \>	$\ \vdots$\\
+ \>	CV$(z_n)$\\
+ \>	\tt{invoke}$(p,m+n,k)$
+\end{tabbing}
+
+\subsubsection{F"ur lokale Variablen und Werteparameter $z$}
+
+\begin{tabbing}
+ CV\=$(z)=$ \\
+ \>	\tt{loada}$(\bar{z})$
+\end{tabbing}
+
+\subsubsection{F"ur Variablenparameter $z$}
+
+\begin{tabbing}
+ CV\=$(z)=$ \\
+ \>	\tt{load}$(\bar{z})$
+\end{tabbing}
+
+
+\subsubsection{Prozedurdeklaration}
+
+\begin{tabbing}
+ CS\=(\tt{procedure }$p(\vec{x};\vec{y})\ $ \tt{begin } $s$ \tt{end})= \\
+ \>	CS$(s)$\\
+ \>	\tt{return}
+\end{tabbing}
+
+\section{Denationelle Semantik}
+
+\subsection{Beschr"ankte Rekursion}
+
+Neue Prozedurnamen $p\upharpoonright n$ f"ur $n\in \mathbb{N}$.\\
+
+Mit $p\upharpoonright n$ wird die Prozedur $p$ beschr"ankt auf die maximale Rekursionstiefe $n$ bezeichnet.
+
+\begin{itemize}
+	\item Falls die Ausf"uhrung des Prozeduraufrufs $p\upharpoonright n(\vec{e};\vec{z})$ zu einer Rekursionstiefe gr"osser als $n$ f"uhrt, terminiert der Aufruf nicht.
+	\item Die Prozedur $p\upharpoonright (n+1)$ ruft in ihrem Rumpf nur Prozeduren $q\upharpoonright n$ auf.
+	\item Die Ausf"uhrung von $p\upharpoonright 0 (\vec{e};\vec{z})$ terminiert nie.
+\end{itemize}
+
+\begin{definition}
+	F"ur eine Anweisung $s$ bezeichnet man mit $s\upharpoonright n$ die Anweisung, die man aus $s$ erh"alt, indem man alle Prozeduraufrufe $p(\vec{e};\vec{z})$ durch beschr"ankte Prozeduraufrufe $p\upharpoonright n (\vec{e};\vec{z})$ ersetzt.
+\end{definition}
+
+\subsection{Monotonie}
+
+Was mit kleiner Rekursionstiefe berechnet werden kann, bekommt man auch mit gr"osserer Rekursionstiefe.
+
+\begin{lemma}[Monotonie]
+	Falls $m\leq n$ und $\sigma \mathcal{R}[s\upharpoonright m]\sigma'$, dann gilt auch $\sigma \mathcal{R}[s\upharpoonright n]\sigma'$
+\end{lemma}
+
+\subsection{Nat"urliche Semantik $\Rightarrow$ denationelle Semantik}
+
+\begin{theorem}
+	Falls in der nat"urlichen Semantik $\sigma \natsemarr{s} \sigma'$ herleitbar ist, dann gibt es ein $n\in \mathbb{N}$, so dass in der denationellen Semantik gilt $\sigma \mathcal{R}[s\upharpoonright n]\sigma'$.
+\end{theorem}
+
+\subsection{Denationelle Semantik $\Rightarrow$ nat"urliche Semantik}
+
+\begin{theorem}
+	Falls in der denationellen Semantik $\sigma \mathcal{R}[s\upharpoonright n] \sigma'$ gilt, dann ist in der nat"urlichen Semantik $\sigma \natsemarr{s} \sigma'$ herleitbar.
+\end{theorem}
+
+\subsection{Wiederholung: Relationen}
+
+\begin{definition}
+	Eine Relation $R$ auf einer Menge $A$ ist eine Menge von Paaren $R\subseteq A\times A$.
+\end{definition}
+
+\begin{definition}
+	Eine Relation $R$ heisst \textit{funktional}, falls f"ur alle $x,y,z$ gilt: Falls $\langle x,y \rangle\in R$ und $\langle x,z\rangle \in R$, dann ist $y=z$.
+\end{definition}
+
+\subsubsection{Komposition und Identit"at}
+
+Zuerst $S$, dann $R$.
+\begin{definition}
+	$R\circ S = \{ \langle x, z \rangle | \exists y \langle x,y \rangle \in S \mbox{ und } \langle y,z \rangle \in R \}$
+\end{definition}
+
+\begin{definition}[Identit"at auf $A$]
+	$Id_A = \{ \langle x,x \rangle | x\in A \}$
+\end{definition}
+
+Die Komposition ist assoziativ und $\mbox{Id}_A$ ist ein Neutralelement.
+
+\begin{lemma}
+	Seien $R_1,R_2,R_3$ und $R$ Relationen auf $A$. Dann gilt:
+	\begin{itemize}
+		\item $R_1 \circ (R_2 \circ R_3) = (R_1\circ R_2)\circ R_3$
+		\item $\mbox{Id}_A \circ R=R=R\circ \mbox{Id}_A$
+	\end{itemize}
+\end{lemma}
+
+Die Komposition von Relationen ist monoton bez"uglich der Mengeninklusion.
+
+\begin{lemma}
+	Falls $R_1\subseteq R_2$ und $S_1 \subseteq S_2$, dann ist $R_1 \circ S_1 \subseteq R_2 \circ S_2$
+\end{lemma}
+
+Die Komposition von Relationen ist distributiv "uber der Vereinigung von Relationen.
+\begin{lemma}
+	Sei $(R_i)_{i\in I}$ eine Familie von Relationen. Dann gilt:
+	\begin{displaymath}
+		( \bigcup_{i\in I} R_i ) \circ S = \bigcup_{i\in I} (R_i \circ S), \qquad S\circ(\bigcup_{i\in I} R_i) = \bigcup_{i \in I}(S\circ R_i)
+	\end{displaymath}
+\end{lemma}
+
+\subsubsection{Reflexivit"at und Transitivit"at}
+
+\begin{definition}
+	Eine Relation $R$ heisst \textit{reflexiv} auf $A$, falls $\langle x,x \rangle \in R$ f"ur alle $x\in A$.
+\end{definition}
+
+\begin{definition}
+	Eine Relation $R$ heisst \textit{transitiv} auf $A$, falls f"ur alle $x,y,z \in A$ gilt: Falls $\langle x,y \rangle\in R$ und $\langle y,z\rangle \in R$, dann ist $\langle x,z \rangle \in R$.
+\end{definition}
+
+\begin{lemma}
+	Sei $R$ eine Relation. Dann gilt:
+	\begin{itemize}
+		\item $R$ ist reflexiv auf $A$ genau dann, wenn $Id_A \subseteq R$.
+		\item $R$ ist transitiv auf $A$ genau dann, wenn $R\circ R \subseteq R$.
+	\end{itemize}
+\end{lemma}
+
+\subsubsection{Potenzen und reflexiv, transitiver Abschluss}
+
+Die Potenzen $R^n$ und der reflexiv, transitive Abschluss $R^*$.
+
+\begin{definition}
+	Sei $R$ eine Relation auf $A$. Dann definieren wir:
+	\begin{displaymath}
+		R^0 = Id_A, \qquad	R^{n+1}=R\circ R^n, \qquad	R^* = \bigcup_{n\in \mathbb{N}} R^n
+	\end{displaymath}
+\end{definition}
+
+\begin{lemma}
+	F"ur alle $m,n \in \mathbb{N}$ ist $R^m\circ R^n = R^{m+n}$
+\end{lemma}
+
+$R^*$ ist die kleinste reflexiv, transitive Relation die $R$ umfasst.
+\begin{lemma}
+	Sei $R$ eine Relation auf $A$. Dann gilt:
+	\begin{itemize}
+		\item $R^*$ ist reflexiv und transitiv auf $A$ und $R\subseteq R^*$.
+		\item Falls $S$ eine reflexive und transitive Relation auf $A$ ist mit $R\subseteq S$, dann ist $R^* \subseteq S$.
+	\end{itemize}
+\end{lemma}
+
+\begin{lemma}
+	Sei $R$ eine Relation auf $A$. Dann gilt
+	\begin{displaymath}
+		R^* = \mbox{Id}_A \cup (R^* \circ R)
+	\end{displaymath}
+\end{lemma}
+
+\subsubsection{Funktionale Relationen}
+
+Die Komposition von funktionalen Relationen ist funktional.
+
+\begin{lemma}\ 
+	\begin{itemize}
+		\item Falls $R$ und $S$ funktional sind, dann ist $R\circ S$ funktional.
+		\item Falls $R$ funktional ist, dann ist $R^n$ funktional.
+	\end{itemize}
+	\begin{remark}
+		Wenn $R$ funktional ist, folgt nicht dass $R^*$ funktional ist.
+	\end{remark}
+\end{lemma}
+
+\subsection{Eigenschaften der denationellen Semantik}
+
+\begin{definition}
+	F"ur Boolsche Ausdr"ucke $b$ sei
+	\begin{displaymath}
+		\mathcal{R}[b] = \{ \langle \sigma,\sigma \rangle | \sigma \in \mbox{\sffamily State}, \mathcal{B}[b]\sigma = 1 \}
+	\end{displaymath}
+\end{definition}
+
+\begin{theorem}
+	F"ur die denotationelle Semantik von Programmen gilt:
+	\small
+	\begin{displaymath}
+		\mathcal{R}[\mbox{\tt skip}] = \mbox{\sf Id}_{State}
+	\end{displaymath}
+	\begin{displaymath}
+		\mathcal{R}[s_1\ ;\ s_2] = \mathcal{R}[s_2]\circ \mathcal{R}[s_1]
+	\end{displaymath}
+	\begin{displaymath}
+		\mathcal{R}[\mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end}] = (\mathcal{R}[s_1]\circ \mathcal{R}[b])\cup (\mathcal{R}[s_2]\circ \mathcal{R}[\mbox{\tt not}\ b])
+	\end{displaymath}
+	\begin{displaymath}
+		\mathcal{R}[\mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}] = \mathcal{R}[\mbox{\tt not}\ b]\circ (\mathcal{R}[s]\circ \mathcal{R}[b])^*
+	\end{displaymath}
+	\normalsize
+\end{theorem}
+
+\begin{lemma}
+	\small
+	\begin{displaymath}
+		\mathcal{R}[\mbox{\tt if}\ b\ \mbox{\tt then}\ s\ \mbox{\tt end}] = (\mathcal{R}[s]\circ \mathcal{R}[b])\cup \mathcal{R}[\mbox{\tt not}\ b]
+	\end{displaymath}
+	\normalsize
+\end{lemma}
+
+\subsection{Die While-Anweisung als kleinster Fixpunkt}
+
+\begin{definition}
+	Sei $\Gamma$ ein Operator von $\mathcal{P}(M)$ nach $\mathcal{P}(M)$.
+	\begin{itemize}
+		\item $X$ ist ein \textit{Fixpunkt} von $\Gamma$, falls $\Gamma(X)=X$.
+		\item $X$ ist der \textit{kleinste} Fixpunkt von $\Gamma$, falls $X$ ein Fixpunkt von $\Gamma$ ist und f"ur jeden weiteren Fixpunkt $Y$ von $\Gamma$ gilt, dass $X\subseteq Y$.
+	\end{itemize}
+\end{definition}
+
+\begin{satz}[Fixpunktsatz] F"ur die While-Anweisung gilt:
+\begin{displaymath}
+	\mathcal{R}[\mbox{\tt while}\ b\ \mbox{\tt do}\ s\ \mbox{\tt end}] = \mbox{ kleinster Fixpunkt von } \Gamma_{b,s}
+\end{displaymath}
+wobei der Operator $\Gamma_{b,s}$ von $\mathcal{P}(\mbox{\sf State}\times \mbox{\sf State})$ nach $\mathcal{P}(\mbox{\sf State}\times \mbox{\sf State})$ definiert ist durch
+\begin{displaymath}
+	\Gamma_{b,s}(X) = (X \circ \mathcal{R}[s]\circ \mathcal{R}[b])\cup \mathcal{R}[\mbox{\tt not } b]
+\end{displaymath}
+\end{satz}
+
+\section{Hoare-Logik}
+
+Axiomatische, syntaktische Programmverifikation mit Hoare-Tripel:
+\begin{displaymath}
+	\{  \varphi \} s \{ \psi \}
+\end{displaymath}
+
+Dabei sind $\varphi$ und $\psi$ logische Formeln: Zusicherungen.\\
+
+Bedeutung: Falls \textit{vor} der Ausf"uhrung der Anweisung $s$ die Formel $\varphi$ gilt und $s$ terminiert, dann gilt $\psi$ nach der Ausf"uhrung von $s$.
+
+\subsection{Das Beweissystem von Hoare}
+
+\begin{displaymath}
+	\frac{}{\{\varphi\}\mbox{\tt skip}\{\varphi\}} \quad \mbox{Axiom (\tt{skip})}
+\end{displaymath}
+\begin{displaymath}
+	\frac{}{\{\varphi\frac{e}{x}\}x := e\{\varphi\}} \quad \mbox{Axiom (:=)}
+\end{displaymath}
+\begin{displaymath}
+	\frac{\{\varphi\}s_1\{\psi\}\quad \{\psi\}s_2\{\chi\} }{\{\varphi\}s_1\ ;\ s_2\{\chi\}} \quad \mbox{Regel (;)}
+\end{displaymath}
+\begin{displaymath}
+	\frac{\{\varphi\land b\}s_1\{\psi\}\quad \{\varphi \land \lnot b\}s_2\{\psi\} }{\{\varphi\} \mbox{\tt if}\ b\ \mbox{\tt then}\ s_1\ \mbox{\tt else}\ s_2\ \mbox{\tt end}  \{\psi\}} \quad \mbox{Regel (\tt{if})}
+\end{displaymath}
+\begin{displaymath}
+	\frac{\{ \varphi \land b \} s \{ \varphi \} }{\{\varphi\} \mbox{\tt while}\ b\ \mbox{\tt do}\ s \ \mbox{\tt end}   \{\varphi \land \lnot b\} } \quad  \mbox{Regel (\tt{while})}
+\end{displaymath}
+\begin{displaymath}
+	\frac{\varphi \rightarrow \varphi' \quad \{\varphi'\}s\{\psi'\} \quad \psi' \rightarrow \psi }{ \{\varphi\} s \{ \psi\}} \quad  \mbox{Abschw"achung}
+\end{displaymath}
+
+\begin{definition}
+	Wir schreiben $\vdash \{\varphi\} s \{\psi\}$, falls $\{\varphi\} s \{ \psi\}$ in dem erweiterten Beweissystem herleitbar ist.
+\end{definition}
+
+\subsubsection{Ableitbare und zul"assige Axiome und Regeln}
+
+\begin{displaymath}
+	\frac{\{ \varphi \land b \} s \{ \psi \} \quad \varphi \land \lnot b \rightarrow \psi}{\{\varphi\} \mbox{\tt if}\ b\ \mbox{\tt then}\ s\ \mbox{\tt end} \{ \psi\} }
+\end{displaymath}
+
+\begin{displaymath}
+	\frac{}{\{\varphi\} s \{\mbox{\tt true}\}}
+\end{displaymath}
+
+\begin{displaymath}
+	\frac{}{\{ \mbox{\tt false}\} s \{ \varphi\}}
+\end{displaymath}
+
+\begin{displaymath}
+	\frac{}{\{ \varphi\} s \{ \varphi\}}\qquad \mbox{falls FV}(\varphi)\cap\mbox{AV}(s) = \emptyset
+\end{displaymath}
+
+\begin{displaymath}
+	\frac{\{\varphi_1\} s \{ \psi\} \quad \{\varphi_2\} s \{\psi\} }{\{ \varphi_1 \lor \varphi_2 \} s \{ \psi\}}
+\end{displaymath}
+
+\begin{displaymath}
+	\frac{\{\varphi\} s \{ \psi_1\} \quad \{\varphi\} s \{\psi_2\} }{\{ \varphi \} s \{ \psi_1 \land \psi_2\}}
+\end{displaymath}
+
+\begin{displaymath}
+	\frac{\{\varphi\} s \{ \psi\}}{\{\exists x \varphi \} s \{ \psi\}} \qquad \mbox{falls } x \not \in \mbox{FV}(s) \cup \mbox{FV}(\psi)
+\end{displaymath}
+
+\begin{displaymath}
+	\frac{\{\varphi\} s \{ \psi\}}{\{\varphi \} s \{\forall x \psi\}} \qquad \mbox{falls } x \not \in \mbox{FV}(s) \cup \mbox{FV}(\varphi)
+\end{displaymath}
+
+\subsection{Korrektheit der partiellen Hoare-Logik}
+
+\begin{definition}
+	Ein Tripel $\{\varphi \} s \{ \psi \}$ ist \textit{wahr} im Sinne der partiellen Korrektheit (geschrieben $\vDash \{\varphi\} s \{ \psi\}$), falls f"ur alle Belegungen $\sigma,\sigma'$ gilt:\\\\
+		$\mbox{Falls } \mathcal{T}[\varphi]\sigma = 1 \mbox{ und } \langle \sigma, \sigma' \rangle \in \mathcal{R}[s],$\\
+		$\mbox{ dann ist } \mathcal{T}[\psi]\sigma' = 1.$
+\end{definition}
+
+Falls das Tripel $\{ \varphi \} s \{ \psi \}$ herleitbar ist im Beweissystem von Hoare, dann ist $\{ \varphi \} s \{ \psi \}$ wahr.
+
+\begin{theorem}
+	Falls $\vdash \{ \varphi \} s \{ \psi \}$, dann $\vDash \{ \varphi \} s \{ \psi \}$.
+\end{theorem}
+
+\subsection{Totale Korrektheit von Programmen (Terminierung)}
+
+Die Regel (\texttt{while}) wird ersetzt durch die folgende Regel (\texttt{while}$_{\mbox{tot}}$):
+
+\begin{displaymath}
+	\begin{array}{l}
+		\{ \varphi \land b \} s \{ \varphi \} \\
+		\{ \varphi \land b \land t = z \} s \{ t < z \}\\
+		\varphi \rightarrow 0 \leq t \\
+		\hline
+		\{ \varphi \} \mbox{\tt{while }} b\ \mbox{\tt{do}}\ s\ \mbox{\tt{end}} \{ \varphi \land \lnot b \}
+	\end{array}
+\end{displaymath}\\
+
+Dabei muss gelten $z \not \in\mbox{FV}(\varphi) \cup \mbox{FV}(t) \cup \mbox{FV}(b) \cup \mbox{FV}(s)$.\\
+Die Variable $z$ wird benutzt um sich den Wert von $t$ vor Ausf"uhrung von $s$ zu merken und ihn mit dem Wert von $t$ nach $s$ zu vergleichen.\\
+Der Term $t$ ist ein Mass, das bei jedem Durchlauf echt abnimmt und so die Terminierung der While-Schlaufe garantiert.\\
+Die Pr"amisse $\varphi \rightarrow 0 \leq t$ stellt sicher, dass das Mass nicht negativ wird.\\
+Der Term $t$ ist eine obere Schranke f"ur die Anzahl Durchl"aufe der While-Schlaufe.\\
+
+\begin{definition}
+	Wir schreiben $\vdash_{\mbox{tot}} \{ \varphi \} s \{ \psi \}$, falls $\{ \varphi \} s \{ \psi \}$ in dem Beweissystem mit neuer Regel f"ur die While-Schlaufe herleitbar ist.
+\end{definition}
+
+\begin{definition}
+	Ein Tripel $\{ \varphi \} s \{ \psi \}$ ist \textit{wahr} im Sinne der totalen Korrektheit (geschrieben: $\vDash_{\mbox{tot}} \{\varphi \}s\{ \psi \} $), falls f"ur alle Belegungen $\sigma$ mit FV$(s)\subseteq$ dom$(\sigma)$ gilt:\\
+
+	Falls $\mathcal{T}[\varphi]\sigma = 1$, dann gibt es ein $\sigma' \in \textsf{State}$ mit $\langle \sigma, \sigma' \rangle \in \mathcal{R}[s]$ und $\mathcal{T}[\psi]\sigma' =1$.
+\end{definition}
+
+$\vDash_{\mbox{tot}} \{ \varphi \} s \{ \psi \}$ bedeutet, dass in jedem Anfanszustand, in dem die Vorbedingung $\varphi$ gilt, die Anweisung $s$ terminiert mit einem Endzustand, in dem die Nachbedingung $\psi$ gilt.
+
+\subsection{Korrektheit der totalen Hoare-Logik}
+
+\begin{theorem}
+	Falls $\vdash_{\mbox{tot}} \{ \varphi \} s \{ \psi \}$, dann $\vDash_{\mbox{tot}} \{\varphi \} s \{ \psi \}$.
+\end{theorem}
+
+\subsection{Erweiterung der Hoare-Logik: Arrays}
+
+\textbf{Axiom f"ur die Array-Zuweisung}\\
+
+\begin{displaymath}
+	\frac{}{\{ \varphi \frac{e_2}{a[e_1]} \} a[e_1] := e_2 \{ \varphi \}}
+\end{displaymath}
+
+\textbf{Problem}: Wie definiert man die Substitution $\varphi \frac{e_2}{a[e_1]}$?\\
+
+\textbf{Einfacher Fall}:
+\small
+\begin{displaymath}
+	\{\underbrace{x < a[j]}_{\varphi\frac{a[j]}{a[j+1]}}\} a[j+1] := a[j] \{ \underbrace{x < a[j+1]}_{\varphi} \}
+\end{displaymath}
+\normalsize
+
+\textbf{Komplizierter Fall}:
+\small
+\begin{displaymath}
+	\{\underbrace{x < (k=j+1 ? a[j] : a[k])}_{\varphi\frac{a[j]}{a[j+1]}}\} a[j+1] := a[j] \{ \underbrace{x < a[k]}_{\varphi} \}
+\end{displaymath}
+\normalsize
+
+\textbf{Neue Ausdr"ucke}: $b\ ?\ e_1\ :\ e_2$ $[$if $b$ then $e_1$ else $e_2]$
+
+\section{Dynamische Logik}
+
+\subsection{"Uberblick}
+
+\subsubsection{Modale Operatoren}
+
+$[s]$ (Box $s$) und $\langle x \rangle$ (Diamond $s$)
+
+\subsubsection{Bedeutung der Operatoren}
+
+$[s] \varphi$ Falls $s$ terminiert, dann gilt $\varphi$ nach der Ausf"uhrung von $s$.\\
+$\langle s \rangle \varphi$ Die Anweisung $s$ terminiert und $\varphi$ gilt nach der Ausf"uhrung.\\
+
+\begin{displaymath}
+	[s] \varphi \leftrightarrow \lnot \langle s \rangle \lnot \varphi
+\end{displaymath}
+
+\section{Bytecode Verification}
+
+\textbf{(Byte)Code Verifikation}: Das Programm wird, wenn es geladen wird, statisch analysiert. Nur Programme, die zur Laufzeit keine Checks der defensiven VM verletzen w"urden, werden vom Verifikator akzeptiert. Solche Programme k"onnen dann auf der \textit{normalen} VM ausgef"uhrt werden.
+
+\subsection{Verifikationsalgorithmus (Idee)}
+
+Die Prozeduren werden einzeln verifiziert.\\
+
+Der Verifikator f"uhrt die Instruktionen symbolisch aus und rechnet nur mit Typen, nicht mit Werten.
+
+\begin{definition}
+	$\textsc{Vars}(p) = ValueParams(p) \cup VarParams(p)\cup Locals(p)$
+\end{definition}
+
+\begin{definition}
+	$\textsc{ValidCodeIndex}(j) \Leftrightarrow 0 \leq j \leq maxCode(p)$
+\end{definition}
+
+\textbf{Annahme}: Alle Variablenparameter sind Outputparameter, d.h. der Verifikator muss sicherstellen, dass bei einer Return-Instruktion die Variablenparameter sicher einen Wert zugewiesen haben.
+
+\subsection{Verifikation (statischer Teil)}
+
+Die folgenden statischen Constraints m"ussen erf"ullt sein:\\
+
+\small
+\begin{tabular}{l|p{5.5cm}}
+	\tt{const}$(i)$ &		$i\in \mathbb{Z}$\\
+	\tt{load}$(n)$ &		$n\in \textsc{Vars}(p)$\\
+	\tt{loada}$(n)$ &		$n\in \textsc{Vars}(p) \backslash VarParams(p)$\\
+	\tt{store}$(n)$ &		$n\in \textsc{Vars}(p)$\\
+	\tt{prim}$(op)$ &		$op \in$ \sf{AddOp} $\cup$ \sf{MulOp} $\cup$ \sf{RelOp} \\
+	\tt{goto}$(i)$ &		$\textsc{ValidCodeIndex}(i)$\\
+	\tt{cond}$(op,i)$ &		$op \in \{\texttt{eq,ne}\}, \textsc{ValidCodeIndex}(i)$\\
+	\tt{invoke}$(q,n,k)$ &		$n=|ValueParams(q)\cup$\\
+	&				$VarParams(q)|,$\\
+	&				$k=|Locals(q)|$
+\end{tabular}
+\normalsize
+
+\subsection{Verifikation (dynamischer Teil)}
+
+\subsubsection{Anfangszustand der Verifikation von $p$}
+
+\begin{itemize}
+	\item \textsf{Visited} = \textsf{Changed} = $\{0\}$
+	\item \textsf{opdV}$_0$ = $[]$
+	\item \textsf{locV}$_0$ = $init(p)$
+\end{itemize}
+
+\subsubsection{Die Typen der Variablen zu Beginn von $p$}
+
+\begin{eqnarray}
+	init(p)&	= &	\{i\mapsto \textsf{int} | i\in ValueParams(p) \} \nonumber \\
+	&		\cup &	\{i\mapsto \textsf{adr}(i) | i\in VarParams(p) \} \nonumber \\
+	&		\cup &	\{\textsf{adr}(i) \mapsto \textsf{undef} | i \in VarParams(p) \} \nonumber \\
+	&		\cup &	\{i \mapsto \textsf{undef} | i \in Locals(p) \} \nonumber
+\end{eqnarray}
+
+\subsubsection{Verifikationsalgorithmus (top-level Loop)}
+
+\small
+\begin{tabbing}
+\sc{V}\=\sc{erify}$ = \textbf{while } \textsf{Changed} \neq \emptyset \textbf{ do}$ \\
+\>	$\textbf{ch}$\=$\textbf{oose } i \in \textsf{Changed} \textbf{ do}$\\
+\>	\>	$\textbf{if }$\=\textsc{Check}$(i,\textsf{locV}_i,\textsf{opdV}_i)=\textsf{True }\textbf{then}$\\
+\>	\>	\>	$\textsf{Changed} := \textsf{Changed}\backslash \{ i \}$;\\
+\>	\>	\>	$\textbf{for}$ \= $\textbf{all } \langle j, locT, opdT \rangle \in \textsc{Succ}(i,\textsf{locV}_i,\textsf{opdV}_i) \textbf{ do}$\\
+\>	\>	\>	\>	\sc{Propagate}$(j,locT,opdT)$\\
+\>	\>	$\textbf{else throw} \texttt{ ''Check violated''}$
+\end{tabbing}
+\normalsize
+
+\subsubsection{Das Propagieren der Typen}
+
+\small
+\begin{tabbing}
+\sc{P}\=\sc{ropagate}$(j, locT, opdT) =$\\
+\>	$\textbf{if }$\=$ j\not \in Visited \textbf{ then}$\\
+\>	\>	$\textbf{if }$\= \sc{ValidCodeIndex}$(j) \textbf{ then}$\\
+\>	\>	\>	$\textsf{locV}_j := locT; \textsf{opdV}_j := opdT;$\\
+\>	\>	\>	$\textsf{Visited} := \textsf{Visited} \cup \{ j\}; \textsf{Changed} := \textsf{Changed}\cup \{j\}$\\
+\>	\>	$\textbf{else throw} \texttt{ ''Invalid code index''}$\\
+\>	$\textbf{elseif } locT \sqsubseteq \textsf{locV}_j \textbf{ and } \textsf{opdT} \sqsubseteq \textsf{opdV}_j \textbf{ then skip}$\\
+\>	$\textbf{elseif } length(opdT) = length(\textsf{opdV}_j) \textsf{ then}$\\
+\>	\>	$\textsf{locV}_j := \textsf{locV}_j \sqcup locT;$\\
+\>	\>	$\textsf{opdV}_j := \textsf{locV}_j \sqcup opdT;$\\
+\>	\>	$\textsf{Changed} := \textsf{Changed} \cup \{ j\}$\\
+\>	$\textbf{else throw } \texttt{''Propagation not possible''}$
+\end{tabbing}
+\normalsize
+
+\subsubsection{Die Struktur der Verify-Typen}
+
+\begin{definition}
+Der Typ \texttt{undef} ist der gr"osste Typ:
+\begin{displaymath}
+	\sigma \sqsubseteq \tau \Leftrightarrow \sigma = \tau \lor \tau = \texttt{undef}
+\end{displaymath}
+\end{definition}
+
+Die kleinste untere Schranke $\sigma \sqcup \tau$ von zwei Typen ist \texttt{int} oder \texttt{adr}$(n)$, falls beide \texttt{int} bzw. \texttt{adr}$(n)$, sonst \texttt{undef}.
+
+\subsubsection{Vergleich der Typen von Instruktionen}
+
+\begin{definition}
+	Punktweiser Vergleich der Typen der Variablen:
+	\begin{displaymath}
+		locS \sqsubseteq locT \Leftrightarrow \mbox{dom}(locS) = \mbox{dom}(locT) \land
+	\end{displaymath}
+	\begin{displaymath}
+		\forall i \in \mbox{dom}(locS)(locS(i))\sqsubseteq locT(i))
+	\end{displaymath}
+\end{definition}
+
+\begin{definition}
+	Punktweiser Vergleich der Typen der Operanden:
+	\begin{displaymath}
+		opdS \sqsubseteq opdT \Leftrightarrow length(opdS) = length(opdT) \land
+	\end{displaymath}
+	\begin{displaymath}
+		\forall i \in [1\ldots length(opdS)](opdS(i)\sqsubseteq opdT(i))
+	\end{displaymath}
+\end{definition}
+
+\subsubsection{Die dynamischen Checks f"ur die Instruktionen}
+
+\small
+\begin{tabbing}
+ \sc{C}\=\sc{heck}$(j,locT,opdT) \Leftrightarrow \textbf{case } code(j) \textbf{ of}$\\
+ \>	$\texttt{load}(n) \rightarrow locT(n) \neq \texttt{undef}$\\
+ \>	$\texttt{loadi} \rightarrow length(opdT) \geq 1 \land \textsc{IsAddr}(top(opdT,1))$\\
+ \>	$\texttt{store}(n) \rightarrow length(opdT)\geq 1$\\
+ \>	$\texttt{storei} \rightarrow length(opdT)\geq 2 \land \textsc{IsAddr}(top(drop(opdT,1)))$\\
+ \>	$\texttt{prim}(op) \rightarrow length(opdT) \geq 2 \land last(opdT,2) = [\texttt{int,int}]$\\
+ \>	$\texttt{Cond}(op,i) \rightarrow length(opdT) \geq 1 \land top(opdT,2) = \texttt{int}$\\
+ \>	$\texttt{in}$\=$\texttt{voke}(q,n,k) \rightarrow length(opdT) \geq n \land$\\
+ \>	\>	$\forall i \in ValueParams(q)(opdT(i) = \texttt{int})\land$\\
+ \>	\>	$\forall i \in ValueParams(q)\textsc{IsAddr}(opdT(i))$\\
+ \>	$\texttt{return} \rightarrow \forall i \in VarParams(p)(locT(\texttt{adr}(i)) \neq \texttt{undef})$\\
+ \>	\textbf{otherwise} $\rightarrow \textsf{True}$
+\end{tabbing}
+\normalsize
+
+\subsubsection{Die Berechnung der Nachfolger}
+
+\small
+\begin{tabbing}
+ \sc{S}\=\sc{ucc}$(pc,locT,opdT)= \textbf{case } code(pc) \texttt{ of}$\\
+ \>	$\texttt{const}(i) \rightarrow \{\langle pc+1, locT, opdT\cdotp[\texttt{int}] \rangle\}$\\
+ \>	$\texttt{load}(n) \rightarrow \{\langle pc+1, locT, opdT\cdotp[locT(n)] \rangle\}$\\
+ \>	$\texttt{loada}(n) \rightarrow \{\langle pc+1, locT, opdT\cdotp[\texttt{adr}(n)] \rangle\}$\\
+ \>	$\texttt{loadi} \rightarrow \{\langle pc+1, locT, drop(opdT,1)\cdotp[locT(top(opdT))] \rangle\}$\\
+ \>	$\texttt{store}(n) \rightarrow \{\langle pc+1, locT[n\mapsto top(opdT)], drop(opdT,1) \rangle\}$\\
+ \>	$\texttt{storei} \rightarrow \{\langle pc+1, locT[\alpha \mapsto top(opdT)], drop(opdT,2)\rangle\}$\\
+ \>	\ \ \	\textbf{where } $\alpha = top(drop(opdT,1))$\\
+ \>	$\texttt{prim}(op) \rightarrow \{\langle pc+1, locT, drop(opdT,2) \cdotp [int] \rangle\}$\\
+ \>	$\texttt{goto}(i) \rightarrow \{\langle i, locT, opdT \rangle\}$\\
+ \>	$\texttt{Cond}(op,i) \rightarrow \{\langle pc+1, locT, opdT\rangle,\langle i, locT, opdT \rangle\}$\\
+ \>	$\texttt{invoke}(q,n,k) \rightarrow \{\langle pc+1, locT\oplus out(p,opdT), [] \rangle\}$\\
+ \>	$\texttt{return} \rightarrow \emptyset$\\
+\end{tabbing}
+\normalsize
+
+Durch einen Prozeduraufruf mit den Argumenten $opdT$ werden den Variablenargumenten von $opdT$ (= die Adressen auf $opdT$) Werte zugewiesen.
+
+\small
+\begin{tabbing}
+ $ou$\=$t(p,opdT)=$ \\
+ \>	$\{ i \mapsto \texttt{int} | \texttt{adr}(i) \in opdT, i \in ValParams(p) \cup Locals(p) \}\cup$\\
+ \>	$\{ \texttt{adr}(i) \mapsto \texttt{int} | \texttt{adr}(i) \in opdT, i \in VarParams(p)\}$
+\end{tabbing}
+\normalsize
+
+Das "Uberschreiben von Bindungen in endlichen Funktionen:
+\begin{displaymath}
+	f \oplus g = \{(x\mapsto y) \in f | x \not \in \mbox{dom}(g)\}\cup g
+\end{displaymath}
+
+\subsection{Die defensive VM}
+
+Bei der defensiven VM tragen die Werte ihren Typ mit sich herum.\\
+
+Die defensive VM benutzt dieselben Checks wie der Verifikator.
+
+\begin{theorem}
+	Falls in einem Programm jede Prozedur eine Typisierung ihres Code-Arrays hat, dann verletzt das Programm keine Checks auf der defensiven VM.
+\end{theorem}
+
+Konklusion: Falls ein Programm vom Verifikator akzeptiert wird, dann ist es \textit{sicher} auf der normalen VM.
+
+\end{document}

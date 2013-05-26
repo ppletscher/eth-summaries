@@ -1,0 +1,1606 @@
+% Theoretische Informatik summary
+% written during my studies at ETH Zuerich
+% based on the lecture of Prof. Nievergelt and Prof. Basin
+% Copyright (C) 2004  Patrick Pletscher
+                                                                                
+\documentclass[german, 10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage[german]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage[bf]{caption2}
+\usepackage{multirow}
+%\usepackage{graphicx}
+
+\usepackage{pstricks}
+\usepackage{vaucanson-g}
+                                                                                
+% text below figures
+\renewcommand{\captionfont}{\small\itshape}
+                                                                                
+% theorems, definitions
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{these}{These}[section]
+\newtheorem{satz}{Satz}[section]
+\newtheorem{korollar}{Korollar}[section]
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+
+\newtheoremstyle{example}{\topsep}{\topsep}%
+{}%         Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{}%        Punctuation after thm head
+{\newline}%     Space after thm head (\newline = linebreak)
+{\thmname{#1}\thmnumber{ #2}\thmnote{ #3}}%         Thm head spec
+
+\theoremstyle{example}
+\newtheorem{example}{Beispiel}[subsection]
+                                                                                
+% dimensions of document
+\textwidth = 19 cm
+\textheight = 25 cm
+\oddsidemargin = -1.5 cm
+\evensidemargin = -1.5 cm
+\hoffset = 0.0 cm
+\marginparwidth = 0.0 cm
+\topmargin = -1.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0 cm
+
+% depth of toc
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+
+% informations about the document
+\title{Theoretische Informatik - Zusammenfassung}
+\author{Patrick Pletscher}
+
+\begin{document}
+
+\maketitle
+
+\section{Modelle von Berechnungen}
+
+Es gibt Modelle in welchen Berechnungen m"oglich sind und in anderen Modellen sind sie wiederum nicht m"oglich. Man spricht dann von \textit{Berechnungsmodellen f"ur spezielle Zwecke}. Kleine "Anderungen im Berechnungsmodell k"onnen hier drastische Konsequenzen haben, so dass z.Bsp. etwas pl"otzlich m"oglich wird.\\
+Es gibt aber auch \textit{universelle Berechnungsmodelle}, Beispiele davon sind production systems, Turingmaschinen oder das Lambda-Kalk"ul. All diese unterschiedlichen Berechnungsmodelle sind "aquivalent. Diese Modelle sind universell im Sinn dass sie alles berechnen k"onnen, was in anderen Modellen berechnet werden kann, wenn man annimmt, dass sie in Zeit und Speicher nicht eingeschr"ankt sind.
+
+\subsection{Sortiernetzwerke (sorting networks)}
+
+Netzwerke von Parallelen Dr"ahten auf welchen Zahlen von links nach rechts reisen. An Stellen, die durch vertikale Linien bezeichnet sind, weist ein Vergleichgatter die kleinere Zahl zum oberen Ausgangsdraht, die gr"ossere auf den unteren. 
+
+\begin{theorem}[0-1 Prinzip]
+	Wenn ein Netzwerk $S$ mit $n$ Eingangslinien alle $2^n$ Vektoren von 0-en und 1-en in aufsteigender Reihenfolge sortiert, so sortiert $S$ irgendeinen Vektor von $n$ beliebigen Zahlen korrekt.
+\end{theorem}
+
+\begin{theorem}
+	(Testen beweist die Korrektheit!): Wenn ein Netzwerk $S$, welches nur Adjazenzvergleiche benutzt, den inversen Vektor $x_1 > x_2 > \ldots > x_n$, so sortiert er einen beliebigen Vektor.
+\end{theorem}
+
+\subsection{Threshold logic}
+
+Ein Thresholdgatter ist ein logisches Element mit mehreren Eing"angen, welches durch einen Thresholdwert $t$ charakterisiert wird. Es z"ahlt die aktuellen Eingangswerte und produziert einen Ausgang von 1, falls die Summe gr"osser gleich $t$ ist. Man benutzt auch noch errregende und hemmende Eing"ange, eine Zelle feuert, falls mindestens $t$ erregende Eing"ange an sind und kein hemmender an ist.
+
+
+\subsection{Markovalgorithmen}
+
+Alphabet $A=\{ 0,1 \}$. Funktion $A^* \to A^*$. Markeralphabet $M = \{ \alpha, \beta, \ldots \}$. Sequenz (geordnet) $P=P_1,P_2,\ldots$ von Umschreibungsregeln, welche von 2 Typen sind: $P_i = x \to y$ (weiterfahren) oder $P_i = x \neg y$ (terminiere), wobei $(A\cup M)^*$.\\
+Ausf"uhrung: benutze die \textit{erste Regel} welche auf den Datenstring angewendet werden kann, wende sie auf den linkesten Pattern match an. Eine Terminierungsregel stoppt den Prozess.
+
+\begin{example}[H"ange Suffix an]
+ $P_1: \alpha 0 \to 0 \alpha, P_2: \alpha 1 \to 1 \alpha$\\
+ $P_3: \alpha \neg 101$\\
+ $P_4: \varepsilon \to \alpha$\\
+
+ Die erste Zeile k"onnte auch durch $\alpha B \to B \alpha$ ersetzt werden und wird Produktionsschema genannt.
+\end{example}
+
+\begin{example}[Umkehren des Eingabestrings s]
+\ 
+\begin{tabbing}
+$P_1$\quad \=	$\alpha \alpha \alpha \to \alpha \alpha$ \qquad \qquad \=	zur"uckstauchen\\
+$P_2$\>		$\alpha \alpha B \to B \alpha \alpha$ \>			Ausl"oschen von einzelnen $\alpha$\\
+$P_3$\>		$\alpha \alpha \neg \varepsilon$\\
+$P_4$\>		$\alpha B' B'' \to B'' \alpha B'$ \>				umkehren\\
+$P_5$\>		$\varepsilon \to \alpha$ \>					repetiert ausgef"uhrt, aber $P_2$ und $P_3$\\
+\>		\>								stoppen $P_5$ vor dem Erstellen von 2\\
+\>		\>								aufeinanderfolgenden $\alpha$
+\end{tabbing}
+
+\end{example}
+
+\subsubsection{Algorithmusdesign}
+
+\begin{enumerate}
+	\item Initialisierung. Durch einen Marker die Stelle markieren, wo etwas geschehen soll.
+	\item Das Durchf"uhren der Operationen wird meist durch das Suchen nach einem bestimmten Marker bewerkstelligt.
+	\item Aufr"aumen der Marker
+\end{enumerate}
+
+\section{Endliche Automaten}
+
+\subsection{Definitionen}
+
+\subsubsection{Notation}
+
+Alphabet $A=\{a,b,\ldots\}$ oder $A=\{0,1,\ldots\}$.\\
+$A^* = \{w, w', \ldots\}$ wobei $w$ Worte sind.\\
+Nullstring $\varepsilon$.\\
+Leere Menge $\emptyset$.\\
+''Sprache'' $L \subseteq A^*$.\\
+Menge $S = \{s_0, s_1, \ldots\}$, Kardinalit"at $|S|$, Potenzmenge $2^{S}$.
+
+\subsubsection{Deterministische endliche Automaten DFA}
+
+$M=(S, A, f, s_0, \ldots)$. Eine Menge von Zust"anden $S$, Alphabet $A$, "Ubergangsfunktion $f: S \times A \to S$, Anfangszustand $s_0$. Andere Komponenten von $M$ bezeichnet mit $\ldots$ k"onnen varieren entsprechend dem Zweck von $M$.
+
+\begin{example}[Mod 3 Teiler]
+Lese eine bin"ar Zahl von links nach rechts, also MSB zuerst, und berechne seinen Rest mod 3.
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.5cm}
+\MediumPicture
+\VCDraw{
+\begin{VCPicture}{(0,-1.2)(6,2)}
+% states
+\LargeState\State[\equiv 0]{(0,0)}{A} \LargeState\State[\equiv 1]{(3,0)}{B} \LargeState\State[\equiv 2]{(6,0)}{C}
+% initial--final
+\Initial{A}
+
+% transitions
+\ArcL{A}{B}{1}
+\ArcL{B}{A}{1}
+\ArcL{B}{C}{0}
+\ArcL{C}{B}{0}
+\LoopN{A}{0}
+\LoopS{C}{1}
+%
+\end{VCPicture}}
+\end{center}
+\caption{mod 3 Teiler}
+\end{figure}
+\end{example}
+
+
+\subsubsection{Acceptor}
+
+$M = (S, A, f, s_0, F)$, wobei $F\subseteq S$ eine Menge von Zust"anden, die akzeptierende Zust"ande sind.\\
+
+Um die Akzeptanz zu definieren, erweiteren wir $f$ von $S\times A \to S$ zu $f: S\times A^* \to S$ wie folgt: $f(s,\varepsilon) = s,\: f(s, wa)=f(f(s,w),a)$ f"ur $w \in A^*$.
+
+\begin{definition}
+	$M$ akzeptiert $w \in A^*$ wenn $f(s_0,w) \in F$. Setze $L \subseteq A^*$ akzeptiert von $M$: $L(M) = \{ w | f(s_0, w) \in F \}$
+\end{definition}
+
+\subsubsection{Transducer}
+
+$M=\{ S, A, f, g, s_0 \}$, mit einer Funktion $g$ welche einen Ausgabestring "uber einem Alphabet $B$ produziert.
+
+\begin{itemize}
+	\item $g: S \to B$ Moore Maschine (in Zustand)
+	\item $h: S \times A \to B$ Mealy Maschine (bei "Ubergang)
+\end{itemize}
+
+Ein Acceptor ist ein Spezialfall eines Transducer.
+
+\subsubsection{Nicht-deterministische endliche Automaten (NFA) mit $\varepsilon$-"Ubergang: $f:S\times (A \cup \{\varepsilon\}) \to 2^{S}$ }
+
+Eine nicht-deterministische Maschine bringt mehrere Kopien von sich hervor, wobei jede seinen eigenen root-to-leaf Pfad vom Baum aller m"oglichen Auswahlen verfolgt. Nicht-Determinismus f"uhrt also zu einem \textit{exponentionellen Wachstum der Rechenleistung}.\\
+
+Spezialfall: NFA ohne $\varepsilon$-"Ubergang: $f:S\times A \to 2^{S}$.\\
+
+Erweitere $f: S \times A^* \to 2^{S}$: $f(s,\varepsilon)=$ $\varepsilon$-H"ulle von $s$ = Alle Zust"ande erreichbar von $s$ mit $\varepsilon$-"Uberg"angen ($s$ inklusive).\\
+
+$f(s,wa) = \cup f(s', a)$ f"ur $s' \in f(s,w)$.\\
+
+Erweitere $f$ weiter $f: 2^{S} \times A^* \to 2^{S}$ wie folgt: $f(s_1,\ldots, s_k, a) = \cup f(s_i, a)$ f"ur $i=1,\ldots, k$.
+
+\begin{definition}
+	$M$ akzeptiert $w \in A^*$ wenn $f(s_0, w) \cap F \neq \emptyset$. $w$ wird akzeptiert wenn $\exists$ ein $w$-Pfad von $s_0$ zu $F$.\\
+	Setze $L\subseteq A^*$ akzeptiert von $M$: $L(M) = \{ w | f(s_0, w) \cap F \neq \emptyset \}$
+\end{definition}
+
+\subsection{"Aquivalenz von NFA und DFA}
+
+\begin{definition}
+	Zwei FAs sind \textit{"aquivalent} genau dann, wenn sie die gleiche Sprache akzeptieren.
+\end{definition}
+
+\begin{lemma}[$\varepsilon$-"Uberg"ange]
+	Jede NFA mit $\varepsilon$-"Uberg"angen kann in eine "aquivalente NFA $M$ ohne $\varepsilon$-"Uberg"angen umgewandelt werden.
+\end{lemma}
+
+Man kann jede NFA durch eine DFA ersetzen dies kann aber zu einem \textit{exponentionellen Wachstum der Anzahl der Zust"ande} f"uhren.
+
+\begin{theorem}["Aquivalenz NFA-DFA]
+	Jede NFA $N$ kann in eine "aquivalente DFA $M$ umgewandelt werden.
+\end{theorem}
+
+\subsubsection{Entfernung von $\varepsilon$-"Uberg"angen}
+
+F"ur alle Zust"ande $s$ in der Zustandsmenge ...
+\begin{itemize}
+	\item betrachte alle Pfade der Form $\varepsilon \varepsilon^*$, welche $s$ mit einem akzeptierenden Zustand $r$ verbinden und keine $\varepsilon$- Zyklen enthalten. Wenn ein solcher Pfad existiert, so wird $s$ als akzeptierend gesetzt.
+		\begin{figure}[htb]
+			\begin{center}
+				\psset{unit=0.5cm}
+				\MediumPicture
+				\VCDraw{
+				\begin{VCPicture}{(0,-0.1)(11,1)}
+				% states
+				\State[s]{(0,0)}{A} \FinalState[r]{(3,0)}{B}
+				
+				% transitions
+				\ZZEdgeL{A}{B}{\varepsilon\varepsilon^*}
+				
+				% arrow in between
+				\psline{->}(4.5,0)(5.5,0)
+
+				% states
+				\FinalState[s]{(7,0)}{C} \FinalState[r]{(10,0)}{D}
+				
+				% transitions
+				\ZZEdgeL{C}{D}{\varepsilon\varepsilon^*}
+				
+				\end{VCPicture}}
+			\end{center}
+		\end{figure}
+	\item betrachte f"ur einen Buchstaben $a \in A$ jeden Pfad von der Form $\varepsilon\varepsilon^* a$ welcher $s$ mit einem anderen Zustand $r$ verbindet und keine $\varepsilon$-Zyklen enth"alt. F"ur jeden von diesen f"uge den "Ubergang $f(s,a)=r$ hinzu.
+		\begin{figure}[htb]
+			\begin{center}
+				\psset{unit=0.5cm}
+				\MediumPicture
+				\VCDraw{
+				\begin{VCPicture}{(0,-2.1)(11,1)}
+				% states
+				\State[s]{(0,0)}{A} \State{(3,0)}{B} \State[r]{(2,-2)}{C}
+				
+				% transitions
+				\ZZEdgeL{A}{B}{\varepsilon\varepsilon^*}
+				\ArcL{B}{C}{a}
+				
+				% arrow in between
+				\psline{->}(4.5,0)(5.5,0)
+
+				% states
+				\State[s]{(7,0)}{D} \State{(10,0)}{E} \State[r]{(9,-2)}{F}
+				
+				% transitions
+				\ZZEdgeL{D}{E}{\varepsilon\varepsilon^*}
+				\ArcL{E}{F}{a}
+				\ArcR{D}{F}{a}
+				
+				\end{VCPicture}}
+			\end{center}
+		\end{figure}
+\end{itemize}
+
+Am Ende kann man alle $\varepsilon$-"Uberg"ange entfernen.
+
+\subsubsection{Umwandlung NFA in DFA - Der Subset Construction Algorithmus}
+
+\begin{enumerate}
+	\item Erstelle den Startzustand des DFA in dem man die $\varepsilon$- H"ulle des Startzustands des NFA nimmt.
+	\item F"uhre folgendes f"ur den neuen DFA Zustand aus:\\
+		F"ur jedes m"ogliche Eingabesymbol:
+		\begin{enumerate}
+			\item Suche alle Zust"ande welche vom neu-erstellten Zustand aus mit dem Eingabesymbol erreicht werden k"onnen; dies gibt eine Menge von Zust"anden zur"uck.
+			\item Finde die $\varepsilon$- H"ulle dieser Menge von Zust"anden, dies kann m"oglicherweise in einer neuen Menge enden.
+		\end{enumerate}
+		Diese Menge von NFA Zust"anden ist ein einziger Zustand in der DFA.
+	\item Jedes Mal wenn wir einen neuen DFA Zustand erstellen, m"ussen wir Schritt 2 auf ihn anwenden. Dieser Prozess ist komplett, wenn die Anwendung von Schritt 2 zu keinem neuen Zustand f"uhrt.
+	\item Die Endzust"ande des DFA sind diese, welche irgendeinen der Endzust"ande der NFA enthalten.
+	\item F"uhre zus"atzlich einen Trap- Zustand ein, inden man kommt, sofern man in einem beliebigen DFA Zustand auf ein Zeichen trifft, f"ur welches keine "Ubergangsrelation vorhanden ist. F"ur alle Zeichen bleibt man in diesem Trap- Zustand.
+\end{enumerate}
+
+\section{Regul"are Ausdr"ucke: Theorie}
+
+Alphabet $A$, regul"are Ausdr"ucke $\mathcal{R}(A)$. $\mathcal{R}(A)$ wird wie folgt erhalten.
+
+\subsection{Syntax}
+
+\subsubsection{Primitive}
+
+$\varepsilon,\emptyset, a \mbox{ f"ur jedes } a \in A$
+
+\subsubsection{Zusammengesetze}
+
+wenn $E',E''$ REs sind, so sind es auch $( E' \cup E'' )$, $( E' \circ E'' )$, $( E' )^*$.\\
+
+\subsubsection{Priorit"at}
+
+Die Priorit"aten der Operatoren sind wie folgt:
+\begin{displaymath}
+	* \succ \circ \succ \cup
+\end{displaymath}
+
+
+\subsection{Semantik}
+
+jede RE definiert eine Sprache $L \subseteq A^*$.
+
+\begin{theorem}
+	Eine Menge $L$ ist regul"ar wenn $L$ durch einen regul"aren Ausdruck beschrieben wird.
+\end{theorem}
+
+$\varepsilon$ bezeichnet die Sprache die nur aus dem Nullstring besteht.\\
+$\emptyset$ bezeichnet $\{\}$\\
+$0$ bezeichnet $\{0\}$ usw. f"ur andere Elemente von $A$.\\
+
+Wenn $E',E''$ die Sprachen $L', L''$ bezeichnen, so gilt:
+\begin{itemize}
+	\item $( E' \cup E'' )$ bezeichnet $L' \cup L''$
+	\item $( E' \circ E'' )$ bezeichnet $\{ w \in A^* | w = w'w'',\: w'\in L',\: w''\in L'' \}$
+	\item $( E' )^{*}$ bezeichnet $\{ w\in A^* | w = w_1 w_2 \ldots w_l,\: w_i \in L', \: l \geq 0 \}$
+\end{itemize}
+
+\subsection{Eigenschaften von REs}
+
+\begin{definition}
+	Eine Sprache (oder Menge) $L \subseteq A^*$ wird als regul"ar bezeichnet gdw. $L$ durch eine FA akzeptiert wird.
+\end{definition}
+
+\begin{theorem}
+	Wenn $L, L' \subseteq A^*$ regul"are Mengen sind, so sind es auch $L \cup L'$, $L \circ L'$ und $L^*$.
+\end{theorem}
+
+\begin{theorem}
+	Wenn $L$ regul"ar ist, so ist auch das Komplement $\lnot L$ regul"ar.
+\end{theorem}
+
+\subsection{NFA $\geq$ RE}
+
+\begin{theorem}
+	$L$ definiert durch RE, so existiert eine NFA $N$ f"ur welche gilt $L = \mathcal{L}(N)$.
+\end{theorem}
+
+\subsection{DFA $\leq$ RE}
+
+\subsubsection{Boolsche Matrix Multiplikation}
+
+Transitive Closure einer Adjazenzmatrix $A$.
+
+\begin{displaymath}
+	Z_{ik} = \bigvee_{j=1\ldots n} X_{ij} \land Y_{jk}
+\end{displaymath}
+
+Hat Laufzeit $O(n^3 \log n)$, da man nur 2-er Potenzen von Adjazenzmatrix $A$ betrachten kann.
+
+\subsubsection{Warshall Algorithmus}
+
+Verbesserung des Algorithmus f"ur Transitive Closure
+
+\begin{displaymath}
+	B_{ij}^k = B_{ij}^{k-1} \lor B_{ik}^{k-1} \land B_{kj}^{k-1}
+\end{displaymath}
+
+Hat Laufzeit $O(n^3)$.
+
+\subsubsection{Anwendung von Warshall auf RE}
+
+$R_{ij}^n$: Regul"arer Ausdruck definiert die Sprache von $\forall$ Strings welche $M=(Q,A, f, q_0, F)$ von $\mathbf{i}$ nach $\mathbf{j}$ "uberf"uhrt.\\
+
+Es gilt also
+\begin{displaymath}
+	R_{ij} =
+	\begin{cases}
+		a'\cup a''\cup \ldots a^{(n)} &		\mbox{f"ur alle } a^{(n)} \mbox{ mit } f(i,a^{(n)})=j\\
+		\emptyset &				\mbox{sonst}
+	\end{cases}
+\end{displaymath}
+
+
+Dann gilt folgende Formel
+\begin{displaymath}
+	R_{ij}^k = R_{ij}^{k-1}\cup R_{ik}^{k-1}\circ(R_{kk}^{k-1})^*\circ R_{kj}^{k-1}
+\end{displaymath}
+
+F"ur die Initialisierung:
+\begin{eqnarray*}
+	R_{ij}^0 &	= &	\{ a | f(s_i, a) = s_j\} \text{ f"ur } i \neq j\\
+	R_{ii}^0 &	= &	\{ a | f(s_i, a) = s_i\} \cup \{ \varepsilon\}
+\end{eqnarray*}
+
+F"ur die Umwandlung einer FA in eine RE geht man wie folgt vor:
+\begin{enumerate}
+	\item Schreibe in einer Tabelle alle m"oglichen direkten "Uberg"ange (also $k=0$) auf. F"ur Loop-"Uberg"ange muss man auch $\varepsilon$ als m"oglichen "Ubergang eintragen.
+	\item Erh"ohe $k$ um eins und benutze obige Formel um das Problem f"ur das gr"ossere $k$ auf die vorherige Tabelle zur"uckzuf"uhren.
+	\item Wiederhole Schritt 2 solange, bis $k=n = |Q|$. Wenn fertig, dann lese in Zeile von Startzustand all die REs f"ur akzeptierende Zust"ande ab und verodere sie.
+\end{enumerate}
+\ \\
+
+\begin{example}[Umwandlung FA in RE]
+\
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.5cm}
+\MediumPicture
+\VCDraw{
+\begin{VCPicture}{(0,-0.4)(6,1)}
+% states
+\FinalState[q_1]{(0,0)}{A} \State[q_2]{(3,0)}{B} \FinalState[q_3]{(6,0)}{C}
+% initial--final
+\Initial{A}
+
+% transitions
+\EdgeL{A}{B}{a}
+\ArcL{B}{C}{a}
+\ArcL{C}{B}{b}
+\LoopN{A}{b}
+\LoopN{B}{b}
+\LoopE{C}{a}
+%
+\end{VCPicture}}
+\end{center}
+\caption{Automat f"ur Beispiel}
+\end{figure}
+
+$k=0$:
+\begin{center}
+\small
+\begin{tabular}{c||c|c|c}
+	&	1 &			2 &			3\\ \hline \hline
+	1 &	$\varepsilon | b$ &	$a$ &			\\ \hline
+	2 &	 &			$\varepsilon | b$ &	$a$\\ \hline
+	3 &	 &			$b$ &			$\varepsilon | a$
+\end{tabular}
+\normalsize
+\end{center}
+
+$k=1$:
+\begin{center}
+\small
+\begin{tabular}{c||c|c|c}
+	&	1 &			2 &			3\\ \hline \hline
+	1 &	$(\varepsilon | b) | \underbrace{(\varepsilon | b)(\varepsilon | b)^* (\varepsilon | b)}_{= b^*}$ &	$(a)|\underbrace{(\varepsilon, b)(\varepsilon, b)^* a}_{= b^* a}$ &			\\ \hline
+	2 &	 &			$\varepsilon | b$ &	$a$\\ \hline
+	3 &	 &			$b$ &			$\varepsilon | a$
+\end{tabular}
+\normalsize
+\end{center}
+
+usw.
+
+\end{example}
+
+\subsection{Zustandsminimierung}
+
+\begin{definition}
+	Zust"ande $r$ und $s$ von $M$ sind "aquivalent (nicht unterscheidbar) genau dann, wenn f"ur alle $w \in  A^*, f(r,w)\in F \Leftrightarrow f(s,w)\in F$.
+\end{definition}
+
+\begin{theorem}
+	Wenn $r, s$  nicht unterscheidbar sind durch Worte $w$ der L"ange $|w|\leq n = | S |$, so sind $r$ und $s$ nicht unterscheidbar.
+\end{theorem}
+
+\subsubsection{Algorithmus f"ur die Zustandsminimierung}
+
+In einer Tabelle von Zustandspaaren ...
+
+\begin{enumerate}
+	\item Markiere alle Paare welche durch $\varepsilon$ unterschieden werden k"onnen (einer akzeptierend, anderer Nicht-akzeptierend).
+	\item F"ur jedes unmarkierte Paar $(r,s) \ r,s \in S, \ r \neq s$ "uberpr"ufe f"ur alle $a \in A$, ob das Paar $( f(r,a), f(s,a))$ als unterscheidbar markiert wurde. Wenn dies der Fall ist, markiere $(r,s)$ unterscheidbar durch kleinsten Zeugen $w= a w'$, wobei $w'$ vererbt ist von $(f(r,a),f(s,a))$
+	\item Wiederhole 2 $|Q|$ mal oder bis kein Paar in einem Durchgang markiert werden kann.
+\end{enumerate}
+
+\begin{example}[Zustandsminimierung]
+\ \\
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.5cm}
+\MediumPicture
+\VCDraw{
+\begin{VCPicture}{(0,-3)(10,3)}
+% states
+\State[a]{(0,0)}{A} \State[b]{(3,0)}{B} \State[c]{(6,0)}{C}
+\FinalState[d]{(9,2)}{D}
+\FinalState[e]{(9,-2)}{E}
+% initial--final
+\Initial{A}
+
+% transitions
+\EdgeL{A}{B}{0}
+\ArcL{B}{D}{0,1}
+\ArcL{C}{D}{1}
+\ArcR{C}{E}{0}
+\LArcR{D}{A}{0}
+\ArcL{E}{A}{0}
+\ArcL{D}{E}{1}
+\ArcL{E}{D}{1}
+%
+\end{VCPicture}}
+\end{center}
+\caption{Automat f"ur Beispiel}
+\end{figure}
+
+$|w| = 0$:\\
+
+\begin{tabular}{c||c|c|c|c}
+	&		$b$ &		$c$ &		$d$ &			$e$ \\ \hline \hline
+	$a$ &		&		&		$\varepsilon$ &		$\varepsilon$ \\ \hline
+	$b$ &		&		&		$\varepsilon$ &         $\varepsilon$ \\ \hline
+	$c$ &		&		&		$\varepsilon$ &         $\varepsilon$ \\ \hline
+	$d$ &		&		&		&         		\\ \hline
+\end{tabular}
+\\\\
+
+$|w|=1$:\\
+
+\begin{tabular}{c||c|c|c|c}
+	&		$b$ &		$c$ &		$d$ &			$e$ \\ \hline \hline
+	$a$ &		$0$ &		$0$ &		$\varepsilon$ &		$\varepsilon$ \\ \hline
+	$b$ &		&		&		$\varepsilon$ &         $\varepsilon$ \\ \hline
+	$c$ &		&		&		$\varepsilon$ &         $\varepsilon$ \\ \hline
+	$d$ &		&		&		&         		\\ \hline
+\end{tabular}
+\\\\
+
+$|w|=2$:\\
+
+\begin{tabular}{c||c|c|c|c}
+	&		$b$ &		$c$ &		$d$ &			$e$ \\ \hline \hline
+	$a$ &		$0$ &		$0$ &		$\varepsilon$ &		$\varepsilon$ \\ \hline
+	$b$ &		&		&		$\varepsilon$ &         $\varepsilon$ \\ \hline
+	$c$ &		&		&		$\varepsilon$ &         $\varepsilon$ \\ \hline
+	$d$ &		&		&		&         		\\ \hline
+\end{tabular}
+\\\\
+
+Es gilt also
+\begin{displaymath}
+	b \equiv c, \quad d \equiv e
+\end{displaymath}
+
+\end{example}
+
+
+\subsection{Pumping Lemma}
+
+Das Pumping Lemma ist eine pr"azise mathematische Aussage, dass ein FSM h"ochstens bis zu einer Konstante $n$ z"ahlen kann.
+
+\begin{lemma}[Pumping]
+	$L$ regul"ar $\Rightarrow \exists n(L)$, so dass jedes $w \in L, |w| \geq n, w = xyz$.
+	\begin{enumerate}
+		\item $|y| > 0$
+		\item $|xy| \leq n$
+		\item $xy^k z \in L$ f"ur $k \geq 0$.
+	\end{enumerate}
+\end{lemma}
+
+\section{Endliche Automaten mit externem Speicher}
+
+Verschiedene Zugriffseinschr"ankungen f"uhren zu verschieden St"arken der Automaten, es gilt:
+\begin{displaymath}
+	\mbox{CA } <  \mbox{ DPDA } < \mbox{ NPDA } < \mbox{ LBA}
+\end{displaymath}
+
+\subsection{Konzepte, Konventionen und Notationen}
+
+FSM $M$ kontrolliert Zugriff auf ein Eingabetape $T$ (wenn es eines gibt) und ein Speicherger"at $S$. Allgemeine Form eines "Ubergangs:\\
+(momentaner Zustand von $M$, momentan untersuchtes Symbol von $T$, momentan untersuchtes Symbol von $S$) $\rightarrow$ (neuer Zustand von $M$, neu nach $S$ geschriebenes Symbol, Bewegung des read/write Kopfs von $S$).
+
+\subsection{Counter Automat}
+
+Ein Counter Automat besteht aus einem fsm $M$, der durch ein Register (Counter) $C$ erweitert wird, welches nur einen einzigen Integerwert von beliebiger Gr"osse speichern kann. $C$ wird mit Null initialisiert. $M$ kann $C$ inkrementieren und dekrementieren und es auf 0 testen.\\
+
+Durch die Einschr"ankung das man nur inkrementieren und dekrementieren kann, kann man nicht viel mehr als Z"ahlen.
+
+\begin{example}[Counter Automat]
+	Es soll ein Counter Automat f"ur die Polnische Notation (suffix) die durch
+	\begin{displaymath}
+		G_s : S \rightarrow OSS | \lnot S | x | y | z; O \rightarrow + | - | \cdotp | /
+	\end{displaymath}
+	definiert gefunden werden.
+
+	\begin{figure}[htb]
+		\begin{center}
+			\psset{unit=1cm}
+			\MediumPicture
+			\VCDraw{
+			\begin{VCPicture}{(-2,-1)(10,5)}
+			% states
+			\State[a]{(-1,0)}{A} \State[b]{(3,0)}{B} \FinalState[c]{(8,0)}{C}
+			% initial--final
+			\Initial{A}
+			
+			% transitions
+			\EdgeL{A}{B}{\scriptsize\begin{array}{c} d,\ - \ \rightarrow \ - \end{array}\normalsize}
+			\ArcL[.5]{B}{C}{\scriptsize\begin{array}{c} \varepsilon,\ =0 \ \rightarrow \ - \end{array}\normalsize}
+			\ArcL{C}{B}{\scriptsize\begin{array}{c} d,\ - \ \rightarrow \ inc \end{array}\normalsize}
+			\LoopN[.5]{B}{
+			\scriptsize
+			\begin{array}{c}
+				\lnot, \ \neq 0 \ \rightarrow \ - \\
+				-, \ \neq 0 \ \rightarrow \ dec \\
+				+, \ \neq 0 \ \rightarrow \ dec \\
+				\cdotp, \ \neq 0 \ \rightarrow \ dec \\
+				/, \ \neq 0 \ \rightarrow \ dec \\
+				d, \ \neq 0 \ \rightarrow \ inc
+			\end{array}
+			\normalsize
+			}
+			\LoopE{C}{\scriptsize\begin{array}{c} \lnot, \ - \ \rightarrow \ - \end{array}\normalsize}
+			%
+			\end{VCPicture}}
+		\end{center}
+		\caption{Beispiel eines Counter Automat}
+	\end{figure}
+
+\end{example}
+
+\subsection{Deterministischer Pushdown Automat (DPDA)}
+
+PDA: FSM kontrolliert einen Stack. Unbeschr"ankter Speicherplatz, begrenzt auf last-in-first-out (LIFO) Zugriff.\\
+Stackoperationen: push, pop, test empty.
+
+\begin{definition}[DPA]
+	$M=(Q, A, B, f, q_0, F)$ oder $M=(Q, A, B, f, q_0)$ in der Version ''akzeptiere bei leerem Stack''.\\
+	Dabei sind $Q$: Menge von Zust"anden, $q_0$: Anfangszustand, $F\subseteq Q$: End oder akzeptierende Zust"ande.\\
+	$A$: Eingabealphabet, $B$: Stackalphabet (Konvention: enth"alt alle $a\in A$ und Boden des Stackssymbol $\not c$).\\
+	"Ubergangsfunktion $f: Q\times A_\varepsilon \times B_\varepsilon \rightarrow Q \times B^*$
+\end{definition}
+
+Der LIFO Zugriff macht den PDA rechnerisch schwach. Nichtdeterminismus macht ihn st"arker, aber entfernt den LIFO Flaschenhals nicht ganz.
+
+\begin{example}[Pushdown Automat]
+	Es soll ein Pushdown Automat erstellt werden, welcher die Sprache $L(G)$ die durch die Produktionen
+	\begin{displaymath}
+		S \rightarrow S P | \varepsilon; P \rightarrow (S) | 0
+	\end{displaymath}
+	definiert ist, akzeptiert.
+	\begin{figure}[htb]
+		\begin{center}
+			\psset{unit=1cm}
+			\MediumPicture
+			\VCDraw{
+			\begin{VCPicture}{(0,-1)(7,3)}
+			% states
+			\State{(1.5,0)}{A}
+			% initial--final
+			\Initial{A}
+			
+			% transitions
+			\LoopN[.5]{A}{
+			\small
+			\begin{array}{c}
+				0, \ \varepsilon \ \rightarrow \ \varepsilon \\
+				(, \ \varepsilon \ \rightarrow \ ( \\
+				), \ ( \ \rightarrow \ \varepsilon
+			\end{array}
+			\normalsize
+			}
+			\put(4,0){accept by empty stack}
+			%
+			\end{VCPicture}}
+		\end{center}
+		\caption{Beispiel eines Pushdown Automat}
+	\end{figure}
+\end{example}
+
+\subsection{Nicht deterministischer Pushdown Automat (NPDA)}
+\begin{definition}[DPA]
+	$M=(Q, A, B, f, q_0, F)$ oder $M=(Q, A, B, f, q_0)$ in der Version ''akzeptiere bei leerem Stack''.\\
+	"Ubergangsfunktion $f: Q\times A_\varepsilon \times B_\varepsilon \rightarrow 2^{Q\times B^*}$.
+\end{definition}
+
+\subsection{Linear beschr"ankter Automat (LBA)}
+
+Read/write Zugriff auf ein Tape $T$, von fixer L"ange welche durch den Eingabestring $w$ bestimmt ist.
+
+\subsection{Turing Maschine und Automaten von "aquivalenter St"arke}
+
+Eine Turing Maschine ist eine FSM, welche ein Tape von unbeschr"ankter Gr"osse als externes Speichermedium benutzt. Es sind Lese-/Schreiboperation erlaubt. Dieses Maschine ist \textit{universell}.
+
+\subsubsection{FSM mit 2-Stacks}
+
+Ist auch universell.
+
+\subsubsection{FSM mit Queue}
+
+Als Speichermedium dient eine Queue, also FIFO. Auch diese Maschine ist universell.
+
+\section{Kontextfreie Grammatiken (CFG) und Sprachen (CFL)}
+
+\subsection{Grammatiken}
+
+\begin{displaymath}
+	G = (V,A,\mathcal{P},S)
+\end{displaymath}
+
+\begin{labeling}{$\mathcal{P}$:}
+	\item[$V$:] Menge der Nicht-Terminalsymbole
+	\item[$A$:] Menge der Terminalsymbole, Symbole die nicht mehr weiter ersetzt werden k"onnen
+	\item[$S$:] Startsymbol
+	\item[$\mathcal{P}$:] Menge der Produktionen der Form $L\rightarrow R;\ L,R \in (V\cup A)^*$
+\end{labeling}
+
+Im Unterschied zu Markov-Algorithmen k"onnen beliebige Regeln angewandt werden.
+
+\subsection{Typen von Sprachen (nach Chomsky)}
+
+\begin{labeling}{\usekomafont{descriptionlabel}Typ 0:}
+	\item[\usekomafont{descriptionlabel}Typ 0:] keine Restriktion
+	\item[\usekomafont{descriptionlabel}Typ 1:] Kontext sensitiv
+		\begin{displaymath}
+			\forall P: w_1 \rightarrow w_2: |w_1| \leq |w_2|
+		\end{displaymath}
+		\textit{Ausnahme}: $S\rightarrow \varepsilon$ erlaubt, wenn $S$ nie auf recher Seite.
+	\item[\usekomafont{descriptionlabel}Typ 2:] Kontextfrei
+		\begin{displaymath}
+			w_1 \in V
+		\end{displaymath}
+	\item[\usekomafont{descriptionlabel}Typ 3:] Regul"ar
+		\begin{displaymath}
+			w_2 \in A \cup AV
+		\end{displaymath}
+\end{labeling}
+
+\subsubsection{kontextfrei vs. kontext sensitiv}
+
+\begin{labeling}{\usekomafont{descriptionlabel}kontextsensitiv:}
+	\item[\usekomafont{descriptionlabel}kontextfrei:] $P\supset A \rightarrow x$\\
+			$A$ kann bedingungslos ersetzt werden.
+	\item[\usekomafont{descriptionlabel}kontextsensitiv:] Kann Regeln der Form $uAv \rightarrow uxv$ enthalten.\\
+			$A$ kann nur abh"angig vom Kontext ersetzt werden.
+\end{labeling}
+
+\subsection{Kontextfreie Grammatiken und Sprachen}
+
+\subsubsection{Umschreibschritt}
+
+F"ur $u,v,x,y,y',z \in (V\cup A)^*: u \rightarrow v,\ \mbox{wenn } u=xyz, v= xy'z\ \mbox{und } y \rightarrow y'\in \mathcal{P}$.\\
+
+$\rightarrow^*$ ist der transitive, reflexive Abschluss von $\rightarrow$: $u \rightarrow^* v\ \mbox{wenn } \exists w_0,w_1,\ldots,w_k\ \mbox{mit } k\geq 0\ \mbox{und } u=w_0, w_{j-1}\rightarrow w_j, w_k =v$.
+
+\subsubsection{kontextfreie Sprachen}
+
+$L(G)$ ist die freie Sprache generiert durch $G$: $L(G) = \{ w \in A^* | S \rightarrow^* w \}$
+
+\subsection{"Aquivalenz von CFGs und NPDAs}
+
+\begin{theorem}[CFG $\equiv$ NPDA]
+	$L \subseteq A^*$ ist eine CF genau dann, wenn $\exists$ NPDA $M$, welche $L$ akzeptiert.
+\end{theorem}
+
+\subsection{Normalformen}
+
+Jede CFG kann in eine Zahl von ''Normalformen'' verwandelt werden, welche (fast) "aquivalent sind. "Aquivalent meint hier, dass die beiden Grammatiken dieselbe Sprache definieren; fast ist n"otig, da diese Normalformen den Nullstring nicht generieren k"onnen.
+
+\subsubsection{Chomsky Normalform (rechte Seiten sind kurz)}
+
+Alle Regeln sind von der Form $X \rightarrow YZ$ oder $X \rightarrow a$, f"ur nicht Terminale $X,Y,Z \in V$ und Terminale $a \in A$.
+
+\begin{theorem}
+	Jede CFG $G$ kann in eine Chomsky Normalform $G'$ transformiert werden, so dass $L(G') = L(G) -\{\varepsilon\}$.
+\end{theorem}
+
+\subsubsection{Greibach Normalform}
+
+Produziere bei jedem Schritt ein Terminalsymbol ganz links - n"utzlich f"ur Parsing.\\
+
+Alle Regeln sind von der Form $X \rightarrow a w$, f"ur ein Terminal $a\in A$ und ein $w \in V^*$.
+
+\begin{theorem}
+	Jede CFG $G$ kann in eine Greibach Normalform $G'$ transformiert werden, so dass $L(G') = L(G)-\{\varepsilon\}$.
+\end{theorem}
+
+
+\subsection{Das Pumping Lemma f"ur CFLs}
+
+\begin{theorem}
+	F"ur jede CFL $L$ gibt es eine Konstante $n$, so dass jedes $z\in L$ von der L"ange $|z|\geq n$ als $z=u v w x y$ geschrieben werden kann, so dass folgendes gilt:
+	\begin{enumerate}
+		\item $v x \neq \varepsilon$
+		\item $|v w x| \leq n$
+		\item $u v^k w x^k y \in L$ f"ur alle $k\geq 0$
+	\end{enumerate}
+\end{theorem}
+
+\begin{theorem}
+	$L= \{ 0^k 1^k 2^k | k\geq 0 \}$ ist nicht kontextfrei.
+\end{theorem}
+
+\subsection{Abschlusseigenschaften der Klasse von CFLs}
+
+\begin{theorem}
+	Die Klasse von CFLs "uber dem Alphabet $A$ ist geschlossen unter der regul"aren Operationen Vereinigung, Katenation und Kleene Star.
+\end{theorem}
+
+\begin{theorem}
+	Die Klasse von CFLs "uber dem Alphabet $A$ ist nicht geschlossen unter Durchschnitt und Komplement.
+\end{theorem}
+
+\subsection{Das ''Wort Problem''. CFL Parsing in $O(n^3)$ durch dynamische Programmierung}
+
+Das Wort Problem fragt: Gegeben $G$ und $w\in A^*$, entscheide ob $w \in L(G)$ oder nicht. Oder genauer: Gibt es einen Algorithmus welcher anwendbar ist auf irgendeine Grammatik $G$ in einer gegebenen Klasse von Grammatiken, und ein $w\in A^*$, welcher entscheidet ob $w\in L(G)$?\\
+
+F"ur CFGs gibt es einen ''bottom up'' Algorithmus (Cocke, Younger, Kasami) welcher systematisch alle m"oglichen Parseb"aume von zusammenh"angenenden Substrings vom zu Parsenden String $w$ berechnet und l"auft in $O(|w|^3)$.
+
+\section{Universelle Berechnungsmodelle und "Aquivalenz}
+
+\subsection{"Ubersicht}
+
+Es gilt:
+\begin{displaymath}
+	\mbox{TM} \geq \mbox{MA} \geq \mbox{QM} \geq \mbox{TM}
+\end{displaymath}
+
+TM: Turing Maschine\\
+MA: Markov Algorithmus\\
+QM: Queue
+
+\subsubsection{Turing Maschine}
+
+Daten k"onnen entlang einem Band ausgelegt werden, Labels dazu benutzt werden um die verschiedenen Teile ausfindig zu machen. Dazu kommt ein endlicher Automat Kontroller mit dem das Band scannen kann bis man auf ein bestimmtes Label trifft.
+
+\subsubsection{Post oder Queue Maschine}
+
+Ist beschr"ankt durch eine Zugriffsbeschr"ankung: Daten k"onnen nur vom Kopf gelesen und gel"oscht werden und am Ende angeh"angt werden.
+
+\subsubsection{Markov Algorithmen}
+
+Ist strikt sequentiell. Die erste Umschreibregel die zutrifft, wird beim ersten Pattern Match angewandt. Die "Uberg"ange sind von der Form: $q_i, x \rightarrow q_j, y$ mit $x,y \in A^*$
+
+\section{Berechenbarkeit}
+
+\subsection{Definition}
+
+\begin{definition}[Berechenbarkeit]
+	Eine (evtl. partielle) Funktion $f: \mathbb{N}^k \to \mathbb{N}$ ist \textit{berechenbar}, falls es ein Rechenverfahren gibt, das $f$ berechnet.
+\end{definition}
+
+Verfahren ist z.B. durch Java-Programm $P$ gegeben; wobei Ausf"uhrung ohne Platzbeschr"ankung. $P$ gestartet mit $(n_1,\ldots,n_k)\in \mathbb{N}^k$, terminiert nach endlich vielen Schritten mit Ausgabe $f(n_1,\ldots,n_k)$. Im Falle einer \textit{partiellen} Funktion muss $P$ nicht (immer) stoppen.
+
+\subsection{Churchsche These}
+
+\begin{these}[Chursche]
+	Die durch die formale Definition der Turing-Berechenbarkeit ("aquivalent: While, Goto, $\lambda$-Kalk"ul, ..-Berechnbarkeit) erfasste Klasse von Funktionen stimmt genau mit der Klasse der im intuitiven Sinne berechenbaren Funktionen "uberein.
+\end{these}
+
+\subsection{Turingmaschine}
+
+\begin{definition}[Turingmaschine]
+	Eine Turingmaschine ist ein 7-Tupel
+	\begin{displaymath}
+		M = (Z, \Sigma, \Gamma, \delta, z_0, \Box, E)
+	\end{displaymath}
+	Hierbei sind:
+	\begin{itemize}
+		\item $Z$ die endliche \textit{Zustandsmenge}
+		\item $\Sigma$ das \textit{Eingabealphabet}
+		\item $\Gamma \supset \Sigma$ das \textit{Arbeitsalphabet}
+		\item $\delta : Z \times \Gamma \rightarrow Z \times \Gamma \times \{L,R,N\}$ die \textit{"Uberf"uhrungsfunktion}, im nichtdeterminstischen Fall:\\
+			$\delta: Z \times \Gamma \rightarrow \mathcal{P}(Z\times \Gamma \times \{L,R,N\})$
+		\item $z_0 \in Z$ der \textit{Startzustand}
+		\item $\Box \in \Gamma \ \backslash \ \Sigma$ das \textit{Blank}
+		\item $E \subseteq Z$ die Menge der \textit{Endzust"ande}
+	\end{itemize}
+\end{definition}
+
+\subsubsection{Konfiguration}
+
+Eine \textit{Konfiguration} formalisiert den globalen Zustand der Turingmaschine. Eine Konfiguration ist ein Wort $k \in \Gamma^* Z \Gamma^*$. $k=\alpha z \beta$ bedeutet, dass $\alpha \beta$ der nicht-leere Teil des Bandes ist. $z$ ist der Zustand, in dem sich die Maschine gerade befindet und der Schreib-/Lesekopf steht auf dem ersten Zeichen von $\beta$.\\
+
+Erreichbare Konfigurationen werden durch die bin"are Relation $\vdash$ definiert. Es gilt\\
+
+\small
+$a_1 \ldots a_m z b_1 \ldots b_n \vdash$
+	\begin{itemize}
+		\item $a_1 \ldots a_m z' c b_2 \ldots b_n$, falls $\delta(z,b_1)= (z',c,N), m \geq 0, n \geq 1$.
+		\item $a_1 \ldots a_m c z' b_2 \ldots b_n$, falls $\delta(z,b_1)= (z',c,R), m \geq 0, n \geq 2$.
+		\item $a_1 \ldots a_{m-1} z' a_m c b_2 \ldots b_n$, falls $\delta(z,b_1)= (z',c,L), m \geq 1, n \geq 1$.
+	\end{itemize}
+\normalsize
+
+Weiterhin gelten die zwei Sonderf"alle
+	\begin{itemize}
+		\item $a_1 \ldots a_m z b_1 \vdash a_1 \ldots a_m c z'\ \Box$, falls $\delta(z,b_1)= (z',c,R)$
+		\item $z b_1 \ldots b_n \vdash z'\ \Box \ c b_2 \ldots b_n$, falls $\delta(z,b_1)= (z',c,L)$
+	\end{itemize}
+
+Eine TM kann sowohl Sprachen akzeptieren als auch Funktionen definieren.
+
+\subsubsection{Turing-Berechenbarkeit und Definierbarkeit}
+
+\begin{definition}[Sprachakzeptanz]
+	Eine Turingmaschine \textit{akzeptiert} die Sprache
+	\begin{displaymath}
+		T(M) = \{ x \in \Sigma^* | z_0 x \vdash^* \alpha z \beta;\ \alpha, \beta \in \Gamma^*;\ z \in E \}
+	\end{displaymath}
+\end{definition}
+
+\begin{definition}[Turingberechenbarkeit]
+	Eine Funktion $f: N^k \to N$ heisst \textit{Turing-berechenbar}, falls es eine Turingmaschine $M$ gibt, so dass f"ur alle $n_1,\ldots, n_k, m \in N$ gilt
+\small
+	\begin{displaymath}
+		f(n_1,\ldots,n_k) = m \ \text{gdw} \ z_0 \overline{n_1} \# \overline{n_2} \# \ldots \# \overline{n_k} \vdash^* \ \Box  \ldots  \Box \ z_e \overline{m} \ \Box  \ldots  \Box
+	\end{displaymath}
+\normalsize
+	wobei $z_0 \in E$ und $\overline{n}$ die (z.B. Bin"ar-)Darstellung der Zahl $n$ darstellt. $\#$ ist hierbei ein Trennzeichen.
+\end{definition}
+
+\begin{definition}[Turingberechenbarkeit]
+	Eine Funktion $f: \Sigma^* \to \Sigma^*$ heisst \textit{Turing-berechenbar}, falls es eine Turingmaschine $M$ gibt, so dass f"ur alle $x,y \in \Sigma^*$ gilt:
+	\begin{displaymath}
+		f(x) = y \ \text{gdw} \ z_0 x \vdash^* \Box \ldots \Box \ z_e y \ \Box \ldots \Box
+	\end{displaymath}
+\end{definition}
+
+\subsubsection{Charakteristische Funktion}
+
+Man sagt, eine Sprache $A$ ist von Typ 0, wenn sie von einer Turingmaschine $M_A$ akzeptiert wird. Diese entspricht einer Turingmaschine, die die folgende Funktion $\chi_A : \Sigma^* \to \{ 0,1 \}$ berechnet
+\begin{displaymath}
+	\chi_A(w) = \left \{
+	\begin{array}{ll}
+		1 &			w \in A\\
+		\text{undefiniert} &	w \not \in A
+	\end{array}
+	\right .
+\end{displaymath}
+
+$M_A$ kann leicht umgebaut werden, um $\chi_A$ zu berechnen. Daher stimmen die Typ 0-Sprachen genau mit den \textit{semi-entscheidbaren Sprachen "uberein}.
+
+\subsubsection{Mehrband-Turingmaschinen}
+
+Eine Mehrband-Turingmaschine kann auf $k\geq 1$ vielen B"anden unabh"angig voneinander operieren. D.h. $k$ Schreib-Lesek"opfe, und $\delta$ ist eine Funktion von $Z \times \Gamma^k$ nach $Z \times \Gamma^k \times \{ L,R,N \}$.
+
+\begin{satz}[Berechnungskraft von Mehrband- Turingmaschinen]
+	Zu jeder Mehrband- Turingmaschine $M$ gibt es eine (Einband-)Turingmaschine $M'$ mit $T(M) = T(M')$ bzw. so, dass $M'$ dieselbe Funktion berechnet wie $M$.
+\end{satz}
+
+\subsubsection{Ausdrucksm"achtigkeit}
+
+Seien etwa $M_i = (Z_i, \Sigma, \Gamma_i, \delta_i, z_i, \ \Box, E_i), i=1,2$. Wir bezeichnen \textit{die sequentielle Komposition von $M_1$ und $M_2$} durch
+\begin{displaymath}
+	\textsf{start} \longrightarrow M_1 \longrightarrow M_2 \longrightarrow \textsf{stop}
+\end{displaymath}
+oder durch $M_1; M_2$.\\
+
+Dieses Hintereinanderschalten wird definiert durch
+\begin{displaymath}
+	M = (Z_1 \cup Z_2, \Sigma, \Gamma_1 \cup \Gamma_2, \delta, z_1, \ \Box, E_2)
+\end{displaymath}
+wobei (oBdA) $Z_1 \cap Z_2 = \emptyset$ und
+\begin{displaymath}
+	\delta = \delta_1 \cup \delta_2 \cup \{ (z_e, a, z_2, a, N) | z_e \in E_1, a \in \Gamma_1 \}
+\end{displaymath}
+
+\subsubsection{Ausdrucksm"achtigkeit: Test auf 0}
+
+$Z = \{ z_0, z_1, \textit{ja}, \textit{nein} \}$; Startzustand $z_0$, Endzust"ande sind ja und nein.
+\begin{eqnarray*}
+	\delta(z_0, a) &	= &	(\textit{nein}, a, N) \text{ f"ur } a \neq 0\\
+	\delta(z_0, 0) &	= &	(z_1, 0, R)\\
+	\delta(z_1, a) &	= &	(\textit{nein}, a, L) \text{ f"ur } a \neq \Box \\
+	\delta(z_1, \Box) &	= &	(\textit{ja}, \Box, L)
+\end{eqnarray*}
+
+\subsubsection{Ausdrucksm"achtigkeit: if-then-else}
+
+\begin{displaymath}
+	\begin{array}{llllll}
+		\textsf{start} &	\longrightarrow &	M \ \ \overset{z_{e1}}{\longrightarrow} &	M_1 &	\longrightarrow &	\textsf{stop} \\
+		&			&			\downarrow z_{e_2}\\
+		&			&			M_2\\
+		&			&			\downarrow\\
+		&			&			\textsf{stop}
+	\end{array}
+\end{displaymath}
+
+Bezeichnet eine TM, wobei vom Endzustand $z_{e1}$ von $M$ aus nach $M_1$ "ubergangen wird, und von $z_{e2}$ aus nach $M_2$. Alternative Schreibweise:
+\begin{displaymath}
+	\textsf{if }  M \textsf{ then } M_1 \textsf{ else } M_2
+\end{displaymath}
+
+\subsection{LOOP-Programme}
+
+\subsubsection{Semantik und Syntax}
+
+F"ur die Berechnung einer $k$-stelligen Funktion gehen wir davon aus, dass diese mit den Startwerten $n_1, \ldots, n_k \in N$ in den Variablen $x_1, \ldots, x_k$ gestartet wird und alle anderen Variablen den Anfangswert 0 haben.
+
+\begin{displaymath}
+	\textsf{LOOP}\ x_i \ \textsf{DO} \ P \ \textsf{END;}
+\end{displaymath}
+
+$P$ wird genau (der Anfangswert von) $x_i$-mal ausgef"uhrt. Das "Andern des Variablenwertes $x_i$ im Innern von $P$ hat keinen Einfluss auf die Anzahl der Wiederholungen.\\
+
+Wertezuweisungen der Form $x_i := x_j + c$ und $x_i := x_j -c$, wobei aber hier ''Proper Subtraction'', also falls $c > x_j$ so wird Resultat zu $0$.
+
+\begin{definition}
+	Eine Funktion $f: \mathbb{N}^k \to \mathbb{N}$ heisst \textit{LOOP-berechenbar}, falls es ein LOOP-Programm $P$ gibt, das $f$ in dem Sinne berechnet, dass $P$, gestartet mit $n_1,\ldots,n_k$ in den Variablen $x_1,\ldots,x_k$ (und 0 in den restlichen Variablen) stoppt mit dem Wert $f(n_1,\ldots,n_k)$ in der Variablen $x_0$.
+\end{definition}
+
+Alle LOOP-berechenbaren Funktionen sind \textit{totale} Funktionen. Aber nicht alle totalen Funktionen sind LOOP-Berechenbar.\\
+
+Simulation von $\textsf{IF} \ x=0 \ \textsf{THEN} \ A \ \textsf{END}$:\\
+$y := 1$\\
+$\textsf{LOOP}\ x \ \textsf{DO} \ y := 0 \ \textsf{END;}$\\
+$\textsf{LOOP}\ y \ \textsf{DO} \ A \ \textsf{END;}$
+
+\subsection{WHILE-Programme}
+
+\subsubsection{Semantik und Syntax}
+
+\begin{displaymath}
+	\textsf{WHILE} \ x_i \neq 0 \ \textsf{DO} \ P \ \textsf{END}
+\end{displaymath}
+
+$P$ wird solange wiederholt ausgef"uhrt, wie der Wert von $x_i$ ungleich Null ist. Im Unterschied zu LOOP-Programmen wird hier $P$ im Normalfall $x_i$ ver"andern. WHILE-Programme k"onnen LOOP-Programme simulieren.
+
+\begin{satz}
+	Turingmaschinen k"onnen WHILE-Programme simulieren.
+\end{satz}
+
+\subsubsection{Normalform f"ur WHILE-Programme}
+
+\begin{korollar}
+	Jede WHILE-berechenbare Funktion kann durch ein WHILE-Programm mit nur einer WHILE-Schleife berechnet werden.
+\end{korollar}
+
+\subsection{GOTO-Programme}
+
+\begin{definition}
+	GOTO-Programme bestehen aus Sequenzen von Anweisungen $A_i$, die jeweils durch eine Marke $M_i$ eingeleitet werden:
+		\begin{displaymath}
+			M_1 : \ A_1; \ M_2 : \ A_2; \ldots M_k : \ A_K
+		\end{displaymath}
+	Wobei Anweisungen $A_i$ sein k"onnen:
+	\begin{itemize}
+		\item $x_i := x_j + c$ oder $x_i := x_j -c$
+		\item $\textsf{GOTO} \ M_i$
+		\item $\textsf{IF} \ x_i = c \textsf{ THEN GOTO} \  M_j$
+		\item $\textsf{HALT}$
+	\end{itemize}
+\end{definition}
+
+\begin{satz}
+	Jedes WHILE-Programm kann durch ein GOTO-Programm simuliert werden und umgekehrt.
+\end{satz}
+
+\subsection{TMs und WHILE/GOTO-Programme}
+
+\begin{satz}
+	TMs k"onnen durch GOTO-Programme simuliert werden.
+\end{satz}
+
+Zusammenfassend gilt somit:
+\begin{displaymath}
+	\textsf{TM} \ \leq \ \textsf{GOTO} \ \leq \ \textsf{WHILE} \ \leq \ \textsf{TM}
+\end{displaymath}
+
+\subsection{Funktionen: Grundlagen}
+
+Sei $F_k$ die Menge aller Funktionen $f: \mathbb{N}^k \to \mathbb{N}$\\
+Sei $T_k$ die Menge aller \textit{totalen} Funktionen $f: \mathbb{N}^k \to \mathbb{N}$\\
+Sei
+\begin{eqnarray*}
+	F &	= &	\bigcup_{k\in \mathbb{N}} F_k \\
+	T &	= &	\bigcup_{k \in \mathbb{N}} T_k
+\end{eqnarray*}
+
+\subsection{Basis-Funktionen}
+
+\subsubsection{Null-Funktion}
+
+Mit der Null-Funktion bezeichnen wir die Funktion $zero \in T_0$
+\begin{displaymath}
+	zero = 0 \qquad (x\in \mathbb{N})
+\end{displaymath}
+
+\subsubsection{Successor-Funktion}
+
+Mit der Sucessor-Funktion bzeichnen wir die Funktion $s(x) \in T_1$
+\begin{displaymath}
+	s(x) = x + 1 \qquad (x \in \mathbb{N})
+\end{displaymath}
+
+\subsubsection{Projektions-Funktion}
+
+F"ur alle $j,k \in \mathbb{N}^+, 1 \geq j \geq k$ bezeichnen wir die Projektions-Funktion $\pi^k_j \in T_k$
+\begin{displaymath}
+	\pi^k_j (\mathbf{x}) = x_j \qquad (\mathbf{x} = (x_1,x_2, \ldots , x_k) \in \mathbb{N}^k)
+\end{displaymath}
+
+\subsection{Komposition/Primitive Rekursion}
+
+\subsubsection{Komposition}
+
+Sei $k,l \in \mathbb{Z}^+$ und $\mathbf{f} = (f_1,\ldots,f_l)$ ein $l$-Tupel von Funktionen in $F_k$, und sei $g$ eine Funktion in $F_l$. Sei $h=g\cdotp \mathbf{f} = g\cdotp (f_1(\mathbf{x}),\ldots,f_l(\mathbf{x}))$, die Funktion in $F_k$ definiert wie folgt:
+\begin{displaymath}
+	h(\mathbf{x}) = g(\mathbf{f}(\mathbf{x})) = g(f_1(\mathbf{x}), \ldots, f_l(\mathbf{x}))
+\end{displaymath}
+
+\subsubsection{Primitive Rekursion}
+
+Sei $k \in \mathbb{N}, f \in T_k$ und $h \in T_{k+2}$. Wir bauen eine neue Funktion $g$ wie folgt:
+\begin{displaymath}
+\begin{array}{rcll}
+	g(0, \mathbf{x}) &	= &	f(\mathbf{x}) &				(\mathbf{x} \in \mathbb{N}^k)\\
+	g(y+1, \mathbf{x}) &	= &	h(y, \mathbf{x}, g(y, \mathbf{x})) &	(\mathbf{x} \in N^k, y \in N)
+\end{array}
+\end{displaymath}
+
+Wobei $g \in T_{k+1}$.
+
+\subsection{$\mu$-Minimierung}
+
+Sei $k \in \mathbb{N}$ und $f\in F_{k+1}$. Wir bauen eine neue Funktion $g=\mu f \in F_k$ wie folgt (f"ur $\mathbf{x} \in \mathbb{N}^k$)
+\begin{eqnarray*}
+	g(\mathbf{x}) &		= &	\min \{ n | f(n,\mathbf{x}) = 0 \text{ und f"ur alle } m < n\\
+	&			&	\text{ ist } f(m,\mathbf{x}) \text{ definiert} \}
+\end{eqnarray*}
+Hierbei wird $\min \emptyset = $ undefiniert gesetzt. Durch Anwenden des $\mu$-Operators k"onnen partielle Funktionen entstehen.
+
+\subsection{Definitionen}
+
+\begin{definition}
+	Die Klasse von \textit{primitiv rekursiven (PR) Funktionen} ist die kleinste Teilmenge von $F$, die unter Basis-Funktionen, Komposition und Rekursion abgeschlossen ist.
+\end{definition}
+
+\begin{definition}
+	Die Klasse von \textit{($\mu$-)rekursiven Funktionen} ist die kleinste Teilmenge von $F$, die unter Basis-Funktionen, Komposition, Rekursion und \textit{$\mu$-Minimierung} abgeschlossen ist.
+\end{definition}
+
+\subsection{Beispiele}
+
+\begin{eqnarray*}
+	add(0,x) &	= &	\pi^1_1 (x)\\
+	add(y + 1, x) &	= &	h(y,x,add(y,x))
+\end{eqnarray*}
+
+wobei $h$:
+\begin{displaymath}
+	h(x,y,z) = s(\pi^3_3 (x,y,z)) = s(z)
+\end{displaymath}
+
+\subsection{PR versus LOOP}
+
+\subsubsection{Tupel kodieren}
+
+\begin{displaymath}
+	c(x,y) = \binom{x+y+1}{2} + x
+\end{displaymath}
+
+Stellt eine Funktion von $\mathbb{N}\times\mathbb{N} \to \mathbb{N}$ dar. Somit kann man mit $c$ $k+1$ Tupeln kodieren.
+
+\begin{displaymath}
+	\langle n_0, n_1, \ldots, n_k \rangle = c (n_0, c(n_1, \ldots, c(n_k, 0)))
+\end{displaymath}
+
+F"ur das Dekodieren ben"otigen wir $e$ und $f$ die Umkehrfunktionen von $c$
+
+\begin{displaymath}
+	e(c(x,y)) = x, \qquad f(c(x,y)) = y
+\end{displaymath}
+
+\subsubsection{PR $\Leftrightarrow$ LOOP}
+
+\begin{satz}
+	Die Klasse der PR-Funktionen stimmt genau mit der Klasse der LOOP-berechenbaren Funktionen "uberein.
+\end{satz}
+
+\subsection{$\mu$-Rekursion $\Leftrightarrow$ WHILE-Programme}
+
+$\mu$ ergibt eine echte Erweiterung der PR-Funktionen.
+
+\begin{satz}
+	Die Klasse der $\mu$-rekursiven Funktionen stimmt genau mit der Klasse der WHILE- (GOTO-, Turing-) berechenbaren Funktionen "uberein.
+\end{satz}
+
+\begin{satz}[Kleene]
+	F"ur jede $\mu$-rekursive Funktionen $f$ gibt es zwei $(n+1)$-stellige PR-Funktionen $p$ und $q$, so dass sich $f$ darstellen l"asst als 
+	\begin{displaymath}
+		f(\overline{\mathbf{x}}) = p(\mu q(\overline{\mathbf{x}}), \overline{\mathbf{x}})
+	\end{displaymath}
+	Hierbei ist $\mu q$ die durch Anwendung des $\mu$-Operators auf $q$ entstehende ($n$-stellige) Funktion.
+\end{satz}
+
+\section{Nicht-Berechenbarkeit}
+
+\subsection{Reduktion}
+
+Technik um Nicht-Berechenbarkeit zu zeigen. Damit zeigt man, dass ein Problem mindestens so schwer ist wie ein anderes.\\
+
+\textit{Notation}: $A \leq B$\\
+
+\textit{Bedeutung}: Falls $B$ berechenbar ist, dann ist es $A$ auch. Falls $A$ nicht berechenbar ist, dann ist es $B$ auch nicht.
+
+\subsection{Entscheidbarkeit}
+
+\begin{definition}
+	Eine Menge $A \subseteq \Sigma^*$ heisst \textit{entscheidbar}, falls die \textit{charakteristische Funktion} von $A$, n"amlich $\chi_A : \Sigma^* \to \{0,1\}$, berechenbar ist.
+
+	\begin{displaymath}
+		 \chi_A (w) = \left \{
+		 \begin{array}{ll}
+		 	1, &		\text{falls } w \in A\\
+			0, &		\text{falls } w \not \in A
+		 \end{array}
+		 \right .
+	\end{displaymath}
+\end{definition}
+
+\begin{definition}
+	Eine Menge $A \subseteq \Sigma^*$ heisst \textit{semi-entscheidbar}, falls die ''halbe'' charakteristische Funktion von $A$, n"amlich $\chi_A' : \Sigma^* \to \{0,1\}$, berechenbar ist.
+
+	\begin{displaymath}
+		 \chi_A (w) = \left \{
+		 \begin{array}{ll}
+		 	1, &				\text{falls } w \in A\\
+			\text{undefiniert}, &		\text{falls } w \not \in A
+		 \end{array}
+		 \right .
+	\end{displaymath}
+\end{definition}
+
+\begin{satz}
+	Eine Sprache $A$ ist entscheidbar gdw sowohl $A$ als auch $\overline{A}$ semi-entscheidbar sind.
+\end{satz}
+
+\subsection{Rekursive Abz"ahlbarkeit}
+
+\begin{definition}
+	Eine Sprache $A \subseteq \Sigma^*$ heisst \textit{rekursiv aufz"ahlbar}, falls $A = \emptyset$ oder falls es eine totale und berechenbare Funktion $f: \mathbb{N} \to \Sigma^*$ gibt, so dass 
+	\begin{displaymath}
+		A = \{ f(0), f(1), f(2), \ldots \}
+	\end{displaymath}
+	Nebenbemerkung: $f(i)$ darf gleich $f(j)$ sein.
+\end{definition}
+
+\begin{satz}
+	Eine Sprache ist rekursiv aufz"ahlbar, gdw sie semi-entscheidbar ist.
+\end{satz}
+
+\begin{korollar}
+	$A$ ist entscheidbar gdw $A$ und $\overline{A}$ beide rekursiv aufz"ahlbar sind.
+\end{korollar}
+
+\subsection{"Aquivalente Begriffe}
+
+Folgende Aussagen sind "aquivalent
+
+\begin{itemize}
+	\item $A$ ist rekursiv aufz"ahlbar
+	\item $A$ ist semi-entscheidbar
+	\item $\chi_A '$ ist (Turing-, WHILE-, GOTO-) berechenbar
+	\item $A=T(M)$ f"ur eine TM $M$
+	\item $A$ ist ein Definitionsbereich einer berechenbaren Funktion
+	\item $A$ ist Wertebereich einer berechenbaren Funktion
+\end{itemize}
+
+\subsection{Aufz"ahlbare versus abz"ahlbare Mengen}
+
+\begin{definition}
+	Eine Menge $A$ heisst \textit{abz"ahlbar}, falls $A=\emptyset$ oder falls es eine totale (nicht notwendigerweise berechenbare!) Funktion $f$ gibt, so dass
+	\begin{displaymath}
+		A = \{ f(0), f(1), \ldots \}
+	\end{displaymath}
+\end{definition}
+
+\begin{satz}
+	Jede Teilmenge $A'$ einer abz"ahlbaren Menge $A=\{ f(0), f(1), \ldots \}$ ist wieder abz"ahlbar.
+\end{satz}
+
+Aber: Nicht jede Teilmenge einer rekursiv aufz"ahlbaren Menge muss wieder rekursiv aufz"ahlbar sein.
+
+\subsubsection{Nichtabz"ahlbarkeit}
+
+\begin{satz}
+	Nicht alle Mengen sind abz"ahlbar.
+\end{satz}
+
+\subsection{Nichtentscheidbarkeit}
+
+\subsubsection{Kodierung von TMs}
+
+\begin{itemize}
+	\item Sei $\Gamma = \{ a_0, \ldots, a_k \}$ und $Z=\{ z_0, \ldots, z_n\}$ (oBdA) durchnummeriert.
+	\item Jedem Tupel in $\delta$ der Form $(z_i,a_j,z_{i'},a_{j'},y)$ ordnen wir das Wort
+		\begin{displaymath}
+			\# bin(i) \# bin(j) \# bin(i') \# bin(j') \# bin(m)
+		\end{displaymath}
+
+		zu, wobei
+		\begin{displaymath}
+			m = \left \{
+			\begin{array}{ll}
+				0, &	y = L\\
+				1, &	y = R\\
+				2, &	y = N
+			\end{array}
+			\right .
+		\end{displaymath}
+	\item Wir schreiben diese W"orter in (beliebiger) Reihenfolge hintereinander und erhalten - als Zwischenschritt - ein Wort "uber $\{0,1,\#\}$.
+	\item Wir f"ugen die bin"are Kodierung der Start- und Endzust"ande hinzu.
+	\item Wir ordnen ein Wort "uber $\{0,1\}$ durch Kodierung zu:
+		\begin{eqnarray*}
+			0 &	\mapsto &	00\\
+			1 &	\mapsto &	01\\
+			\# &	\mapsto &	11
+		\end{eqnarray*}
+\end{itemize}
+
+Jetzt entspricht eine TM $M$ einem Wort "uber $\{ 0,1 \}^*$. Jedoch nicht jedes Wort "uber $\{0,1\}^*$ kodiert eine TM. Sei $\hat{M}$ irgendeine beliebige feste TM (hier als ''Default-Programm'' benutzt), dann k"onnen wir \textit{f"ur jedes} $w \in \{0,1\}^*$ festlegen, dass $M_w$ eine TM bezeichnet, n"amlich
+
+\begin{displaymath}
+	M_w = \left \{
+	\begin{array}{ll}
+		M, &		\text{falls } w \text{ Codewort von } M \text{ ist}\\
+		\hat{M}, &	\text{sonst}
+	\end{array}
+	\right .
+\end{displaymath}
+
+\subsubsection{Spezielles Halteproblem}
+
+\begin{definition}
+	$M(w)\downarrow$ bedeutet, dass die TM $M$, angesetzt auf $w$, h"alt. $M(w)\uparrow$ bezeichnet Nicht-Terminierung.
+\end{definition}
+
+\begin{definition}
+	Das \textit{spezielle Halteproblem} oder \textit{Selbstanwendungsproblem} ist die Sprache
+	\begin{displaymath}
+		K = \{ w \in \{ 0,1\}^* | M_w(w)\downarrow \}
+	\end{displaymath}
+\end{definition}
+
+\begin{satz}
+	Das spezielle Halteproblem ist nicht entscheidbar.
+\end{satz}
+
+\subsubsection{Reduktionen}
+
+\begin{definition}
+	Seien $A \subseteq \Sigma^*$ und $B \subseteq \Gamma^*$ Sprachen. Dann heisst $A$ auf $B$ reduzierbar - symbolisch mit $A\leq B$ bezeichnet - falls es eine totale und berechenbare Funktion $f:\Sigma^* \to \Gamma^*$ gibt, so dass f"ur alle $x\in \Sigma^*$ gilt:
+		\begin{displaymath}
+			x \in A \Leftrightarrow f(x) \in B
+		\end{displaymath}
+\end{definition}
+
+\begin{satz}
+	Falls $A \leq B$ und $B$ entscheidbar (bzw. semi-entscheidbar) ist, so ist auch $A$ entscheidbar (bzw. semi-entscheidbar).
+\end{satz}
+
+\begin{korollar}
+	Falls $A$ unentscheidbar ist und $A \leq B$, dann ist auch $B$ unentscheidbar.
+\end{korollar}
+
+\subsubsection{Allgemeines Halteproblem}
+
+\begin{definition}
+	Das (allgemeine) \textit{Halteproblem} ist die Sprache (f"ur $w,x \in \{ 0,1\}^*$)
+	\begin{displaymath}
+		H = \{ w \# x | M_w(x)\downarrow \}
+	\end{displaymath}
+\end{definition}
+
+\begin{satz}
+	Das Halteproblem $H$ ist nicht entscheidbar.
+\end{satz}
+
+\subsubsection{Halteproblem auf leerem Band}
+
+\begin{definition}
+	Das \textit{Halteproblem auf leerem Band} ist die Sprache
+		\begin{displaymath}
+			H_0 = \{w | M_w(\varepsilon)\downarrow\}
+		\end{displaymath}
+	d.h. $M_w$, angesetzt auf leerem Band, h"alt.
+\end{definition}
+
+\begin{satz}
+	$H_0$ ist nicht entscheidbar.
+\end{satz}
+
+\subsubsection{Rice-Satz}
+
+Es ist hoffnungslos, irgendeinen Aspekt des funktionalen Verhaltens einer TM algorithmisch bestimmen zu wollen.
+
+\begin{satz}[Rice]
+	Sei $R$ die Klasse aller Turing-berechenbaren Funktionen. Sei $S$ eine \textit{beliebige} Teilmenge hiervon (mit Ausnahme von $S=\emptyset$ und $S=R$). Dann ist die Sprache
+		\begin{displaymath}
+			C(S) = \{ w | \text{die von } M_w \text{ berechnete Funktion liegt in } S\}
+		\end{displaymath}
+	unentscheidbar.
+\end{satz}
+
+\section{Komplexit"atstheorie}
+
+\subsection{Komplexit"atsklassen}
+
+Man w"ahlt als Berechnungsmodell im Normalfall Mehrband-TMs, man k"onnte aber irgend ein TM-"aquivalentes Modell nehmen.\\
+
+\begin{definition}
+	$time_M : \Sigma^* \to \mathbb{N}$ ist die Anzahl der Rechenschritte einer (Mehrband-)TM $M$ bei Eingabe von $\Sigma^*$.
+\end{definition}
+
+\begin{definition}
+	Sei $f: \mathbb{N}\to \mathbb{N}$. Die Klasse $TIME(f(n))$ besteht aus allen Sprachen $A$, f"ur die es eine deterministische (Mehrband-)TM $M$ gibt mit $A=T(M)$ und $\forall x \in \Sigma^*: time_M(x) < f(|x|)$.
+\end{definition}
+
+\subsubsection{Polynomielle Zeit $P$}
+
+\begin{definition}
+	Ein \textit{Polynom} ist eine Funktion $p: \mathbb{N} \to \mathbb{N}$ der Form
+	\begin{displaymath}
+		p(n) = a_k n^k + a_{k-1}n^{k-1}+\cdots + a_1 n + a_0
+	\end{displaymath}
+	f"ur $a_i \in \mathbb{N}$ und $k\in \mathbb{N}$
+\end{definition}
+
+\begin{definition}
+	Die Komplexit"atsklasse $P$ ist:
+	\begin{eqnarray*}
+		P &	= &	\{ A | \text{ es gibt eine TM M und ein Polynom } p \text{ mit}\\
+		&	&	T(M) = A \text{ und } time_M(x) \leq p(|x|)\}\\
+		&	= &	\bigcup_{p \ Polynom} TIME(p(n))
+	\end{eqnarray*}
+\end{definition}
+
+Um zu zeigen, dass ein Problem in $P$ ist, gen"ugt es zu zeigen, dass es eine L"osung (=Algorithmus) mit Komplexit"at $O(n^k)$ gibt f"ur eine Konstante $k$.
+
+\begin{satz}
+	Die Klasse $P$ und auch weitere komplexere Klassen, etwa $TIME(2^n)$, $TIME(2^{2^n})$ usw., sind PR/LOOP-berechenbar.
+\end{satz}
+
+\subsubsection{NP}
+
+Mit \textit{Nichtdeterminismus} ergibt sich die M"oglichkeit f"ur unterschiedliche Berechnungszeiten. Wir werden die k"urzeste (akzeptierende) Berechnung als Basis benutzen.
+
+\begin{definition}
+	F"ur $M$, eine nichtdeterministische TM, sei
+	\tiny
+	\begin{displaymath}
+		ntime_M(x) = \left \{
+		\begin{array}{ll}
+			min[\text{L"ange einer akzeptierenden Berechnung von } M(x)] &	x \in T(M)\\
+			0 &								x \not\in T(M)
+		\end{array}
+		\right .
+	\end{displaymath}
+	\normalsize
+	Sei $f: \mathbb{N} \to \mathbb{N}$. Die Klasse $NTIME(f(n))$ besteht aus der Sprache $A$ f"ur die es eine \textit{nichtdeterministische} Mehrband-TM $M$ gibt mit $A=T(M)$ und $ntime_M(x) \leq f(|x|)$. Ferner definieren wir:
+	\begin{displaymath}
+		NP = \bigcup_{p \ Polynom} NTIME(p(n))
+	\end{displaymath}
+\end{definition}
+
+Es folgt aus der Definition, dass $P \subseteq NP$ gilt.
+
+\subsection{Verifikation vs Existenz}
+
+\begin{definition}
+	Ein \textit{Verifikationsverfahren} (VF) f"ur eine Sprache $A$ ist ein Algorithmus $V$, wobei
+	\begin{displaymath}
+		A = \{ w | V \text{ akzeptiert } w\# c \text{ f"ur ein } c \in \Gamma^* \}
+	\end{displaymath}
+\end{definition}
+
+Ein VF hat \textit{polynomielle Laufzeit}, wenn die Laufzeit polynomiell in $|w|$ ist. $c$ heisst ein Zertifikat. Es kann eine zus"atzliche Information sein, z.B. ein L"osungsvorschlag.
+
+\begin{satz}
+	Eine Sprache $A$ ist in $NP$ gdw es ein polynomielles VF f"ur $A$ gibt.
+\end{satz}
+
+\subsection{Polynomielle Reduzierbarkeit}
+
+
+\begin{definition}
+	Seien $A\subseteq \Sigma^*$ und $B\subseteq \Gamma^*$ Sprachen. Dann heisst \textit{$A$ auf $B$ polynomiell redzuzierbar} - symbolisch $A\leq_p B$ - falls es eine totale und in polynomieller Zeit berechenbare Funktion $f: \Sigma^* \to \Gamma^*$ gibt, so dass f"ur alle $x \in \Sigma^*$ gilt: 
+	\begin{displaymath}
+		x \in A \Leftrightarrow f(x) \in B
+	\end{displaymath}
+\end{definition}
+
+\begin{lemma}
+	Falls $A \leq_p B$ und $B \in P$ (bzw. $B \in NP$), so ist auch $A \in P$ (bzw. $A \in NP$).
+\end{lemma}
+
+\subsection{NP-hart/ vollst"andig}
+
+\begin{lemma}
+	$\leq_p$ ist eine transitive Relation.
+\end{lemma}
+
+\begin{definition}
+	Eine Sprache $A$ heisst \textit{NP-hart}, falls f"ur alle Sprachen $L \in NP$ gilt: $L \leq_p A$.
+\end{definition}
+
+\begin{definition}
+	Eine Sprache $A$ heisst \textit{NP-vollst"andig}, falls $A$ NP-hart ist und $A \in NP$ gilt.
+\end{definition}
+
+$A$ ist $NP$-vollst"andig, falls $A$ mindestens so schwierig ist wie jedes Problem in $NP$.
+
+\subsection{P vs NP}
+
+\begin{satz}
+	Sei $A$ NP-vollst"andig. Dann gilt:
+	\begin{displaymath}
+		A \in P \Leftrightarrow P = NP
+	\end{displaymath}
+\end{satz}
+
+\subsection{SAT}
+
+\begin{definition}
+	Das \textit{Erf"ullbarkeitsproblem der Aussagenlogik}, kurz SAT, ist:
+	\footnotesize
+	\begin{displaymath}
+		SAT = \{ code(F) \in \Sigma^* | F \text{ ist eine erf"ullbare Formel der Aussagenlogik}\}
+	\end{displaymath}
+	\normalsize
+	Also gegeben eine Formel $F$ der Aussagenlogik, gefragt: ist $F$ erf"ullbar.
+\end{definition}
+
+\begin{satz}[Cook]
+	SAT ist NP-vollst"andig.
+\end{satz}
+
+\subsection{3KNF-SAT}
+
+Eine Boolsche Formel $F$ in konjunktiver Normalform mit h"ochstens 3 Literalen pro Klausel. Ist $F$ erf"ullbar?
+
+\begin{satz}
+	3KNF-SAT ist NP-vollst"andig.
+\end{satz}
+
+\subsection{Mengen"uberdeckung}
+
+Ein Mengensystem "uber einer endlichen Grundmenge $M$, also $T_1,\ldots, T_k \subseteq M$, sowie eine Zahl $n \leq k$. Gibt es eine Auswahl aus $n$ Mengen $T_{i_1},\ldots,T_{i_n}$, in der bereits alle Elemente aus $M$ vorkommen?
+
+\begin{satz}
+	Mengen"uberdeckung ist NP-vollst"andig.
+\end{satz}
+
+\subsection{Clique}
+
+Ein ungerichteter Graph $G=(V,E)$ und eine Zahl $k \in N$. Besitzt $G$ eine ''Clique'' der Gr"osse mindestens $k$? D.h. eine Teilmenge $V' \subseteq V$ mit $|V'|\geq k$ und f"ur alle $u,v \in V'$ mit $u\neq v$ gilt: $\{ u,v \} \in E$.
+
+\begin{satz}
+	Clique ist NP-vollst"andig.
+\end{satz}
+
+\subsection{Knoten"uberdeckung}
+
+Ein ungerichteter Graph $G=(V,E)$ und eine Zahl $k \in N$. Besitzt $G$ eine ''"uberdeckende Knotenmenge'' der Gr"osse h"ochstens $k$? D.h. eine Teilmenge $V' \subseteq V$ $|V'| \leq k$, so dass f"ur alle Kanten $\{ u,v \} \in E$ gilt: $u\in V'$ oder $v\in V'$.
+
+\begin{satz}
+	Knoten"uberdeckung ist NP-vollst"andig.
+\end{satz}
+
+\subsection{Rucksack}
+
+Nat"urliche Zahlen $a_1,\ldots, a_k \in \mathbb{N}$ und $b\in \mathbb{N}$. Gibt es eine Teilmenge $I \subseteq \{1,2,\ldots,k  \}$ mit $\sum_{i\in I} a_i =b$?
+
+\begin{satz}
+	Rucksack ist NP-vollst"andig.
+\end{satz}
+
+\subsection{Partition}
+
+Nat"urliche Zahlen $a_1,\ldots, a_k \in \mathbb{N}$. Gibt es eine Teilmenge $J \subseteq \{ 1,2,\ldots, k \}$ mit $\sum_{i \in J} a_i = \sum_{i\not\in J} a_i$?
+
+\begin{satz}
+	Partition ist NP-vollst"andig.
+\end{satz}
+
+\subsection{Bin Packing}
+
+Eine ''Beh"altergr"osse'' $b\in \mathbb{N}$, die Anzahl der Beh"alter $k\in \mathbb{N}$ und ''Objekte'' $a_1,\ldots, a_n$. K"onnen die Objekte so auf die $k$ Beh"alter verteilt werden, dass kein Beh"alter "uberl"auft?
+
+\begin{satz}
+	Bin Packing ist NP-vollst"andig.
+\end{satz}
+
+\end{document}

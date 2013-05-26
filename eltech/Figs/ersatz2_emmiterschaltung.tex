@@ -1,0 +1,176 @@
+% maschenmethode.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{pa 1478 200}%
+    \special{pa 1478 450}%
+    \special{fp}%
+    \special{pa 1478 450}%
+    \special{pa 1528 450}%
+    \special{pa 1528 700}%
+    \special{pa 1427 700}%
+    \special{pa 1427 450}%
+    \special{pa 1478 450}%
+    \special{fp}%
+    \special{pa 1478 700}%
+    \special{pa 1478 950}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.575in
+    \rlap{\kern 1.427in\lower\graphtemp\hbox to 0pt{\hss \hbox{$\:$}$r_{BE}$\hbox{$\:$}}}%
+    \special{sh 1.000}%
+    \special{ar 1478 950 20 20 0 6.28319}%
+    \special{pa 1478 950}%
+    \special{pa 2228 950}%
+    \special{fp}%
+    \special{pa 1478 950}%
+    \special{pa 728 950}%
+    \special{fp}%
+    \special{ar 708 950 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 1.150in
+    \rlap{\kern 0.688in\lower\graphtemp\hbox to 0pt{$E$\hss}}%
+    \special{ar 708 200 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.000in
+    \rlap{\kern 0.728in\lower\graphtemp\hbox to 0pt{$B$\hss}}%
+    \special{pa 688 200}%
+    \special{pa 500 200}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{ar 500 200 20 20 0 6.28319}%
+    \special{pa 500 200}%
+    \special{pa 500 450}%
+    \special{fp}%
+    \special{pa 500 450}%
+    \special{pa 550 450}%
+    \special{pa 550 700}%
+    \special{pa 450 700}%
+    \special{pa 450 450}%
+    \special{pa 500 450}%
+    \special{fp}%
+    \special{pa 500 700}%
+    \special{pa 500 950}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.575in
+    \rlap{\kern 0.550in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$R_B$\hbox{$\:$}\hss}}%
+    \special{sh 1.000}%
+    \special{ar 500 950 20 20 0 6.28319}%
+    \special{pa 500 200}%
+    \special{pa 125 200}%
+    \special{fp}%
+    \special{pa 125 200}%
+    \special{pa 125 450}%
+    \special{fp}%
+    \special{ar 125 575 125 125 0 6.28319}%
+    \special{ar 83 575 42 42 -3.141593 -0.000000}%
+    \special{ar 167 575 42 42 -0.000000 3.141593}%
+    \special{pa 125 700}%
+    \special{pa 125 950}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.575in
+    \rlap{\kern 0.000in\lower\graphtemp\hbox to 0pt{\hss \hbox{$\:$}$u_1$\hbox{$\:$}}}%
+    \special{pa 125 950}%
+    \special{pa 688 950}%
+    \special{fp}%
+    \special{pa 728 200}%
+    \special{pa 1478 200}%
+    \special{fp}%
+    \special{pa 728 200}%
+    \special{pa 927 200}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 828 175}%
+    \special{pa 927 200}%
+    \special{pa 828 225}%
+    \special{pa 828 175}%
+    \special{fp}%
+    \graphtemp=\baselineskip\multiply\graphtemp by -1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.200in
+    \rlap{\kern 0.877in\lower\graphtemp\hbox to 0pt{\hss \hbox{$\:$}$i_B$\hbox{$\:$}\hss}}%
+    \special{pa 2228 200}%
+    \special{pa 2228 425}%
+    \special{fp}%
+    \special{pa 2228 425}%
+    \special{pa 2377 575}%
+    \special{pa 2228 725}%
+    \special{fp}%
+    \special{pa 2228 425}%
+    \special{pa 2078 575}%
+    \special{pa 2228 725}%
+    \special{pa 2228 950}%
+    \special{fp}%
+    \special{pa 2228 462}%
+    \special{pa 2228 688}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 2252 588}%
+    \special{pa 2228 688}%
+    \special{pa 2203 588}%
+    \special{pa 2252 588}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.575in
+    \rlap{\kern 2.377in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$h_{fe}i_{B}$\hbox{$\:$}\hss}}%
+    \special{sh 1.000}%
+    \special{ar 2228 950 20 20 0 6.28319}%
+    \special{pa 2228 950}%
+    \special{pa 2978 950}%
+    \special{fp}%
+    \special{ar 2998 950 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 1.150in
+    \rlap{\kern 3.018in\lower\graphtemp\hbox to 0pt{\hss $E$}}%
+    \special{ar 2998 200 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.000in
+    \rlap{\kern 3.018in\lower\graphtemp\hbox to 0pt{\hss $C$}}%
+    \special{pa 3018 325}%
+    \special{pa 3018 825}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 3042 725}%
+    \special{pa 3018 825}%
+    \special{pa 2993 725}%
+    \special{pa 3042 725}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.575in
+    \rlap{\kern 3.393in\lower\graphtemp\hbox to 0pt{\hss $u_{CE} = u_2$}}%
+    \special{pa 3018 200}%
+    \special{pa 3268 200}%
+    \special{fp}%
+    \special{pa 3268 200}%
+    \special{pa 3268 150}%
+    \special{pa 3518 150}%
+    \special{pa 3518 250}%
+    \special{pa 3268 250}%
+    \special{pa 3268 200}%
+    \special{fp}%
+    \special{pa 3518 200}%
+    \special{pa 3768 200}%
+    \special{fp}%
+    \graphtemp=\baselineskip\multiply\graphtemp by -1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.150in
+    \rlap{\kern 3.393in\lower\graphtemp\hbox to 0pt{\hss \hbox{$\:$}$R_C$\hbox{$\:$}\hss}}%
+    \special{pa 3768 200}%
+    \special{pa 3768 950}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.575in
+    \rlap{\kern 3.808in\lower\graphtemp\hbox to 0pt{$u_0=0$\hss}}%
+    \special{pa 3768 950}%
+    \special{pa 3018 950}%
+    \special{fp}%
+    \special{pa 2978 200}%
+    \special{pa 2228 200}%
+    \special{fp}%
+    \special{pa 2978 200}%
+    \special{pa 2777 200}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 2878 225}%
+    \special{pa 2777 200}%
+    \special{pa 2878 175}%
+    \special{pa 2878 225}%
+    \special{fp}%
+    \graphtemp=\baselineskip\multiply\graphtemp by 1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.200in
+    \rlap{\kern 2.828in\lower\graphtemp\hbox to 0pt{\hss \hbox{$\:$}$i_C$\hbox{$\:$}\hss}}%
+    \hbox{\vrule depth1.150in width0pt height 0pt}%
+    \kern 3.808in
+  }%
+}%

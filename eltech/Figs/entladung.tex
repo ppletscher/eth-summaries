@@ -1,0 +1,84 @@
+% maschenmethode.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{ar 333 20 20 20 0 6.28319}%
+    \special{pa 333 40}%
+    \special{pa 333 290}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{ar 333 290 20 20 0 6.28319}%
+    \special{pa 333 290}%
+    \special{pa 83 290}%
+    \special{fp}%
+    \special{pa 83 290}%
+    \special{pa 83 640}%
+    \special{fp}%
+    \special{pa 0 640}%
+    \special{pa 167 640}%
+    \special{fp}%
+    \special{pa 0 690}%
+    \special{pa 167 690}%
+    \special{fp}%
+    \special{pa 83 690}%
+    \special{pa 83 1040}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.665in
+    \rlap{\kern 0.167in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$C$\hbox{$\:$}\hss}}%
+    \special{pa 83 1040}%
+    \special{pa 333 1040}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{ar 333 1040 20 20 0 6.28319}%
+    \special{pa 333 290}%
+    \special{pa 583 290}%
+    \special{fp}%
+    \special{pa 583 290}%
+    \special{pa 583 540}%
+    \special{fp}%
+    \special{pa 583 540}%
+    \special{pa 633 540}%
+    \special{pa 633 790}%
+    \special{pa 533 790}%
+    \special{pa 533 540}%
+    \special{pa 583 540}%
+    \special{fp}%
+    \special{pa 583 790}%
+    \special{pa 583 1040}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.665in
+    \rlap{\kern 0.633in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$R$\hbox{$\:$}\hss}}%
+    \special{pa 583 290}%
+    \special{pa 583 490}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 608 390}%
+    \special{pa 583 490}%
+    \special{pa 558 390}%
+    \special{pa 608 390}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.440in
+    \rlap{\kern 0.583in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$i_R$\hbox{$\:$}\hss}}%
+    \special{pa 833 415}%
+    \special{pa 833 915}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 858 815}%
+    \special{pa 833 915}%
+    \special{pa 808 815}%
+    \special{pa 858 815}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.665in
+    \rlap{\kern 0.983in\lower\graphtemp\hbox to 0pt{\hss u(t)\hss}}%
+    \special{pa 583 1040}%
+    \special{pa 333 1040}%
+    \special{fp}%
+    \special{pa 333 1040}%
+    \special{pa 333 1290}%
+    \special{fp}%
+    \special{ar 333 1310 20 20 0 6.28319}%
+    \hbox{\vrule depth1.330in width0pt height 0pt}%
+    \kern 0.983in
+  }%
+}%

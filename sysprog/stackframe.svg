@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.37"
+   width="210mm"
+   height="297mm"
+   sodipodi:docname="stackframe.svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   sodipodi:docbase="/home/ppletscher/ETH/3rd/sysprog/zusammenfassung">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.99486798"
+     inkscape:cx="238.673826"
+     inkscape:cy="565.805439"
+     inkscape:window-width="1211"
+     inkscape:window-height="888"
+     showgrid="true"
+     inkscape:window-x="0"
+     inkscape:window-y="25" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 24.554817 L 186.50202 750.10029 "
+     id="path574" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 363.66749 24.554817 L 363.66749 750.10029 "
+     id="path575" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:helvetica;font-style:normal;font-weight:normal;font-size:12px;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;"
+     x="258.998109"
+     y="35.0784416"
+     id="text576"><tspan
+       id="tspan577">0xF..F</tspan></text>
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="265.429216"
+     y="743.741394"
+     id="text579"
+     sodipodi:linespacing="100%"><tspan
+       x="265.429230"
+       y="743.741394"
+       sodipodi:role="line"
+       id="tspan582">0x0</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 166.62375 L 363.6497 166.62375 "
+     id="path584" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 219.7734 L 363.6497 219.7734 "
+     id="path585" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="278.876054"
+     y="186.501694"
+     id="text586"
+     sodipodi:linespacing="100%"><tspan
+       x="278.876068"
+       y="186.501694"
+       sodipodi:role="line"
+       id="tspan602">%i0-%i5 in callee</tspan><tspan
+       x="278.876068"
+       y="198.501694"
+       sodipodi:role="line"
+       id="tspan604">%o0-%o5 in caller</tspan><tspan
+       x="278.876068"
+       y="210.501694"
+       sodipodi:role="line"
+       id="tspan606">(24 bytes)</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 237.48995 L 363.6497 237.48995 "
+     id="path596" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="217.488245"
+     y="231.519455"
+     id="text597"
+     sodipodi:linespacing="100%"><tspan
+       x="217.488251"
+       y="231.519455"
+       sodipodi:role="line"
+       id="tspan608">struct pointer (4 bytes)</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 228.59621 L 397.55916 228.59621 "
+     id="path601" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="412.370012"
+     y="231.519455"
+     id="text610"
+     sodipodi:linespacing="100%"><tspan
+       x="412.370026"
+       y="231.519455"
+       sodipodi:role="line"
+       id="tspan613">callee kann hier struct zurückgeben</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 326.0727 L 363.6497 326.0727 "
+     id="path615" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="282.968584"
+     y="280.470245"
+     id="text616"
+     sodipodi:linespacing="100%"><tspan
+       x="282.968597"
+       y="280.470245"
+       sodipodi:role="line"
+       id="tspan625">Register Window</tspan><tspan
+       x="282.968597"
+       y="292.470245"
+       sodipodi:role="line"
+       id="tspan627">(64 bytes)</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 267.57262 L 397.55916 267.57262 "
+     id="path629" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="412.370012"
+     y="270.495819"
+     id="text630"
+     sodipodi:linespacing="100%"><tspan
+       x="412.370026"
+       y="270.495819"
+       sodipodi:role="line"
+       id="tspan659">caller's Register können hier</tspan><tspan
+       x="412.370026"
+       y="282.495819"
+       sodipodi:role="line"
+       id="tspan661">gespeichert werden,falls</tspan><tspan
+       x="412.370026"
+       y="294.495819"
+       sodipodi:role="line"
+       id="tspan663">ein Register Window Overflow</tspan><tspan
+       x="412.370026"
+       y="306.495819"
+       sodipodi:role="line"
+       id="tspan665">auftritt (welcher nachdem save</tspan><tspan
+       x="412.370026"
+       y="318.495819"
+       sodipodi:role="line"
+       id="tspan667">im callee auftreten würde)</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 171.47834 326.01953 L 186.6791 326.01953 "
+     id="path669" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:helvetica;font-style:normal;font-weight:normal;font-size:12px;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;"
+     x="146.746103"
+     y="325.487823"
+     id="text670"><tspan
+       id="tspan671">%fp</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 379.22235 L 363.6497 379.22235 "
+     id="path673" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="277.122118"
+     y="349.033264"
+     id="text674"
+     sodipodi:linespacing="100%"><tspan
+       x="277.122131"
+       y="349.033264"
+       sodipodi:role="line"
+       id="tspan679">Lokale Variablen</tspan><tspan
+       x="277.122131"
+       y="361.033264"
+       sodipodi:role="line"
+       id="tspan681">von callee</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 107.8228 379.20459 L 188.5039 379.20459 "
+     id="path683" />
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 107.8228 166.60599 L 188.5039 166.60599 "
+     id="path684" />
+  <path
+     style="font-size:12;fill-rule:evenodd;stroke:#000000;stroke-width:0.104396pt;"
+     d="M 109.91341 180.1477 L 121.0217 180.1477 L 115.52859 167.20837 L 109.91341 180.1477 z "
+     id="path685" />
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 115.62698 177.26255 L 115.62698 371.36499 "
+     id="path686" />
+  <path
+     style="font-size:12;fill-rule:evenodd;stroke:#000000;stroke-width:0.104396pt;"
+     d="M 121.02169 365.63372 L 109.9134 365.63372 L 115.40651 378.57305 L 121.02169 365.63372 z "
+     id="path687" />
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 345.52544 L 397.55916 345.52544 "
+     id="path688" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="411.200731"
+     y="350.167023"
+     id="text689"
+     sodipodi:linespacing="100%"><tspan
+       x="411.200745"
+       y="350.167023"
+       sodipodi:role="line"
+       id="tspan811">werden relativ zum %fp addressiert,</tspan><tspan
+       x="411.200745"
+       y="362.167023"
+       sodipodi:role="line"
+       id="tspan813">also sind die Offsets negativ</tspan></text>
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="66.2068382"
+     y="260.964355"
+     id="text704"
+     sodipodi:linespacing="100%"><tspan
+       x="66.2068405"
+       y="260.964355"
+       sodipodi:role="line"
+       id="tspan709">Caller frame</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 396.9389 L 363.6497 396.9389 "
+     id="path711" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="206.379976"
+     y="390.968170"
+     id="text712"
+     sodipodi:linespacing="100%"><tspan
+       x="206.379974"
+       y="390.968170"
+       sodipodi:role="line"
+       id="tspan715">mögliches Padding (4 byte)</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 388.04516 L 397.55916 388.04516 "
+     id="path717" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="411.200731"
+     y="389.143372"
+     id="text718"
+     sodipodi:linespacing="100%"><tspan
+       x="411.200745"
+       y="389.143372"
+       sodipodi:role="line"
+       id="tspan723">wird möglicherweise benötigt,</tspan><tspan
+       x="411.200745"
+       y="401.143372"
+       sodipodi:role="line"
+       id="tspan725">da %sp double aligniert sein muss</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 432.372 L 363.6497 432.372 "
+     id="path727" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="213.980371"
+     y="418.694519"
+     id="text728"
+     sodipodi:linespacing="100%"><tspan
+       x="213.980377"
+       y="418.694519"
+       sodipodi:role="line"
+       id="tspan731">zusätzliche Parameter</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 416.39164 L 397.55916 416.39164 "
+     id="path733" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:helvetica;font-style:normal;font-weight:normal;font-size:12px;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;"
+     x="413.344591"
+     y="422.113983"
+     id="text734"><tspan
+       id="tspan735">für callee-callee</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 481.97834 L 363.6497 481.97834 "
+     id="path737" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="278.876054"
+     y="448.706238"
+     id="text738"
+     sodipodi:linespacing="100%"><tspan
+       x="278.876068"
+       y="448.706238"
+       sodipodi:role="line"
+       id="tspan775">%i0-%i5 in callee-callee</tspan><tspan
+       x="278.876068"
+       y="460.706238"
+       sodipodi:role="line"
+       id="tspan777">%o0-%o5 in calle</tspan><tspan
+       x="278.876068"
+       y="472.706238"
+       sodipodi:role="line"
+       id="tspan779">(24 bytes)</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 499.69489 L 363.6497 499.69489 "
+     id="path745" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="217.488245"
+     y="493.723999"
+     id="text746"
+     sodipodi:linespacing="100%"><tspan
+       x="217.488251"
+       y="493.723999"
+       sodipodi:role="line"
+       id="tspan747">struct pointer (4 bytes)</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 490.80115 L 397.55916 490.80115 "
+     id="path749" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="412.370012"
+     y="493.723999"
+     id="text750"
+     sodipodi:linespacing="100%"><tspan
+       x="412.370026"
+       y="493.723999"
+       sodipodi:role="line"
+       id="tspan781">callee-callee kann hier struct zurückgeben</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 588.27764 L 363.6497 588.27764 "
+     id="path753" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="282.968584"
+     y="542.675049"
+     id="text754"
+     sodipodi:linespacing="100%"><tspan
+       x="282.968597"
+       y="542.675049"
+       sodipodi:role="line"
+       id="tspan755">Register Window</tspan><tspan
+       x="282.968597"
+       y="554.675049"
+       sodipodi:role="line"
+       id="tspan757">(64 bytes)</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 529.77756 L 397.55916 529.77756 "
+     id="path759" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="412.370012"
+     y="532.700500"
+     id="text760"
+     sodipodi:linespacing="100%"><tspan
+       x="412.370026"
+       y="532.700500"
+       sodipodi:role="line"
+       id="tspan783">callee's Register können hier</tspan><tspan
+       x="412.370026"
+       y="544.700500"
+       sodipodi:role="line"
+       id="tspan785">gespeichert werden,falls</tspan><tspan
+       x="412.370026"
+       y="556.700500"
+       sodipodi:role="line"
+       id="tspan787">ein Register Window Overflow</tspan><tspan
+       x="412.370026"
+       y="568.700500"
+       sodipodi:role="line"
+       id="tspan789">auftritt (welcher nachdem save</tspan><tspan
+       x="412.370026"
+       y="580.700500"
+       sodipodi:role="line"
+       id="tspan791">im callee-callee auftreten würde)</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 171.47834 588.22447 L 186.6791 588.22447 "
+     id="path771" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="146.746103"
+     y="587.692993"
+     id="text772"
+     sodipodi:linespacing="100%"><tspan
+       x="146.746109"
+       y="587.692993"
+       sodipodi:role="line"
+       id="tspan793">%sp</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 362.94101 326.05494 L 663.44902 326.05494 "
+     id="path795" />
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 362.94101 588.25988 L 663.44902 588.25988 "
+     id="path796" />
+  <path
+     style="font-size:12;fill-rule:evenodd;stroke:#000000;stroke-width:0.104396pt;"
+     d="M 649.57694 339.5434 L 660.68523 339.5434 L 655.19212 326.60407 L 649.57694 339.5434 z "
+     id="path803" />
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.39249;"
+     d="M 655.29051 335.52439 L 655.29051 576.3985 "
+     id="path804" />
+  <path
+     style="font-size:12;fill-rule:evenodd;stroke:#000000;stroke-width:0.104396pt;"
+     d="M 660.68521 574.63576 L 649.57692 574.63576 L 655.07003 587.57509 L 660.68521 574.63576 z "
+     id="path805" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="693.567308"
+     y="439.865967"
+     id="text806"
+     sodipodi:linespacing="100%"><tspan
+       x="693.567322"
+       y="439.865967"
+       sodipodi:role="line"
+       id="tspan809">Stackframe</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 171.47834 432.31883 L 186.6791 432.31883 "
+     id="path815" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="124.016724"
+     y="431.786957"
+     id="text816"
+     sodipodi:linespacing="100%"><tspan
+       x="124.016724"
+       y="431.786957"
+       sodipodi:role="line"
+       id="tspan819">%sp+92</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 186.50202 131.19065 L 363.6497 131.19065 "
+     id="path821" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="213.980377"
+     y="152.946688"
+     id="text822"
+     sodipodi:linespacing="100%"><tspan
+       x="213.980377"
+       y="152.946686"
+       sodipodi:role="line"
+       id="tspan823">zusätzliche Parameter</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 357.80324 150.64339 L 397.55916 150.64339 "
+     id="path825" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="413.344604"
+     y="156.366153"
+     id="text826"
+     sodipodi:linespacing="100%"><tspan
+       x="413.344604"
+       y="156.366150"
+       sodipodi:role="line"
+       id="tspan829">für callee</tspan></text>
+  <path
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-dasharray:none;"
+     d="M 41.217521 301.08449 L 41.217521 495.18693 "
+     id="path718" />
+  <path
+     style="font-size:12;fill-rule:evenodd;stroke:#000000;stroke-width:0.104396pt;"
+     d="M 46.612228 489.45566 L 35.503947 489.45566 L 40.997051 502.39499 L 46.612228 489.45566 z "
+     id="path719" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="66.2068405"
+     y="416.675924"
+     id="text720"
+     sodipodi:linespacing="100%"><tspan
+       x="66.2068405"
+       y="416.675934"
+       sodipodi:role="line"
+       id="tspan724">kleiner</tspan></text>
+</svg>

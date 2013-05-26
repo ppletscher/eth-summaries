@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.37"
+   width="210mm"
+   height="297mm"
+   sodipodi:docname="stack.svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   sodipodi:docbase="/home/ppletscher/ETH/3rd/sysprog/zusammenfassung">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4.58300312"
+     inkscape:cx="55.3547472"
+     inkscape:cy="765.042335"
+     inkscape:window-width="1017"
+     inkscape:window-height="780"
+     showgrid="true"
+     inkscape:window-x="19"
+     inkscape:window-y="57" />
+  <rect
+     style="font-size:12;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;"
+     id="rect574"
+     width="88.8025589"
+     height="177.605118"
+     x="70.2822342"
+     y="42.2924767" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:helvetica;font-style:normal;font-weight:normal;font-size:12px;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;"
+     x="43.6889593"
+     y="45.6166375"
+     id="text575"><tspan
+       id="tspan576">%fp</tspan></text>
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="43.6889610"
+     y="222.781894"
+     id="text578"
+     sodipodi:linespacing="100%"><tspan
+       x="43.6889610"
+       y="222.781891"
+       sodipodi:role="line"
+       id="tspan581">%sp</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 70.282236 166.56504 L 159.08479 166.56504 "
+     id="path584" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:helvetica;font-style:normal;font-weight:normal;font-size:12px;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;"
+     x="92.1267145"
+     y="196.628464"
+     id="text585"><tspan
+       id="tspan586">Register</tspan></text>
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="22.4291164"
+     y="169.632324"
+     id="text588"
+     sodipodi:linespacing="100%"><tspan
+       x="22.4291172"
+       y="169.632324"
+       sodipodi:role="line"
+       id="tspan591">%sp+92</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 70.282236 131.13194 L 159.08479 131.13194 "
+     id="path593" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="114.446073"
+     y="147.240946"
+     id="text594"
+     sodipodi:linespacing="100%"><tspan
+       x="114.446075"
+       y="147.240952"
+       sodipodi:role="line"
+       id="tspan599">Funktions-</tspan><tspan
+       x="114.446075"
+       y="159.240952"
+       sodipodi:role="line"
+       id="tspan601">parameter</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 154.33599 151.03999 L 227.94239 98.328313 L 256.43519 98.328313 "
+     id="path603" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:helvetica;font-style:normal;font-weight:normal;font-size:12px;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;"
+     x="265.457910"
+     y="105.451513"
+     id="text604"><tspan
+       id="tspan605">immer 32 Bit Bereiche,</tspan><tspan
+       sodipodi:role="line"
+       id="tspan609"
+       x="265.457916"
+       y="117.451515">auch für short int und char</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 70.282236 113.41539 L 159.08479 113.41539 "
+     id="path611" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 154.33599 126.23682 L 227.94239 73.525164 L 256.43519 73.525164 "
+     id="path612" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="265.457916"
+     y="71.6622553"
+     id="text613"
+     sodipodi:linespacing="100%"><tspan
+       x="265.457916"
+       y="71.6622543"
+       sodipodi:role="line"
+       id="tspan620">möglicherweise</tspan><tspan
+       x="265.457916"
+       y="83.6622543"
+       sodipodi:role="line"
+       id="tspan622">4 Byte Padding</tspan></text>
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="114.446075"
+     y="76.3748600"
+     id="text624"
+     sodipodi:linespacing="100%"><tspan
+       x="114.446075"
+       y="76.3748627"
+       sodipodi:role="line"
+       id="tspan629">lokale</tspan><tspan
+       x="114.446075"
+       y="88.3748627"
+       sodipodi:role="line"
+       id="tspan631">Variablen</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 154.33599 80.173808 L 227.94239 27.462173 L 256.43519 27.462173 "
+     id="path633" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:start;writing-mode:lr;"
+     x="265.457916"
+     y="29.1425640"
+     id="text634"
+     sodipodi:linespacing="100%"><tspan
+       x="265.457916"
+       y="29.1425648"
+       sodipodi:role="line"
+       id="tspan641">werden relativ zum</tspan><tspan
+       x="265.457916"
+       y="41.1425648"
+       sodipodi:role="line"
+       id="tspan643">%fp addressiert</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.75;"
+     d="M 18.459414 68.432945 L 18.459414 139.66494 "
+     id="path618" />
+  <path
+     style="font-size:12;fill-rule:evenodd;stroke:#000000;stroke-width:0.126667pt;"
+     d="M 13.912741 134.91616 L 22.935461 134.91616 L 18.363951 143.99903 L 13.912741 134.91616 z "
+     id="path619" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:Bitstream Charter;font-style:normal;font-weight:normal;font-size:12;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;text-anchor:middle;writing-mode:lr;"
+     x="42.2138290"
+     y="103.359965"
+     id="text620"
+     sodipodi:linespacing="100%"><tspan
+       x="42.2138290"
+       y="103.359962"
+       sodipodi:role="line"
+       id="tspan626">kleiner</tspan></text>
+</svg>

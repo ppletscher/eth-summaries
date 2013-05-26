@@ -1,0 +1,49 @@
+% maschenmethode.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{pa 415 560}%
+    \special{pa 415 310}%
+    \special{pa 915 560}%
+    \special{pa 415 810}%
+    \special{pa 415 560}%
+    \special{fp}%
+    \special{pa 915 560}%
+    \special{pa 1165 560}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.435in
+    \rlap{\kern 0.415in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}{\small$+$}\hbox{$\:$}\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.685in
+    \rlap{\kern 0.415in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}{\small$-$}\hbox{$\:$}\hss}}%
+    \special{pa 415 435}%
+    \special{pa 40 435}%
+    \special{fp}%
+    \special{ar 20 435 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.285in
+    \rlap{\kern 0.300in\lower\graphtemp\hbox to 0pt{\hss nichtinvertierender Eingang}}%
+    \special{pa 415 685}%
+    \special{pa 40 685}%
+    \special{fp}%
+    \special{ar 20 685 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.835in
+    \rlap{\kern 0.300in\lower\graphtemp\hbox to 0pt{\hss invertierender Eingang}}%
+    \special{ar 1185 560 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.560in
+    \rlap{\kern 1.245in\lower\graphtemp\hbox to 0pt{Ausgang\hss}}%
+    \special{pa 665 435}%
+    \special{pa 665 60}%
+    \special{fp}%
+    \special{ar 665 40 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 0.000in
+    \rlap{\kern 0.725in\lower\graphtemp\hbox to 0pt{positive Betriebsspannung\hss}}%
+    \special{pa 665 685}%
+    \special{pa 665 1060}%
+    \special{fp}%
+    \special{ar 665 1080 20 20 0 6.28319}%
+    \graphtemp=.5ex\advance\graphtemp by 1.080in
+    \rlap{\kern 0.725in\lower\graphtemp\hbox to 0pt{negative Betriebsspannung\hss}}%
+    \hbox{\vrule depth1.100in width0pt height 0pt}%
+    \kern 1.245in
+  }%
+}%

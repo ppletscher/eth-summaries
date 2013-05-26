@@ -1,0 +1,2236 @@
+% Digitaltechnik summary
+% written during my studies at ETH Zuerich
+% based on the lecture of Prof. Biere
+% Copyright (C) 2004  Patrick Pletscher
+                                                                                
+\documentclass[german, 10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage[german]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage[bf]{caption2}
+\usepackage{multirow}
+%\usepackage{floatflt}
+\usepackage{pstricks}
+\usepackage{graphicx}
+                                                                                
+% text below figures
+\renewcommand{\captionfont}{\small\itshape}
+                                                                                
+% theorems, definitions
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[theorem]
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+                                                                                
+% dimensions of document
+\textwidth = 19 cm
+\textheight = 25 cm
+\oddsidemargin = -1.5 cm
+\evensidemargin = -1.5 cm
+\hoffset = 0.0 cm
+\marginparwidth = 0.0 cm
+\topmargin = -1.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0 cm
+
+% depth of toc
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+% informations about the document
+\title{Digitaltechnik - Zusammenfassung}
+\author{Patrick Pletscher}
+
+\begin{document}
+
+\maketitle
+
+\section{VHDL}
+
+\subsection{VHDL Entities und Architectures}
+
+VHDL Modelle bestehen aus mehreren Entities, jede Entity hat eine \texttt{entity} Deklaration und ein oder mehrere \texttt{architecture} Implementierungen. Implementierungen k"onnen keinen Zustand haben wie Objekte.
+
+\subsubsection{Einfaches Beispiel}
+
+\begin{verbatim}
+ entity And2 is
+   port (x, y: in bit; z: out bit);
+ end entity And2;
+
+ architecture ex1 of And2 is
+ begin
+   z <= x and y;
+ end architecture ex1; 
+\end{verbatim}
+
+\subsubsection{Erl"auterungen}
+
+\begin{itemize}
+	\item \texttt{bit} einfacher Datentyp mit Konstanten \texttt{'0'} und \texttt{'1'}. Characters!
+	\item mit \texttt{<=} wird zugewiesen
+	\item \texttt{in} Eingang, \texttt{out} Ausgang, \texttt{inout} bidirektionale Ports
+	\item \texttt{not} hat h"ochste Priorit"at
+	\item \texttt{and, or, ...} haben \textit{dieselbe} Priorit"at
+\end{itemize}
+
+\subsection{Bezeichner}
+
+Es wird nicht zwischen Gross- und Kleinschreibung unterschieden. Es gibt einen sogenannten Escape-Mechanismus: \verb#\$ein fancy%Bezeichner\#. Zeilenweise Kommentare beginnen mit \texttt{--}.
+
+\subsection{Kombinatorische RTL Beschreibung}
+
+RTL ist eine Abk"urzung f"ur register transfer level, der VHDL Code beschreibt also wie Daten von einem Register zum n"achsten "ubergeben werden, die Transformation der Daten wird mit der kombinatorischen Logik zwischen den Registern gemacht, man kann RTL Code aber auch ohne Register benutzen und pure kombinatorische Logik damit abbilden.
+
+\begin{verbatim}
+ entity combinational_function is
+   port (a, b, c: in bit; z: out bit);
+ end entity combinational_function;
+
+ architecture expression of combinational_function is
+ begin
+   z <= (not a and b) or (a and c);
+ end architecture expression;
+\end{verbatim}
+
+\subsection{Netzlisten-Implementierung}
+
+Implementierung von \texttt{combinational\_function}.
+
+\subsubsection{Beschreibung Bibliotheks-Schaltkreise}
+
+\begin{verbatim}
+ entity Or2 is
+   port (x, y: in bit; z: out bit);
+ end entity Or2;
+
+ architecture ex1 of Or2 is
+ begin
+   z <= x or y;
+ end architecture ex1;
+
+ entity Not1 is
+   port (x: in bit; z: out bit);
+ end entity Not1;
+
+ architecture ex1 of Not1 is
+ begin
+   z <= not x;
+ end architecture ex1;
+\end{verbatim}
+
+\subsubsection{Manuelle Synthese - "Ubersetzung in Netzliste}
+
+\begin{verbatim}
+ architecture netlist of combinational_function is
+   component And2 is
+     port (x, y: in bit; z: out bit);
+   end component And2;
+   component Or2 is
+     port (x, y: in bit; z: out bit);
+   end component Or2;
+   component Not1 is
+     port (x: in bit; z: out bit);
+   end component Not1;
+   signal p, q, r: bit;
+ begin
+   g1 : Not1 port map (a, p);
+   g2 : And2 port map (p, b, q);
+   g3 : And2 port map (a, c, r);
+   g4 : Or2 port map (q, r, z);
+ end architecture netlist;
+\end{verbatim}
+
+Bemerkung: Das Ganze ist kompilierbar, ohne dass die components definiert sind, auch muss keine Auswahl der Architecture getroffen werden.
+
+\subsubsection{Erkl"arungen}
+
+\begin{itemize}
+	\item verwendete externe Komponenten werden mit \texttt{component} deklariert
+	\item interne Signale (Dr"ahte) werden durch \texttt{signal} erzeugt
+	\item Zusammenst"opseln durch Instanzierung \texttt{g1 : ...}
+	\item Verbinden der Ports und Signale durch \texttt{map}
+	\item man kann auch eine explizite Signalzuordnung verwenden:\\
+		\verb#g2: And2 port map (z => q, x => p, y => b);#
+\end{itemize}
+
+
+\subsubsection{Instanzierung ohne Komponenten-Deklaration}
+
+\begin{verbatim}
+ architecture direct of combinational_function is
+   signal p, q, r: bit;
+ begin
+   g1 : entity work.Not1(ex1) port map (a, p);
+   g2 : entity work.And2(ex1) port map (p, b, q);
+   g3 : entity work.And2(ex1) port map (a, c, r);
+   g4 : entity work.Or2(ex1) port map (q, r, z);
+ end architecture direct;
+\end{verbatim}
+
+\texttt{work.Or2(ex1)} ist Pfadangabe f"ur die Entity \texttt{Or2} und als Architecture wird \texttt{ex1} gew"ahlt.
+
+\subsection{Wie w"ahlt man die Architektur aus?}
+
+Zuletzt verwendete Architektur wird verwendet.\\
+
+Man kann die Architektur selber explizit Instanzieren, \texttt{work.Or2(ex1)} oder bei Variablendefinitionen usw. \texttt{for all: And2 use entity work.And2(ex1);}.\\
+
+Oder per Konfiguration:
+\begin{verbatim}
+ configuration use_expr of And2_tb is
+   for assignment_only
+     for g1 : And2
+       use entity work.And2(ex1);
+     end for;
+   end for;
+ end configuration use_expr;
+\end{verbatim}
+
+\subsection{Zuweisung von Signalen}
+
+\begin{verbatim}
+ z <= x and y;
+\end{verbatim}
+
+\subsubsection{Zuweisung mit Delay}
+
+\begin{verbatim}
+ z <= x after 5 ns;
+\end{verbatim}
+
+\subsection{Generics}
+
+Deklaration:
+\begin{verbatim}
+ entity And2 is
+   generic (delay: delay_length);
+   port (x,y: in bit; z: out bit);
+ end entity And2;
+
+ architecture ex2 of And2 is
+ begin
+   z <= x and y after delay;
+ end architecture ex2;
+\end{verbatim}
+
+Instanz:
+\begin{verbatim}
+ g2: And2 generic map (delay => 5 ns)
+  port map (p, b, q);
+\end{verbatim}
+
+\begin{itemize}
+	\item Generische Parameter: Konstanten bekannt zur Kompilierzeit.
+	\item Defaultwerte: \texttt{generic (delay: delay\_length := 5 ns);}. Defaultwerte m"ussen nicht durch \texttt{map} verbunden werden.
+	\item \texttt{open} steht f"ur den Defaultwert oder einen unverbunden Ausgang
+	\item Konstanten k"onnen an Eing"ange gelegt werden
+\end{itemize}
+
+\subsection{Testbench}
+
+\begin{verbatim}
+ entity And2_tb is
+ end entity And2_tb;
+
+ architecture assignment_only of And2_tb is
+   signal a, b, o1, o2, check: bit;
+   constant period: time := 50 ns;
+ begin
+   g1: entity work.And2(ex1)
+    port map (a, b, o1);
+   g2: entity work.universal(expr)
+    port map (a, b, '0',o2, open);
+   check <= o1 xor o2;
+   a <= '0', '1' after period,
+    '0' after 2*period, '1' after 3*period;
+   b <= '0', '1' after 2*period,
+    '0' after 4*period;
+ end architecture assignment only;
+\end{verbatim}
+
+\texttt{check} ist auf 1 gdw. \texttt{g1} und \texttt{g2} dieselbe Ausgabe produzieren.
+
+\subsubsection{Testbench mit Prozessen}
+
+Man kann auch einen Prozess zur Erzeugung der Eingabe-Belegungen verwenden:
+
+\begin{verbatim}
+ run: process
+ begin
+   a <= '0'; b <= '0'; wait for period;
+   a <= '0'; b <= '1'; wait for period;
+   a <= '1'; b <= '0'; wait for period;
+   a <= '1'; b <= '1'; wait for period;
+   a <= '0'; b <= '0'; wait for period;
+   wait;
+ end process run;
+\end{verbatim}
+
+\subsection{Vektoren}
+
+\begin{verbatim}
+	type bit_vector is array (natural range <>) of bit;
+\end{verbatim}
+
+\texttt{natural} sind die nat"urlichen Zahlen, \verb#range <># ist eine undefinierte Index-Menge.
+
+\begin{verbatim}
+ entity GrayEncoder is
+   port (binary: in  bit_vector (2 downto 0);
+         gray  : out bit_vector (2 downto 0)); 
+ end entity GrayEncoder;
+
+ architecture when_else of GrayEncoder is
+ begin
+   gray <= "000" when binary = "000" else
+           --...
+           "100";
+ end architecture when_else;
+\end{verbatim}
+
+Arrays sind steigende(\texttt{to}) oder fallende (\texttt{downto}) Indizes. Einschr"ankung auf Unterbereiche: z.B. \texttt{binary (2 downto 1)}.\\
+
+Man kann das Selbe auch mit \texttt{with-select}machen:
+\begin{verbatim}
+ --..
+ gray <= "000" when "000",
+         --...
+         "100" when others;
+ --..
+\end{verbatim}
+
+Es m"ussen alle F"alle explizit behandelt werden.
+
+\section{Digitaltechnik}
+
+EDA = Electronic Design Automation\\
+PCB = Printed Circuit Boards. Zusammenl"oten von kleinen ICs\\
+VLSI = Very Large Scale Integration
+
+\subsection{PLA}
+
+Jemeils normales und negiertes Eingangssignal, welche in einer UND-Matrix verundet werden k"onnen (horizontal) und eine ODER-Matrix, welche vertikal die Signale verodert und auf ein Ausgangssignal gibt.\\
+Man muss also seine logische Formel in eine DNF bringen.
+
+\subsection{Disktretisierung}
+
+Jede gr"ossere Wertemenge $W$ l"asst sich boolesch kodieren durch ein $\gamma$:
+\begin{displaymath}
+	\gamma : W \rightarrow 2^n \quad \mbox{mit } n=\lceil \log_2 |W| \rceil
+\end{displaymath}
+
+\subsection{Einerkomplement}
+
+Die $(n+1)$-stellige Bin"arzahl $s_nd_{n-1}\cdots d_0$ im Einerkompliment kodiert
+\begin{displaymath}
+	\mbox{die positive Zahl} \quad \sum^{n-1}_{i=0} d_i \cdotp 2^i \quad \mbox{falls } s_n=0
+\end{displaymath}
+\begin{displaymath}
+	\mbox{die negative Zahl} \quad -\sum^{n-1}_{i=0} (1-d_i) \cdotp 2^i \quad \mbox{falls } s_n=1
+\end{displaymath}
+
+Trick: Bits Umdrehen, als Integer Negieren
+
+\subsection{Zweierkomplement}
+
+Die (n+1)-stellige Bin"arzahl $s_n d_{n-1}\cdots d_0$ im Zweierkomplement kodiert
+\begin{displaymath}
+	\mbox{die positive Zahl} \quad \sum^{n-1}_{i=0} d_i \cdotp 2^i \quad \mbox{falls } s_n=0
+\end{displaymath}
+\begin{displaymath}
+	\mbox{die negative Zahl} \quad -(1+\sum^{n-1}_{i=0} (1-d_i) \cdotp 2^i) \quad \mbox{falls } s_n=1
+\end{displaymath}
+
+Trick: Bits Umdrehen, Eins Hinzuz"ahlen, als Integer Negieren.
+
+\subsection{Festkommazahlen}
+
+Genauigkeit $m$ der Nachkommastellen wird fixiert, z.B. $m=2$ Bin"ar-Stellen.
+
+\subsection{Fliesskommazahlen f"ur 32 Bit}
+
+\small
+\begin{verbatim}
+ +-+-+-+-+-+-+-+-+-+-+-+-+
+ | S |    E    |    F    |
+ +-+-+-+-+-+-+-+-+-+-+-+-+
+ 0   1         9        31
+\end{verbatim}
+\normalsize
+                                                                                                   
+S: Vorzeichen\\
+E: Exponent 8 Bits\\
+F: Mantisse 23 Bits\\
+                                                                                                   
+Die Zahl ist:
+\begin{displaymath}
+        V = (-1)^S \cdotp 1.F \cdotp 2^{E-127} \quad \mbox{falls } 0 < E < 255
+\end{displaymath}
+                                                                                                   
+Ausnahmen:\\\\
+\begin{tabular}{l l}
+        $E=255, F\neq 0$ &              $V=NaN$ (not a number)\\
+        $E=255, F=0, S=0$ &             $V=Inf (=\infty)$\\
+        $E=255, F=0, S=1$ &             $V=Inf (=-\infty)$\\
+        $E=0, F\neq 0$ &                $V=(-1)^{s}\cdotp 0.F\cdotp 2^{-126}$\\
+        &                               (nicht normalisierte Zahl)\\
+        $E=0, F=0, S=1$ &               $V=-0$\\
+        $E=0, F=0, S=0$ &               $V=0$
+\end{tabular}
+
+\subsection{Aufz"ahlungstypen}
+
+\subsubsection{One-Hot Encoding}
+
+$m$ Werte werden durch $m$ Bits kodiert
+
+\subsubsection{Gray-Codes}
+
+Aufeinanderfolgende Kombinatioen unterscheiden sich an einer Bitposition.\\
+
+Ein Gray-Code f"ur $p$ Bits kann in einen Gray-Code f"ur $p+1$ Bits erweitert werden, indem der Code f"ur $p$ Bits gespiegelt angeh"angt wird. Vor die Codes der ersten H"alfte wird $0$ gestellt, vor die der zweiten H"alfte $1$.
+
+\begin{verbatim}
+procedure gray(i, p)
+begin
+  if p = 1 then output "i"
+  elsif i < p**(p-1) then
+    output "0";
+    gray(i, p-1)
+  else
+    output "1";
+    gray((2**p-1)-i, p-1)
+  end
+end gray
+\end{verbatim}
+
+\section{CMOS}
+
+Hierbei wird mit Spannungspegeln gearbeitet.
+
+\subsection{Schaltbilder}
+
+\begin{figure}[hbt]
+ \input Figs/schaltbilder
+ \centerline{\box\graph}
+ \caption{CMOS Schaltbilder}
+ \label{schaltbilder}
+\end{figure}
+
+NMOS (= pull-down) muss immer auf GND liegen und PMOS (= pull-up) immer auf VDD. NMOS schaltet das Signal Source nach Drain durch, wenn an Gate eine logische 1 anliegt, welche durch VDD repr"asentiert wird. PMOS schaltet das Signal Source nach Drain, wenn an Gate eine logische 0 anliegt, welche durch GND repr"asentiert wird.
+
+\pagebreak
+\subsection{Inverter}
+
+\begin{figure}[hbt]
+ \input Figs/cmos_inverter
+ \centerline{\box\graph}
+ \caption{CMOS Inverter}
+ \label{cmos_inverter}
+\end{figure}
+
+
+\subsection{NOR}
+
+Ausgang 1 gdw. beide Eing"ange 0.
+
+\begin{figure}[hbt]
+ \input Figs/cmos_nor
+ \centerline{\box\graph}
+ \caption{CMOS NOR}
+ \label{cmos_nor}
+\end{figure}
+
+\subsection{NAND}
+
+\begin{figure}[hbt]
+ \input Figs/cmos_nand
+ \centerline{\box\graph}
+ \caption{CMOS NAND}
+ \label{cmos_nand}
+\end{figure}
+
+\pagebreak
+\subsection{Threestate-Buffer mit Transmission-Gate}
+
+3 logische Ausgabewerte: 0, 1, oder gar kein Signal (hochohmig).\\
+in wird negiert durchgeleitet zu out gdw. en auf 1 liegt, sonst ist out hochohmig.
+
+\begin{figure}[hbt]
+ \input Figs/cmos_threestate
+ \centerline{\box\graph}
+ \caption{Threestate Buffer}
+ \label{cmos_threestate}
+\end{figure}
+
+
+\subsection{Multiplexer}
+
+\verb#out = if z then y else x# oder $(z \land y) \lor (\lnot z \land x)$.
+
+\begin{figure}[hbt]
+ \input Figs/cmos_multiplexer
+ \centerline{\box\graph}
+ \caption{Multiplexer}
+ \label{cmos_multiplexer}
+\end{figure}
+
+\subsection{St"orabstand}
+
+Der Transistor garantiert, dass seine Ausgangsspannung sehr nahe bei VDD oder GND ist. Er akzeptiert aber als Eingangsspannungen auch viel gr"ossere Differenzen von GND und VDD, somit k"onnen St"orungen usw. abgefangen werden.
+
+\section{Kombinatorische Schaltungen}
+
+\subsection{Gatter}
+
+\small
+\begin{tabular}{cccc}
+	Bezeichnung &		Boolesche &				Algebraische &				Traditionelles \\
+	(VHDL) &		Logik &					Schreibweise &				Schaltbild\\
+	&			&					&					\multirow{3}{14mm}{\input{Figs/or_gatter}\box\graph}\\
+	Disjunktion &		\multirow{2}{14mm}{$x\lor y$}&		\multirow{2}{14mm}{$x+y$} &		\\
+	(\texttt{or}) \\
+	\\
+	Negierte&		&					&					\multirow{3}{14mm}{\input{Figs/nor_gatter}\box\graph}\\
+	Disjunktion &		\multirow{2}{14mm}{$\lnot(x\lor y)$}&	\multirow{2}{14mm}{$\overline{x+y}$} &	\\
+	(\texttt{nor}) \\
+	\\
+	&			&					&					\multirow{3}{14mm}{\input{Figs/and_gatter}\box\graph}\\
+	Konjunktion &		\multirow{2}{14mm}{$x\land y$}&		\multirow{2}{14mm}{$x+y$} &	\\
+	(\texttt{and}) \\
+	\\
+	Negierte&			&					&					\multirow{3}{14mm}{\input{Figs/nand_gatter}\box\graph}\\
+	Konjunktion &		\multirow{2}{14mm}{$\lnot(x\land y)$}&	\multirow{2}{14mm}{$\overline{x\cdotp y}$} &	\\
+	(\texttt{nand}) \\
+	\\
+	&			&					&					\multirow{3}{14mm}{\input{Figs/xor_gatter}\box\graph}\\
+	Exklusiv-Oder &		\multirow{2}{14mm}{$x \not \leftrightarrow y$}&	\multirow{2}{14mm}{$x\oplus y$} &	\\
+	(\texttt{xor}) \\
+	\\
+	&			&					&					\multirow{3}{14mm}{\input{Figs/xnor_gatter}\box\graph}\\
+	"Aquivalenz &		\multirow{2}{14mm}{$x \leftrightarrow y$}&	\multirow{2}{14mm}{$\overline{x\oplus y}$} &	\\
+	(\texttt{xnor}) \\
+	\\
+	&			&					&					\multirow{3}{14mm}{\input{Figs/implikation_gatter}\box\graph}\\
+	Implikation &		\multirow{2}{14mm}{$x \rightarrow y$}&	&					\\
+	(N/A) \\
+	\\
+	&			&					&					\multirow{3}{14mm}{\input{Figs/not_gatter}\box\graph}\\
+	Negation &		\multirow{2}{14mm}{$\lnot x$}&		\multirow{2}{14mm}{$\overline{x}$} &	\\
+	(\texttt{not}) \\
+\end{tabular}
+
+\normalsize
+
+\subsection{Rechenregeln der Booleschen Algebra}
+
+\scriptsize
+\begin{tabular}{cc}
+	Konjunktive &			Disjunktive \\
+	Formulierung &			Formulierung \\
+	\\
+	$x\land y \equiv y \land x$ &	$x \lor y \equiv y \lor x$\\
+	$x \land (y \land z)\equiv (x \land y)\land z$ &	$x \lor(y\lor z)\equiv (x\lor y) \lor z$\\
+	$x \land(y \lor z) \equiv (x \land y) \lor (x \land z)$ &	$x \lor (y \land z) \equiv (x \lor y) \land (x \lor z)$\\
+	$\lnot(x\land y)\equiv \lnot x \lor \lnot y$ &		$\lnot(x\lor y) \equiv \lnot x \land \lnot y$\\
+	$x \land x \equiv x$ &					$x \lor x \equiv x$\\
+	$x \land 0 \equiv 0$ &					$x \lor 1 \equiv 1$\\
+	$x\land 1\equiv x$ &					$x \lor 0 \equiv x$\\
+	\multicolumn{2}{c}{$\lnot(\lnot x)\equiv x$}
+\end{tabular}
+\normalsize
+
+\begin{theorem}[Shannonsche Expansion]
+Seien $e,f$ Boolesche Ausdr"ucke, $x$ Variable, $e[f/x]$ Substitution von $x$ durch $f$ in $e$.
+\begin{displaymath}
+	e \equiv x \land e[1/x] \lor \lnot x \land e[0/x]
+\end{displaymath}
+\end{theorem}
+
+\begin{description}
+	\item[Abschw"achung] $x\cdotp y\equiv x, \quad \mbox{falls } x\Rightarrow y\quad ($y$\mbox{ schw"acher als }$x$)$
+	\item[Verst"arkung] $x+y \equiv x, \quad \mbox{falls } y\Rightarrow x \quad (y \mbox{ st"arker als }$x$)$
+	\item[Konsensus] (Fallunterscheidung und Abschw"achung)
+		\begin{displaymath}
+			x\cdotp y + \overline{x} \cdotp z + y \cdotp z \equiv x \cdotp y + \overline{x}\cdotp z
+		\end{displaymath}
+\end{description}
+
+\subsection{Disjunkte Normalform (DNF)}
+
+Eine DNF ist eine Disjunktion einer Konjuktion von Literalen.\\
+
+Ein \textit{Literal} ist eine negierte oder unnegierte Variable, ein \textit{Produktterm} ist eine Konjunktion von Literalen, man bezeichnet einen Produktterm auch als \textit{Monom}, ein \textit{Minterm} ist ein maximaler Produktterm.
+
+\subsection{Karnaugh Diagramme}
+
+Man w"ahlt eine ''Reihenfolge'' der Variablen und codiert sie bin"ar.\\
+
+\usekomafont{descriptionlabel} Beispiel:
+
+\normalfont
+\begin{tabular}{cc}
+
+\begin{minipage}{4cm}
+\setlength{\unitlength}{3mm}
+\begin{picture}(8,8)
+	\multiput(2,2)(0,2){3}{\line(1,0){4}}
+	\multiput(2,2)(2,0){3}{\line(0,1){4}}
+	
+	\put(2.8,2.5){$0$}
+	\put(4.8,2.5){$1$}
+	\put(2.8,4.5){$0$}
+	\put(4.8,4.5){$0$}
+	
+	\put(3.5,2.1){\tiny 2}
+	\put(5.5,2.1){\tiny 3}
+	\put(3.5,4.1){\tiny 0}
+	\put(5.5,4.1){\tiny 1}
+
+	\put(1.5,2){\line(0,1){2}}
+	\put(0.6,2.6){c}
+	
+	\put(4,6.5){\line(1,0){2}}
+	\put(4.8,6.8){d}
+\end{picture}
+\end{minipage}
+&
+\begin{minipage}{4cm}
+\begin{tabular}{c|c|c|c}
+	Index & 	c &		d &	c and d\\\hline
+	0 &		0 &		0 &	0\\
+	1 &		0 &		1 &	0\\
+	2 &		1 &		0 &	0\\
+	3 &		1 &		1 &	1
+\end{tabular}
+\end{minipage}
+
+\end{tabular}
+
+% TODO bigger Karnaugh map
+
+\subsubsection{Minimierung von Karnaugh Diagrammen}
+
+\begin{enumerate}
+	\item Konstruiere und Bezeichne das Gitter
+	\item Trage Minterme von der Funktionstabelle ein oder von der DNF
+	\item Suche und Markiere maximale Bl"ocke
+	\item W"ahle minimale Listen von nicht-redundanten maximalen Bl"ocken
+	\item Generiere Produktterme aus Bl"ocken
+\end{enumerate}
+
+\subsubsection{Implikanten und Primimplikanten}
+
+Ein \textit{Implikant} einer DNF ist ein implizierter Produktterm, ein Block im Karnaugh-Diagramm. Ein \textit{Primimplikant} ist ein maximaler Implikant, entspricht einem maximalen Block, der in keine Richtung erweitert werden kann. Ein \textit{Kernimplikant} "uberdeckt ein sonst nicht "uberdeckten Minterm.
+
+\subsection{Abstrakte Minimierungsmethode}
+
+\begin{enumerate}
+	\item Generiere alle Primimplikanten durch einfache Konsusregel (diese Terme "uberdecken am Anfang nur einen Block in einem entsprechenden Karnaugh Diagramm)
+	\item Gib Kernimplikanten aus, da in jeder minimalen DNF enthalten
+	\item Entferne redundante Primimplikanten
+	\item W"ahle minimale "Uberdeckung aus restlichen Primimplikanten
+\end{enumerate}
+
+\subsubsection{Quine-McClusky-Verfahren}
+
+\begin{enumerate}
+	\item Funktionstabelle f"ur alle Kombinationen der Variablen
+	\item Uns interessieren nur die Zeilen, bei welchen der Funktionswert 1 ist. Diese Zeilen werden nach den Anzahl Einsen (in den Variablen) geordnet
+	\item Von allen m"oglichen Paaren von zwei aufeinanderfolgenden Anzahl Einsen nimmt man diese zusammen, f"ur welche man f"ur eine Variable ein ''don't care'' einf"ugen kann (Konsensus). Wiederhole solange bis nur noch Primimplikanten vorhanden sind.
+	\item Man w"ahlt danach alle Kernimplikanten aus und geht von den Gr"ossten Termen (bzgl. abgedeckten Bl"ocken) zu den kleinsten.
+\end{enumerate}
+
+\begin{labeling}{\usekomafont{descriptionlabel}Beispiel}
+	\item[\usekomafont{descriptionlabel}Beispiel]\textit{Schritt 1}\\
+		\small
+		\begin{tabular}{ccccccc}
+			Minterme &	&	&	&	&	Anzahl &	\\
+			Indizes &	a &	b &	c&	d&	Einsen &	Primimpl.\\ \hline
+			0 &		0 &	0 &	0&	0&	0&		nein\\ \hline
+
+			2 &		0 &	0 &	1&	0&	1&		nein\\
+			8 &		1 &	0 &	0&	0&	1&		nein\\ \hline
+
+			5 &		0 &	1 &	0&	1&	2&		nein\\ 
+			10 &		1 &	0 &	1&	0&	2&		nein\\ 
+			12 &		1 &	1 &	0&	0&	2&		nein\\ \hline
+
+			13 &		1 &	1 &	0&	1&	3&		nein\\ \hline
+			
+			15 &		1 &	1 &	1&	1&	4&		nein\\ \hline
+		\end{tabular}
+		\normalsize
+		\\\\
+		\textit{Schritt 2}\\
+		\small
+		\begin{tabular}{ccccccc}
+			Minterme &	&	&	&	&	Anzahl &	\\
+			Indizes &	a &	b &	c&	d&	Einsen &	Primimpl.\\ \hline
+			0,2 &		0 &	0 &	-&	0&	0&		nein\\ 
+			0,8 &		- &	0 &	0&	0&	0&		nein\\ \hline
+
+			2,10 &		- &	0 &	1&	0&	1&		nein\\
+			8,10 &		1 &	0 &	-&	0&	1&		nein\\
+			8,12 &		1 &	- &	0&	0&	1&		ja\\ \hline
+
+			5,13 &		- &	1 &	0&	1&	2&		ja\\
+			12,13 &		1 &	1 &	0&	-&	2&		ja\\ \hline
+
+			13,15 &		1 &	1 &	-&	1&	3&		ja\\ \hline
+		\end{tabular}
+		\normalsize
+		\\\\
+		\textit{Schritt 3}\\
+		\small
+		\begin{tabular}{ccccccc}
+			Minterme &	&	&	&	&	Anzahl &	\\
+			Indizes &	a &	b &	c&	d&	Einsen &	Primimpl.\\ \hline
+			0,2,8,10 &	- &	0 &	-&	0&	0&		ja\\ 
+			0,8,2,10 &	- &	0 &	-&	0&	0&		redundant\\ 
+		\end{tabular}
+		\normalsize
+\end{labeling}
+
+\section{Blocks}
+
+\subsection{Standard Logik IEEE 1164}
+
+Neunwertige Logik.\\
+
+\begin{tabular}{cl}
+	\verb#'U'# &	Uninitialisiert\\
+	\verb#'X'# &	Stark Unbekannt\\
+	\verb#'0'# &	Starke 0\\
+	\verb#'1'# &	Starke 1\\
+	\verb#'Z'# &	Hochohmig\\
+	\verb#'W'# &	Schwach Unbekannt\\
+	\verb#'L'# &	Schwache 0\\
+	\verb#'H'# &	Schwache 1\\
+	\verb#'-'# &	Don't Care
+\end{tabular}
+
+\subsubsection{Bedeutungen}
+
+$0 = \mbox{ falsch}$\\
+$1 = \mbox{ wahr}$\\
+$Z = \mbox{ inaktiv}$\\
+$X = \mbox{ unbekannt/Widerspruch}$\\
+
+Mit Ausnahme von resolve ist das Ergebnis einer Operation mit \verb#'Z'# immer \verb#'X'#.
+
+\subsubsection{AND f"ur die 4 wichtigsten}
+
+\begin{tabular}{c|cccc}
+	and &	X &	0 &	1 &	Z\\\hline
+	X &	X &	0 &	X &	X\\
+	0 &	0 &	0 &	0 &	0\\
+	1 &	X &	0 &	1 &	X\\
+	Z &	X &	0 &	X &	X
+\end{tabular}
+
+\subsubsection{NOT f"ur die 4 wichtigsten}
+
+\begin{tabular}{c|c}
+	not\\
+	X &	X\\\hline
+	0 &	1\\
+	1 &	0\\
+	Z &	X
+\end{tabular}
+
+\subsubsection{OR f"ur die 4 wichtigsten}
+
+\begin{tabular}{c|cccc}
+	or &	X &	0 &	1 &	Z\\\hline
+	X &	X &	X &	1 &	X\\
+	O &	X &	0 &	1 &	X\\
+	1 &	1 &	1 &	1 &	1\\
+	Z &	X &	X &	1 &	X
+\end{tabular}
+
+\subsubsection{XOR f"ur die 4 wichtigsten}
+
+\begin{tabular}{c|cccc}
+	xor &	X &	0 &	1 &	Z\\\hline
+	X &	X &	X &	X &	X\\
+	O &	X &	0 &	1 &	X\\
+	1 &	X &	1 &	0 &	X\\
+	Z &	X &	X &	X &	X
+\end{tabular}
+
+\subsubsection{Resolution}
+
+\begin{verbatim}
+ subtype std_logic is resolved std_ulogic;
+\end{verbatim}
+
+\verb#std_logic# erlaubt mehrere Treiber, d.h. mehrere Zuweisungen.\\
+\verb#std_ulogic# erlaubt nur einen Treiber, d.h. nur eine Zuweisung.\\
+Konflikte sind in einer Resolutions-Tabelle aufgel"ost.\\\\
+
+\begin{tabular}{c|cccc}
+	resolve &	X &	0 &	1 &	Z\\\hline
+	X &		X &	X &	X &	X\\
+	O &		X &	0 &	X &	0\\
+	1 &		X &	X &	1 &	1\\
+	Z &		X &	0 &	1 &	Z
+\end{tabular}
+
+\subsubsection{Verwendung des Standards}
+
+\begin{verbatim}
+library ieee;
+use ieee.std_logic_1164.all;
+\end{verbatim}
+
+Sollte vor jeder Entity stehen, Deklaration hat keinen File-Scope, gilt nur bis zur n"achsten Entity.\\
+
+Bei \verb#when-else# Konstrukten m"ussen jetzt alle restlichen F"alle behandelt werden. Meist mit \verb#"XXX"#
+
+\subsubsection{Beispiel: Gray Encoder mit Standard Logik}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+ entity GrayEncoder is
+   port (binary: in  std_logic_vector (2 downto 0);
+         gray  : out std_logic_vector (2 downto 0)); 
+ end entity GrayEncoder;
+
+ architecture when_else of GrayEncoder is
+ begin
+   gray <= "000" when binary = "000" else
+           --...
+           "XXX";
+ end architecture when_else;
+\end{verbatim}
+
+
+\subsection{Generic Decoder}
+
+$n$ Eingabe-Bits werden in $2^n$ Ausgabe-Bits umgewandelt. Bin"ar Kodierung zu One-Hot-Kodierung.
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity decoder is
+   generic (n: positive);
+   port (a: in std_ulogic_vector (n-1 downto 0);
+         z: out std_ulogic_vector
+          (2**n-1 downto 0));
+ end entity decoder;
+
+ architecture rotate of decoder is
+   constant tmp: bit_vector (2**n-2 downto 0)
+    := (others => '0');
+   constant z_out: bit_vector (2**n-1 downto 0)
+    := tmp & '1';
+ begin
+   z <= st_StdULogicVector(z_out sll
+    to_integer(unsigned(a)));
+ end architecture rotate; 
+\end{verbatim}
+
+\subsection{std\_match und Don't Cares}
+
+Mit Hilfe von \verb#std_match# kann man Don't Cares erst ausn"utzen.
+
+\begin{verbatim}
+ Y <= "01" when std_match(a, "001-") else
+      --...
+\end{verbatim}
+
+\subsection{Weitere Modellierungen}
+
+Drei M"oglichkeiten der Modellierung:
+\begin{enumerate}
+	\item Strukturell: Instanzierung von Komponenten (z.B. Netzliste)
+	\item Datenfluss: durch Ausdr"ucke und \verb#when-else#
+	\item Sequentiell: mit Prozessen (nicht unbedingt sequentielle Schaltkreise)
+\end{enumerate}
+
+\subsubsection{Sequentielle Modellierung am Beispiel Priority Encoder}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.numeric_std.all;
+ architecture seq1 of prenc is
+ begin
+   process (a) is
+   begin
+     valid <= '1';
+     if std_match(a, "0001") then
+       y <= "00";
+     elsif std_match(a, "001-") then
+       y <= "01";
+     elsif std_match(a, "01--") then
+       y <= "10";
+     elsif std_match(a, "1---") then
+       y <= "11";
+     else
+       y <= "00";
+       valid <= '0';
+     end if;
+   end process;
+ end architecture seq1;
+\end{verbatim}
+
+Der Prozess wird evaluiert, falls a sich "andert.
+
+\subsubsection{Variablen in Sequentieller Modellierung}
+
+\begin{verbatim}
+ -- Deklaration
+ variable even : std_ulogic;
+ -- Zuweisung
+ even := not even;
+\end{verbatim}
+
+
+\section{Sequentielles System}
+
+\begin{description}
+	\item[Sequentiell] Zustandsbehaftet, vergangenes Verhalten und Eingaben bestimmen momentanen Zustand.
+	\item[Kombinatorisch] Zustandsfrei, keine Seiteneffekte, Ausgaben sind funktional von den Eingaben abh"angig.
+\end{description}
+
+\subsection{Allgemeines Sequentielles System}
+
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.35cm}
+\begin{pspicture}(0,0)(20,10)
+	\psline{->}(1,8)(5,8)
+	\put(1,8.3){\small Eingabe}
+	\psline{->}(15,8)(19,8)
+	\put(15.2,8.3){\small Ausgabe}
+	\psframe(5,6)(15,9)
+	\put(6.15,8){\small Kombinatorische}
+	\put(8.35,6.7){\small Logik}
+	\psline{-}(15,7)(16.8,7)
+	\psline{-}(16.8,7)(16.8,3)
+	\psline{->}(16.8,3)(13.5,3)
+	\psframe(6.5,2)(13.5,4)
+	\put(8.2,2.7){\small Register}
+	\psline{-}(6.5,3)(3.2,3)
+	\psline{-}(3.2,3)(3.2,7)
+	\psline{->}(3.2,7)(5,7)
+	\put(0,1.9){\small Momentaner}
+	\put(0,0.9){\small Zustand}
+	\put(14.3,1.9){\small Folgezustand}
+\end{pspicture}
+\caption{Allgemeines Sequentielles System}
+\end{center}
+\end{figure}
+
+\subsection{Synchron vs Asynchron}
+
+\begin{description}
+	\item[Synchron] globales Taktsignal, Zustands"anderung zu fest spezifizierten Zeiten
+	\item[Asynchron] Zustands"anderung zu beliebigen Zeitpunkten
+\end{description}
+
+\subsection{D-Flipflop}
+
+Speichert Eingang als Zustand f"ur einen Taktzyklus. Gibt nach einem Takt die Eingabe aus. Dreieck bedeutet \textit{flankengesteuert}, entweder steigende oder fallende Flanke; meistens wird die steigende Flanke verwendet. Oft gibt es auch einen zus"atzlichen asynchronen \textit{reset} oder \textit{set} Eingang.
+
+\begin{figure}[hbt]
+ \input Figs/flipflop
+ \centerline{\box\graph}
+ \caption{D-Flipflop}
+ \label{flipflop}
+\end{figure}
+
+\subsubsection{D-Flipflop mit positiver Flankensteuerung}
+
+\begin{table}[hbt]
+\begin{center}
+	\begin{tabular}{cc|cc}
+		D &	C &		$Q'$ &		$\overline{Q}'$ \\ \hline
+		0 &	$\uparrow$ &	0 &		1 \\
+		1 &	$\uparrow$ &	1 &		0 \\
+		- &	$\downarrow$ &	Q &		$\overline{Q}$ \\
+		- &	0 &		Q &		$\overline{Q}$ \\
+		- &	1 &		Q &		$\overline{Q}$
+	\end{tabular}
+	\caption{"Ubergangstabelle. Strich in $Q'$ bedeutet Wert im n"achsten Zustand (keine Negation)}
+\end{center}
+\end{table}
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,0)(20,10)
+	\psframe[fillcolor=lightgray, linestyle=none, fillstyle=solid](4.5,1)(9.5,8)
+	\psframe[fillcolor=lightgray, linestyle=none, fillstyle=solid](11.5,1)(16.5,8)
+	
+	\psline{-}(2,4)(6,4)
+	\put(0.4,3.9){$C$}
+	\psline{-}(6,4)(8,7)
+	\psline{-}(8,7)(13,7)
+	\psline{-}(13,7)(15,4)
+	\psline{-}(15,4)(19,4)
+
+	\psline{-}(7,9)(7,0)
+	\psline{-}(14,9)(14,0)
+
+	\psline{<->}(7,8.5)(14,8.5)
+	\put(10.5,8.7){$t_w$}
+	
+	\psline{<->}(7,4.6)(10.5,4.6)
+	\put(8,4.9){$t_{plh}$}
+	
+	\psline{<->}(14,4.6)(17.5,4.6)
+	\put(15,4.9){$t_{phl}$}
+
+	\psline{<->}(4.5,2.5)(7,2.5)
+	\put(5.3,1.5){$t_s$}
+	\psline{<->}(7,2.5)(9.5,2.5)
+	\put(7.8,1.5){$t_h$}
+	
+	\psline{<->}(11.5,2.5)(14,2.5)
+	\put(12.3,1.5){$t_s$}
+	\psline{<->}(14,2.5)(16.5,2.5)
+	\put(14.8,1.5){$t_h$}
+
+\end{pspicture}
+\caption{Ablauf eines Clockticks}
+\end{center}
+\end{figure}
+
+Eingang stabil w"ahrend \textit{setup} Phase $t_s$ vor der Flanke. Eingang stabil w"ahrend \textit{hold} Phase $t_h$ nach der Flanke. Ausgang stabil erst nach \textit{propagation} Phase $t_{plh}$ bzw. $t_{phl}$ nach der Flanke. Minimale Clock-Signall"ange $t_w$.
+
+\subsection{Automaten}
+
+\subsubsection{Determinismus}
+
+Nicht-Deterministische Automaten sind Automaten, f"ur die gilt:
+\begin{enumerate}
+	\item Deadends: Zust"ande ohne Nachfolgezustand
+	\item Zust"ande mit mehreren m"oglichen Nachfolgern
+\end{enumerate}
+
+\subsection{Maschinen}
+
+\subsubsection{Moore Maschine}
+
+Ausgaben h"angen nur vom momentanen Zustand ab und "andern mit der Clock-Flanke
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,0)(27,10)
+	\psline{->}(0,7.5)(3.5,7.5)
+	\put(0.2,8){\small inputs}
+	\psframe(3.5,8.2)(7,4.2)
+	\put(4.2,7.3){\small next}
+	\put(4.1,6.2){\small state}
+	\put(4.1,5.1){\small logic}
+
+	\psline{->}(7,7.5)(11,7.5)
+	\psframe(11,8.2)(16,4.2)
+	\put(12.5,6.7){\small state}
+	\put(11.6,5.6){\small registers}
+	\psline{-}(11,5.6)(11.9,5.0)
+	\psline{-}(11.9,5.0)(11,4.4)
+	\psline{-}(11,5)(9.5,5)
+	\psline{-}(9.5,5)(9.5,3)
+	\put(8.8,2.3){\small clock}
+
+	\psline{-}(16,7.5)(18,7.5)
+	\pscircle[fillcolor=black, fillstyle=solid](18,7.5){0.13}
+	\psline{->}(18,7.5)(20,7.5)
+	\psframe(20,8.2)(23.5,4.2)
+	\put(20.2,6.7){\small output}
+	\put(20.7,5.6){\small logic}
+
+	\psline{->}(23.5,7.5)(26,7.5)
+	\put(23.7,8){\small outputs}
+
+	\psline{-}(18,7.5)(18,1.5)
+	\psline{-}(18,1.5)(5.25,1.5)
+	\psline{->}(5.25,1.5)(5.25,4.2)
+\end{pspicture}
+\caption{Moore Maschine}
+\end{center}
+\end{figure}
+
+\subsubsection{Mealy Maschine}
+
+Ausgaben h"angen vom momentanen Zustand und den aktuellen Eingaben ab.
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,0)(27,10)
+	\psline{->}(0,7.5)(3.5,7.5)
+	\put(0.2,6.3){\small inputs}
+	\pscircle[fillcolor=black, fillstyle=solid](1.5,7.5){0.13}
+	\psline{-}(1.5,7.5)(1.5,8.6)
+	\psline{-}(1.5,8.6)(18,8.6)
+	\psline{-}(18,8.6)(18,7.5)
+	\psline{->}(18,7.5)(20,7.5)
+	\psframe(3.5,8.2)(7,4.2)
+	\put(4.2,7.3){\small next}
+	\put(4.1,6.2){\small state}
+	\put(4.1,5.1){\small logic}
+
+	\psline{->}(7,7.5)(11,7.5)
+	\psframe(11,8.2)(16,4.2)
+	\put(12.5,6.7){\small state}
+	\put(11.6,5.6){\small registers}
+	\psline{-}(11,5.6)(11.9,5.0)
+	\psline{-}(11.9,5.0)(11,4.4)
+	\psline{-}(11,5)(9.5,5)
+	\psline{-}(9.5,5)(9.5,3)
+	\put(8.8,2.3){\small clock}
+
+	\psline{-}(16,5)(18,5)
+	\pscircle[fillcolor=black, fillstyle=solid](18,5){0.13}
+	\psline{->}(18,5)(20,5)
+	\psframe(20,8.2)(23.5,4.2)
+	\put(20.2,6.7){\small output}
+	\put(20.7,5.6){\small logic}
+
+	\psline{->}(23.5,7.5)(26,7.5)
+	\put(23.7,8){\small outputs}
+
+	\psline{-}(18,5)(18,1.5)
+	\psline{-}(18,1.5)(5.25,1.5)
+	\psline{->}(5.25,1.5)(5.25,4.2)
+\end{pspicture}
+\caption{Mealy Maschine}
+\end{center}
+\end{figure}
+
+\subsubsection{Formale Notation}
+
+Menge von Zust"anden $S$, Menge von Eingaben $I$, Menge von Ausgaben $O$.\\
+
+\small
+Moore Maschine: \ $(S,I,O,\delta, \lambda) \ \mbox{mit} \ \delta: S \times I \rightarrow S \ \mbox{und} \ \lambda: S \rightarrow O$\\
+Moore Maschine: \ $(S,I,O,\delta, \lambda) \ \mbox{mit} \ \delta: S \times I \rightarrow S \ \mbox{und} \ \lambda: S\times I \rightarrow O$\\
+\normalsize
+
+Booleschse Kodierung: \ $S= 2^n, \ I= 2^m, \ O = 2^k$\\
+
+$\delta = (\delta_i) \ \mbox{mit} \ \delta_i:2^{n+m} \rightarrow \{0,1\} \ \mbox{f"ur} \ i=0\ldots n$\\
+$\lambda = (\lambda_j) \ \mbox{mit} \ \lambda_j:2^{n} \rightarrow \{0,1\} \ \mbox{f"ur} \ j=0\ldots k \ \mbox{(Moore)}$\\
+$\lambda = (\lambda_j) \ \mbox{mit} \ \lambda_j:2^{n+m} \rightarrow \{0,1\} \ \mbox{f"ur} \ j=0\ldots k \ \mbox{(Moore)}$
+
+\subsubsection{Komposition von Maschinen}
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,-1)(27,10)
+
+	\psline{-}(0,5)(1,5)
+	\pscircle[fillcolor=black, fillstyle=solid](1,5){0.13}
+	\psline{-}(1,5)(1,7.5)
+	\psline{-}(1,7.5)(1.5,7.5)
+	\psline{-}(1,5)(1,2.5)
+	\psline{-}(1,2.5)(1.5,2.5)
+	\psframe(1.5,9.5)(4,5.5)
+	\psframe(1.5,4.5)(4,0.5)
+	\psline(4,7.5)(4.5,7.5)
+	\psline(4,2.5)(4.5,2.5)
+
+	\put(0.4,-1){\small parallel}
+
+	\psline{-}(6,5)(7,5)
+	\psframe(7,7)(9.5,3)
+	\psline{-}(9.5,5)(10.5,5)
+	\psframe(10.5,7)(13,3)
+
+	\put(7.2,-1){\small sequentiell}
+
+	\psline{-}(14.5,5)(15.5,5)
+	\pscircle[fillcolor=black, fillstyle=solid](15.5,5){0.13}
+	\psline{-}(15.5,5)(15.5,6.5)
+	\psline{-}(15.5,5)(15.5,3.5)
+	\psline{-}(15.5,6.5)(16.5,6.5)
+	\psframe(16.5,8.5)(19,4.5)
+	\psline{-}(19,8)(23,8)
+	\psline{-}(19,6.5)(20,6.5)
+	\psframe(20,7)(22.5,3)
+	\psline{-}(22.5,5)(23,5)
+	\psline{-}(20,3.5)(15.5,3.5)
+	
+	\put(17.5,-1){\small hybrid}
+
+\end{pspicture}
+\caption{Komposition von Maschinen}
+\end{center}
+\end{figure}
+
+\subsubsection{Sequentielle Komposition von Moore-Maschine}
+
+Sequentielle Komposition von Moore-Maschinen erzeugt Verz"ogerung; das berechnete Ergebnis wird erst im n"achsten Takt weitergegben. Dadurch ist aber ein viel h"oherer Takt m"oglich. 
+
+\subsubsection{Sequentielle Komposition von Mealy-Maschine}
+
+Sequentielle Komposition von Mealy-Maschinen erzeugt lange Signalpfade; l"angste Pfade antiproportional zu erzielbaren Taktfrequenz. In der Zwischenzeit treten Hazards auf, da Eingabe Signal durch alle in Serie geschalteten Gatter gehen muss, dadurch vergeht Zeit, bis stabil.
+
+\subsubsection{Mealy-Maschine als Moore-Maschine}
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,-2)(27,15)
+	\psline{-}(0,7.5)(2,7.5)
+	\pscircle[fillcolor=black, fillstyle=solid](1,7.5){0.13}
+	\psline{-}(1,7.5)(1,8.6)
+	\psline{-}(1,8.6)(9,8.6)
+	\psline{-}(9,8.6)(9,7.5)
+	\psline{-}(9,7.5)(10,7.5)
+	\psframe[fillcolor=lightgray,fillstyle=solid,linestyle=none](2,8.2)(4.5,4.2)
+
+	\psline{-}(4.5,6.2)(5.5,6.2)
+	\psframe(5.5,6.7)(8,2.7)
+	\psline{-}(5.5,4)(6.4,3.6)
+	\psline{-}(6.4,3.6)(5.5,3.2)
+
+	\psline{-}(8,5)(10,5)
+	\pscircle[fillcolor=black, fillstyle=solid](9,5){0.13}
+	\psframe[fillcolor=darkgray, fillstyle=solid, linestyle=none](10,8.2)(12.5,4.2)
+	\psline{-}(9,5)(9,1)
+	\psline{-}(9,1)(0.5,1)
+	\psline{-}(0.5,1)(0.5,5.5)
+	\psline{-}(0.5,5.5)(2,5.5)
+
+	\psline{-}(12.5,7.5)(13.5,7.5)
+
+	\psline{-}(15.5,7.5)(17.5,7.5)
+	\pscircle[fillcolor=black, fillstyle=solid](16.5,7.5){0.13}
+	\psline{-}(16.5,7.5)(16.5,8.6)
+%	\psline{-}(16.5,8.6)(16.5,8.6)
+%	\psline{-}(18,8.6)(18,7.5)
+%	\psline{-}(18,7.5)(20,7.5)
+	\psframe[fillcolor=lightgray,fillstyle=solid,linestyle=none](17.5,8.2)(20,4.2)
+
+	\psline{-}(20,6.2)(21,6.2)
+	\psframe(21,6.7)(23.5,2.7)
+	\psline{-}(21,4)(21.9,3.6)
+	\psline{-}(21.9,3.6)(21,3.2)
+
+	\psline{-}(23.5,5)(24.5,5)
+	\psline{-}(24.5,5)(24.5,1)
+	\psline{-}(24.5,1)(16,1)
+	\psline{-}(16,1)(16,5.5)
+	\pscircle[fillcolor=black, fillstyle=solid](16,5.5){0.13}
+	\psline{-}(16,5.5)(17.5,5.5)
+
+	\psline{-}(16,5.5)(16,10)
+	\psline{-}(16,10)(17.5,10)
+	\psline{-}(16.5,7.5)(16.5,12.6)
+	\psline{-}(16.5,12.6)(17.5,12.6)
+	\psframe[fillcolor=darkgray, fillstyle=solid, linestyle=none](17.5,9.3)(20,13.3)
+
+	\psline{-}(20,11.3)(21,11.3)
+	\psframe[fillcolor=lightgray, fillstyle=solid](21,11.8)(23.5,7.8)
+	\psline{-}(21,9.1)(21.9,8.7)
+	\psline{-}(21.9,8.7)(21,8.3)
+	\psline{-}(23.5,9.8)(24.5,9.8)
+	\put(21.4,10.2){\small Neu}
+
+	\put(2.5,-1){\small Mealy-Maschine}
+	\put(14,-1){\small "Aquivalente Moore-Maschine}
+	
+\end{pspicture}
+\caption{Mealy-Maschine als Moore-Maschine}
+\end{center}
+\end{figure}
+
+Moore-Maschine ist um einen Takt zeitverz"ogert.
+
+
+\section{Algorithmic State Machines}
+
+\subsection{ASM Elemente}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.3\textwidth]{asm_assertion.ps}
+	\end{center}
+	\caption{Zustand mit Ausgaben}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.3\textwidth]{asm_assertion_prev_state.ps}
+	\end{center}
+	\caption{Ausgabe geh"ort zum vorherigen Zustand}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.3\textwidth]{asm_condition.ps}
+	\end{center}
+	\caption{Fallunterscheidung}
+\end{figure}
+
+
+\section{Addierer}
+
+\subsection{Halb-Addierer (Half Adder)}
+
+Addition von zwei Bits mit "Ubertrag-Generierung
+
+\begin{eqnarray*}
+	s &	\equiv &	(a\ \boxed{+} \ b) \mod 2 \equiv a \oplus b \\
+	o &	\equiv &	(a\ \boxed{+} \ b) \mbox{ div } 2 \equiv a \cdotp b
+\end{eqnarray*}
+
+$\boxed{+} \ $ bezeichnet die Addition in den nat"urlichen Zahlen
+
+\begin{figure}[hbt]
+ \input Figs/half_adder
+ \centerline{\box\graph}
+ \caption{Halb-Addierer}
+ \label{halfadder}
+\end{figure}
+
+\subsection{Voll-Addierer (Full Adder)}
+
+Addition von drei Bits mit "Ubertrag-Generierung
+
+\begin{eqnarray*}
+	s &	\equiv &	(a\ \boxed{+} \ b \ \boxed{+} \ i) \mod 2 \equiv a \oplus b \oplus i \\
+	o &	\equiv &	(a\ \boxed{+} \ b \ \boxed{+} \ i) \mbox{ div } 2 \equiv a \cdotp b + a\cdotp i + b\cdotp i
+\end{eqnarray*}
+
+i = carry \textbf{i}n\\
+o = carry \textbf{o}ut\\
+s = \textbf{s}um
+
+\subsubsection{Voll-Addierer Whitebox Modell}
+% TODO Moeglicherweise Voll-Addierer Whitebox Model
+
+\tiny
+\begin{displaymath}
+\begin{array}{ccccccc}
+	o &	= &	(a\cdotp b) \oplus ((a\oplus b)\cdotp i) &	\equiv &	(a\cdotp b) + ((a\oplus b)\cdotp i) &	\equiv &	((a+b)\cdotp i)+(a\cdotp b)\\
+	s &	= &	(a\oplus b)\oplus c &				\equiv &	(a\oplus b) \oplus c &			\equiv &	(a\oplus b)\oplus c
+\end{array}
+\end{displaymath}
+\normalsize
+
+\subsection{Ripple-Carry Adder}
+
+%TODO Moeglicherweise Schaltung
+
+F"ur $n$ Bits werden $n$ Full Adder in Serie geschaltet, das carry out Bit wird immer an den carry in des nachfolgenden Voll-Addierer weitergegeben.\\
+
+Platz: $O(n)$\\
+Zeit: $O(n)$
+
+\subsection{Kombinierter Addierer Subtrahierer}
+
+%TODO Moeglicherweise Schaltung
+
+$A,B,S$ in 2er-Komplement.\\
+
+Eing"ange wie bei Ripple-Carry Adder und zus"atzlich ein Eingang, ob Addition oder Subtraktion, falls Subtraktion dann wird jeweils durch einen Mux das $B_i$ invertiert und zu $A_i$ addiert und als $S_i$ ausgegeben. Es kann noch ein XOR des $S_n$ mit dem Carry Out $o_n$ gemacht werden, falls $1$, dann trat ein Overflow auf.
+
+\subsection{Addierer in VHDL}
+
+\subsubsection{Addierer Entity}
+
+\begin{verbatim}
+ library ieee;
+
+ use ieee.std_logic_1164.all;
+
+ entity adder is
+   generic (n: positive);
+   port (a,b : in std_ulogic_vector (n-1 downto 0);
+         i   : in std_ulogic;
+         o   : out std_ulogic;
+         s   : out std_ulogic_vector (n-1 downto 0));
+ end entity adder; 
+\end{verbatim}
+
+\subsubsection{Halb-Addierer in VHDL}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_ulogic_1164.all;
+
+ entity half_adder is
+   port (a, b: in std_ulogic; o, s: out std_ulogic);
+ end entity half_adder;
+
+ architecture expr of half_adder is
+ begin
+   s <= a xor b;
+   o <= a and b;
+ end architecture expr;
+\end{verbatim}
+
+\subsubsection{Voll-Addierer in VHDL}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity full_adder is
+   port (a, b, i: in std_ulogic;
+         o, s   : out std_ulogic);
+ end entity full_adder;
+
+ architecture with_half_adders of full_adder is
+   component half_adder
+     port(a,b : in std_ulogic;
+          o,s : out std_ulogic);
+   end component half_adder;
+   signal o1, s1, o2 : std_ulogic;
+ begin
+   ha1: half_adder port map (a, b, o1, s1);
+   ha2: half_adder port map (s1, i, o2, s);
+   ha3: half_adder port map (o1, o2, open, o);
+ end architecture with_half_adders;
+\end{verbatim}
+
+\subsubsection{Ripple-Carry-Addierer in VHDL}
+
+\begin{verbatim}
+ architecture ripple_carry of adder is
+   component full_adder is
+     port (a, b, i : in std_ulogic;
+           o, s    : out std_ulogic);
+   end component full_adder;
+   signal c: std_ulogic_vector (n downto 0);
+ begin
+   g1 : for i in 0 to n-1 generate
+     fa : full_adder port map
+      (a(i), b(i), c(i), c(i+1), s(i));
+   end generate g1;
+   c(0) <= i;
+   o <= c(n);
+ end architecture ripple_carry;
+\end{verbatim}
+
+\subsection{Carry Lookahead}
+
+Idee: Vorausberechnung des Carry, Faktorisieren von Carry-Propagierung und Generierung.\\
+
+Faktorisieren
+\begin{displaymath}
+	c_{k+1} \equiv a_k\cdotp b_k + a_k\cdotp c_k + b_k \cdotp c_k \equiv \underbrace{a_k \cdotp b_k}_{g_k} + \underbrace{(a_k + b_k)}_{p_k} \cdotp c_k
+\end{displaymath}
+
+$g_k$: die Summanden-Bits an der $k$-ten Stelle \textbf{g}enerieren ein Carry\\
+$p_k$: die Summanden-Bits an der $k$-ten Stelle \textbf{p}ropagieren das Carry
+
+\small
+\begin{eqnarray*}
+	c_k &	\equiv &	g_{k-1} + p_{k-1}\cdotp g_{k-2}+\cdots+(p_{k-1}\cdotp p_{k-2}\cdots p_0 \cdotp c_0)\\
+	s_k &	\equiv &	a_k\oplus b_k\oplus (g_{k-1} + p_{k-1}\cdotp g_{k-2}+\cdots+(p_{k-1}\cdotp p_{k-2}\cdots p_0 \cdotp c_0))
+\end{eqnarray*}
+\normalsize
+
+\subsubsection{pg Element}
+
+\begin{eqnarray*}
+	g_k &	\equiv &	a_k \cdotp b_k\\
+	p_k &	\equiv &	a_k + b_k\\
+	\\
+	c_{k+1} &	\equiv & 	g_k + p_k \cdotp c_k
+\end{eqnarray*}
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,0)(5,10)
+
+	\psframe(0,3)(5,6)
+	\put(1.5,4.2){\Large pg}
+	
+	\psline{-}(1,6)(1,7)
+	\put(1,7.5){$a_k$}
+	\psline{-}(4,6)(4,7)
+	\put(4,7.5){$b_k$}
+
+	\psline{-}(1,3)(1,2)
+	\put(1,1){$g_k$}
+	\psline{-}(4,3)(4,2)
+	\put(4,1){$p_k$}
+\end{pspicture}
+\caption{pg Element}
+\end{center}
+\end{figure}
+
+\subsubsection{Schlussbemerkung}
+
+Dieser Ansatz ben"otigt aber f"ur das letzte ODER n Eing"ange, und insgesamt $O(n^2)$ Transistoren, daf"ur ist aber die Zeit $O(1)$, es gibt eine 4-stufige Logik, welche unabh"angig von $n$ ist.
+
+\subsection{Optimierter Carry Lookahead Addierer}
+
+\subsubsection{PG Element}
+
+$G_{k,i}$: $[k, i]$ generiert Carry \\
+$P_{k,i}$: $[k,i]$ propagiert Carry
+
+\begin{eqnarray*}
+	G_{k,i} &	\equiv &	G_{k,j+1} + P_{k,j+1}\cdotp G_{j,i}\\
+	P_{k,i} &	\equiv &	P_{k,j+1} \cdotp P_{j,i}\\
+	\\
+	c_{k+1} &	\equiv &	G_{k,i} + P_{k,i}\cdotp c_i
+\end{eqnarray*}
+
+Bemerkungen:\\
+$k-1 > j > i$, $G_{ii}=g_i$, $P_{ii}=p_{ii}$\\
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,0)(5,10)
+
+	\psframe(0,3)(5,7)
+	\put(1.5,4.2){\Large PG}
+	
+	\psline{-}(1,7)(1,8)
+	\put(0,8.5){$G_{k,j+1}$}
+	\psline{-}(4,7)(4,8)
+	\put(4,8.5){$P_{k,j+1}$}
+
+	\psline{-}(1,3)(1,2)
+	\put(0,1){$G_{k,i}$}
+	\psline{-}(4,3)(4,2)
+	\put(4,1){$P_{k,i}$}
+
+	\psline{-}(5,4)(6,4)
+	\put(7,3.5){$G_{j,i}$}
+	\psline{-}(5,6)(6,6)
+	\put(7,5.5){$P_{j,i}$}
+\end{pspicture}
+\caption{PG Element}
+\end{center}
+\end{figure}
+
+\subsubsection{Summe und Carry Element}
+
+\begin{eqnarray*}
+	s_k &		\equiv &	a_k \oplus b_k \oplus c_k\\
+	c_{k+1} &	\equiv &	G_{k,i} + P_{k,i}\cdotp c_i
+\end{eqnarray*}
+
+\begin{figure}[htb]
+\begin{center}
+\psset{unit=0.3cm}
+\begin{pspicture}(0,0)(20,10)
+
+	\psframe(0,3)(3,6)
+	\put(0.75,4){\Large $\Sigma$}
+	
+	\psline{->}(1.5,2)(1.5,3)
+	\put(1,1){$c_k$}
+
+	\psline{<-}(0.5,6)(0.5,7)
+	\put(0,7.5){$a_k$}
+	
+	\psline{<-}(1.5,6)(1.5,7)
+	\put(1.25,7.5){$b_k$}
+	
+	\psline{->}(2.5,6)(2.5,7)
+	\put(2.5,7.5){$s_k$}
+
+	\psframe(10,3)(13,6)
+	\put(10.75,4){\Large $C$}
+	
+	\psline{->}(11.5,1)(11.5,3)
+	\put(11,0){$c_i$}
+
+	\psline{->}(11.5,6)(11.5,7)
+	\put(11,7.5){$c_{k+1}$}
+
+	\psline{->}(14,7)(14,5.5)
+	\put(13.5,7.5){$G_{k,i}$}
+	\psline{-}(14,5.5)(13,5.5)
+	
+	\psline{->}(17,7)(17,4.5)
+	\put(16.5,7.5){$P_{k,i}$}
+	\psline{-}(17,4.5)(13,4.5)
+
+	\psline{<-}(20,7)(20,3.5)
+	\put(19.5,7.5){$c_i$}
+	\psline{-}(20,3.5)(13,3.5)
+\end{pspicture}
+\caption{Summe und Carry Element}
+\end{center}
+\end{figure}
+
+% TODO Putting it all together
+
+\subsubsection{Zusammenfassung}
+
+\begin{itemize}
+	\item 1. Phase: Generierung und Propagierung (down)
+	\item 2. Phase: Carry Erzeugen (up)
+	\item 3. Phase: lokale Summenbildung
+	\item Baum wird zweimal traversiert
+	\item Zeit: $O(\log n)$, Platz: $O(n)$
+	\item Bei ausschliesslicher Verwendung von Gattern mit zwei Eing"angen
+\end{itemize}
+
+\section{Multiplizierer}
+
+\subsection{Sequentieller Algorithmus}
+
+4 Register: $C, P, A, B$
+
+\begin{enumerate}
+	\item Obere H"alfte $P$ der partiellen Summe mit 0 initialisieren.
+	\item Erster Operand ins $B$ Register
+	\item Zweiter Operand ins $A$ Register (untere H"alfte der partiellen Summe)
+	\item F"ur jeden der $n$ Multiplikationsschritte:
+		\begin{enumerate}
+			\item LSB von $A$ gleich 1, dann Addiere $B$ zu $P$ (ansonsten 0)
+			\item Schiebe $(C,P,A)$ nach rechts ($C$ ist Carry des Addierers)
+		\end{enumerate}
+	\item Resultat findet sich in $(P,A)$
+\end{enumerate}
+
+\subsection{Probleme mit Vorzeichen}
+
+\subsubsection{Einfache Multiplikation mit Vorzeichen}
+
+\begin{enumerate}
+	\item Konvertierung der beiden Operanden in positive Zahlen
+	\item Speichern der urspr"unglichen Vorzeichen
+	\item Unsigned Multiplikation der Konvertierten Zahlen
+	\item Berechnung des Resultat-Vorzeichens aus gespeicherten Vorzeichen (negativ gdw. urspr"ungliche Operanden komplement"ares Vorzeichen hatten)
+	\item eventuell Negation des Ergebnisses bei negativem Resultats-Vorzeichen
+\end{enumerate}
+
+\subsubsection{Booth Recoding}
+
+\begin{itemize}
+	\item Verwende Arithmetisches Shift statt Logischem, somit wird jedes Mal, wenn das signed Bit gesetzt ist auch ein 1 hineingeschoben.
+	\item Kein Carry Bit beim MSB, falls Carry, so vergesse ihn einfach.
+	\item Verwende folgende Addition/Subtraktion Regeln ($A_{-1}=0$)
+		\begin{enumerate}
+			\item addiere 0 zu $P$ wenn $A_{i}=0$ und $A_{i-1}=0$
+			\item addiere $B$ zu $P$ wenn $A_{i}=0$ und $A_{i-1}=1$
+			\item subtrahiere $B$ von $P$ wenn $A_{i}=1$ und $A_{i-1}=0$
+			\item addiere 0 zu $P$ wenn $A_{i}=1$ und $A_{i-1}=1$
+		\end{enumerate}
+\end{itemize}
+
+\subsubsection{Hintergrund Booth Multiplikation}
+
+Da jedesmal
+\begin{displaymath}
+	B \cdotp (A_{i-1} - A_{i})
+\end{displaymath}
+
+zum partiellen Produkt addiert wird, erh"alt man die Teleskopsumme
+
+\begin{displaymath}
+	\sum^{n-1}_{i=0} B \cdotp (A_{i-1} - A_i)\cdotp 2^i \equiv
+\end{displaymath}
+\begin{displaymath}
+	B \cdotp (- A_{n-1} \cdotp 2^{n-1} + A_{n-2}\cdotp 2^{n-2}+\cdotp + A_1 2 + A_0)+ B\cdotp A_{-1}
+\end{displaymath}
+
+\subsection{Carry-Save-Adder (CSA)}
+
+\begin{itemize}
+	\item Idee: keine Carry Propagierung bei der Multiplikation
+	\item Unabh"angige Volladdierer (Full Adder = FA)
+	\item Carry-In wird von vorheriger Berechnung genommen
+	\item Carry-OUt wird gespeichert f"ur nachfolgende Berechnung
+	\item Man spart Zeit f"ur die Propagation
+	\item Nach $n$ Schritten muss noch die Summe und die Carries addiert werden
+\end{itemize}
+
+\section{Sequentielle Blocks}
+
+W"ahrend Flip-Flops flankengesteurte Speicher-Elemente sind, d.h. sie lesen Eingabe, wenn Flanke nach oben, sind Latches pegelgesteuerte Speicher-Elemente, d.h. sie lesen Eingabe solange clock=1.
+
+\subsection{RS Latch mit NANDs}
+
+\begin{figure}[hbt]
+ \input Figs/rs_latch
+ \centerline{\box\graph}
+ \caption{RS Latch}
+ \label{rs_latch}
+\end{figure}
+
+\begin{tabular}{cc|cc}
+	S &	R &	Q' &	$\overline{Q}'$ \\ \hline
+	0 &	0 &	1 &	1 \\
+	0 &	1 &	0 &	1 \\
+	1 &	0 &	1 &	0 \\
+	1 &	1 &	Q &	$\overline{Q}$ \\
+\end{tabular}
+
+Erste Zeile ist unerw"unscht, da $Q'$ und $\overline{Q}'$ nicht komplement"ar.
+
+\subsubsection{RS Latch in VHDL}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity rslatch1 is
+   port (S, R : in std_ulogic;
+         Q, Qbar : buffer std_ulogic);
+ end entity rslatch1;
+
+ architecture dataflow of rslatch1 is
+ begin
+   Q <= '1' when R = '0' else
+        '0' when S = '0' else Q;
+   Qbar <= '1' when S = '0' else
+           '0' when R = '0' else Qbar;
+ end architecture dataflow;
+
+ use ieee.std_logic_1164.all;
+
+ entity rslatch2 is
+   port (S, R : in std_ulogic;
+         Q, Qbar : out std_ulogic);
+ end entity rslatch2;
+
+ architecture dataflow of rslatch2 is
+ begin
+   Q <= '1' when R = '0' else
+        '0' when S = '0' else unaffected;
+   Qbar <= '1' when S = '0' else
+           '0' when R = '0' else unaffected;
+ end architecture dataflow;
+\end{verbatim}
+
+
+\subsection{D Latch}
+
+$D$ wird zu $Q$ weitergeschaltet, wenn Enable gesetzt ist. Geht Enable zur"uck, dann beh"alt $Q$ seinen Wert bei. Kontrollsignal $C$
+ ist durch 1 verkn"upft mit der Eingabe $D$.
+
+\begin{figure}[hbt]
+ \begin{center}
+ 	\includegraphics[width=0.3\textwidth]{d_latch.ps}
+ \end{center}
+ \caption{D Latch}
+ \label{d_latch}
+\end{figure}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity dlatch is
+   port (D, Enable : in std_ulogic;
+         Q : out std_ulogic);
+ end entity dlatch;
+
+ architecture behavioural of dlatch is
+ begin
+   process (D, Enable) is
+   begin
+     if (Enable == '1') then
+       Q <= D;
+     end if;
+   end process;
+ end architecture behavioural;
+\end{verbatim}
+
+\subsection{D Flip-Flop mit Asynchronem Set/Reset}
+
+Reset (Set) auf 0 setzt Q auf 0 (1). Die Zahl 1 vekn"upft die Clock mit der Eingabe, R und S sind unabh"angig von C (keine 1) also asynchron.
+
+\begin{figure}[hbt]
+ \begin{center}
+ 	\includegraphics[width=0.3\textwidth]{d_flipflop_set.ps}
+ \end{center}
+ \caption{D Flip-Flop mit Asynchronem Set/Reset}
+ \label{d_flipflop_set}
+\end{figure}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity dffr is
+   port (D, Clock, Reset : in std_ulogic;
+         Q : out std_ulogic);
+ end entity dffr;
+
+ architecture behaviourial of dffr is
+ begin
+   process (Clock, Reset) is
+   begin
+     if (Set = '0') then
+       Q <= '1';
+     elsif (Reset = '0') then   
+       Q <= '0';
+     elsif (rising_edge(Clock)) then
+       Q <= D;
+     end if;
+   end process;
+ end architecture behavioural
+\end{verbatim}
+
+\subsection{T Flip-Flop}
+
+\begin{tabular}{c|cc}
+	T &	Q'&	$\overline{Q}'$\\ \hline
+	0 &	Q &	$\overline{Q}$\\
+	1 &	$\overline{Q}$ &	Q
+\end{tabular}
+
+Zustand "andert sich nicht bei $T=0$, sonst wechselt (toggled) der Zustand (0 zu 1, 1 zu 0)
+
+\subsection{JK Flip-Flop}
+
+\begin{tabular}{cc|cc}
+	J &	K &	Q' &	$\overline{Q}'$\\\hline
+	0 &	0 &	Q &	$\overline{Q}$\\
+	0 &	1 &	0 &	1\\
+	1 &	0 &	1 &	0\\
+	1 &	1 &	$\overline{Q}$ &	Q
+\end{tabular}
+
+"ahnlich RS Flip-Flop, aber keine problemtische Eingangs-Belegungen, die 1/1 Kombination toggled den Zustand, die 0/0 Kombination "andert nichts.
+
+\subsection{Register}
+
+\subsubsection{4-Bit Register IEEE Schaltbild}
+
+\begin{figure}[hbt]
+ \begin{center}
+ 	\includegraphics[width=0.35\textwidth]{4bit_register.ps}
+ \end{center}
+ \caption{4 Bit Register IEEE Schaltbild}
+ \label{4bit_register}
+\end{figure}
+
+\subsubsection{VHDL}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity reg is
+   generic (n : natural := 4);
+   port (D: in std_ulogic_vector(n-1 downto 0);
+         Clock, Reset : in std_ulogic;
+         Q: out std_ulogic_vector(n-1 downto 0));
+ end entity reg;
+
+ architecture behavioural of reg is
+ begin
+   process (Clock, Reset) is
+   begin
+     if (Reset = '0') then
+       Q <= (others => '0');
+     elsif rising_edge(Clock) then
+       Q <= D;
+     end if;
+   end process;
+ end architecture behavioural;
+\end{verbatim}
+
+\subsection{Serial In Parallel Out (SIPO) Register}
+
+Bit-Sequenz wird Bit f"ur Bit eingelesen, gen"ugend Bits gesammelt: als Wort (z.B. 32 Bit) auslesen. Dazu wird ein Schieberegister verwendet. Gelesene Bits werden um eine Position nach vorne verschoben und neue Bits werden hinten angeh"angt.
+
+\subsubsection{SIPO VHDL}
+
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity sipo is
+   generic (n: natural := 8);
+   port (a: in std_ulogic;
+         q: out std_ulogic_vector(n-1 downto 0);
+	 clk: in std_ulogic);
+ end entity sipo;
+
+ architecture rtl of sipo is
+ begin
+   process (clk) is
+     variable reg : std_ulogic_vector(n-1 downto 0);
+   begin
+     if rising_edge(clk) then
+       reg := reg(n-2 downto 0) & a;
+       q <= reg;
+     end if;
+   end process;
+ end architecture rtl;
+\end{verbatim}
+
+\subsection{Universal Shift Register}
+
+\begin{tabular}{ccl}
+	s(1) &		s(0) &		Action\\ \hline
+	0 &		0 &		Hold\\
+	0 &		1 &		Shift right\\
+	1 &		0 &		Shift left\\
+	1 &		1 &		Par. Load
+\end{tabular}
+
+\subsubsection{VHDL}
+
+\small
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all;
+
+ entity universal_shift_register is
+   generic (n : natural := 8);
+   port (a: in std_ulogic_vector(n-1 downto 0);
+         lin, rin : in std_ulogic;
+         s : in std_ulogic_vector(1 downto 0);
+         clk, rst: in std_ulogic;
+         q : out std_ulogic_vector(n-1 downto 0));
+ end entity universal_shift_register;
+
+ architecture rtl of universal_shift_register is
+ begin
+   process (clk, rst) is
+     variable reg : std_ulogic_vector(n-1 downto 0);
+   begin
+     if (rst = '0') then
+       reg := (others => '0');
+     elsif rising_edge(clk) then
+       case s is
+         when "11" =>
+           reg := a;
+         when "10" =>
+           reg := reg(n-2 downto 0) & lin;
+         when "01" =>
+           reg := rin & reg(n-1 downto 1);
+         when others =>
+           null;
+       end case;
+     end if;
+     q <= reg;
+   end process;
+ end architecture rtl;
+\end{verbatim}
+\normalsize
+
+\subsection{Z"ahler in RTL}
+
+\small
+\begin{verbatim}
+ library ieee;
+ use ieee.std_logic_1164.all, ieee.numeric_std.all;
+
+ entity counter is
+
+ end entity counter;
+
+ architecture rtl of counter is
+ begin
+   process (clk, rst) is
+     variable cnt: unsigned (n-1 downto 0);
+   begin
+     if rst = '0' then
+       cnt := (others => '0');
+     elsif rising_edge(clk) then
+       cnt := cnt -1;
+     end if;
+     count <= std_ulogic_vector(cnt);
+   end process;
+ end architecture rtl;
+\end{verbatim}
+\normalsize
+
+\subsection{Ripple Z"ahler mit T-Flip-Flops}
+
+Ausgang der T-Flip-Flops steuern Takt folgender T-Flip-Flops. Lineare Verz"ogerung in der Wortbreite bis MSB stabil.
+
+\section{Speicher}
+
+\begin{description}
+	\item[ROM] read-only memory
+	\item[RAM] random-access memory
+	\item[SRAM] static RAM. Zustand bleibt solange Strom anliegt.
+	\item[DRAM] dynamic RAM. implementiert mit Kondensatoren. Zustand verliert sich ohne regelm"assiges Auffrischen.
+\end{description}
+
+\subsection{SRAM}
+
+Ist schreib- und lesbar, also bidirektionaler \verb#inout# Daten-Port. Kontrollsignale CS (Chip Select), WE (Write Enable), OE (Output Enable). CS aktiviert einen einzelnen RAM-Chip. Deaktiviert sind Ausgaben eines RAM-Chip im Tristate (\verb#Z#). Schreiben durch Setzen von $\overline{WE}$, Lesen durch Setzen von $\overline{OE}$. Interface Constraint: $\overline{WE}$ und $\overline{OE}$ sind nie gleichzeitig gesetzt.
+
+\subsubsection{Schreibzyklus}
+
+$\overline{WE}$ muss schon gewisse Zeit gesetzt sein, bis mit $\overline{CS}$ Chip gew"ahlt werden kann.
+
+
+\subsubsection{Lesezyklus}
+
+Auch hier muss $\overline{OE}$ schon gewisse Zeit gesetzt sein, bis mit $\overline{CS}$ Chip gew"ahlt werden kann. Zus"atzlich ist Data erst nach einer gewissen Zeit verf"ugbar.
+
+\subsubsection{SRAM Zelle mit zwei Invertern}
+
+\begin{figure}[hbt]
+ \input Figs/sram
+ \centerline{\box\graph}
+ \caption{SRAM Zelle mit zwei Invertern}
+ \label{sram}
+\end{figure}
+
+\subsubsection{Kaskadierung von SRAM Chips}
+
+Mehrere SRAM Chips k"onnen kombiniert werden, indem man jeweils die hintersten Bits f"ur die Adressierung der Chips benutzt, also z.Bsp 2 Bits f"ur 4 Chips und die restlichen Adressbits f"ur die Adressierung innerhalb des Chips.
+
+\subsection{DRAM}
+
+Verwendet eine Kapazit"at antstatt Transitstor Gatter. Es ben"otigt immer einen Refresh, da die Daten nach gewisser Zeit verschwinden. 
+
+\begin{figure}[hbt]
+ \input Figs/dram
+ \centerline{\box\graph}
+ \caption{DRAM Zelle mit Kapazit"at}
+ \label{dram}
+\end{figure}
+
+\section{Simulation}
+
+Im Normalfall wir Stimulus und ein Checker verwendet. Unter \textit{Funktionale Tests} versteht man korrekte funktionale Implementierung, man testet als ob Eingabe/Ausgabe der Spezifikation entspricht. Unter \textit{Timing Simulation} versteht man korrektes Zeitverhalten, also ob die Zeitschranken eingehalten werden, hier kann man m"oglicherweise den funktionalen Stimulus wiederverwenden.\\
+Oftmals benutzt man f"ur das \textit{Design under Test (DUT)} RTL (Spezifikation) und Strukturelle (DUT = Eigentliches Testobjekt) ''Implementierung'' und vergleiche diese gegeneinander. Also im Allgemeinen wird Spezifikation und Implementierung miteinander verglichen.\\
+
+In VHDL vergleicht man die Spezifikation gegen die Implementierung oft mittels einem Prozess, der mit \texttt{assert} arbeitet.
+
+\small
+\begin{verbatim}
+ wait for 50 ns;
+ assert sr = sd report "outputs differ" severity failure
+\end{verbatim}
+\normalsize
+
+\subsection{Datei-Operationen}
+
+\small
+\begin{verbatim}
+library ieee;
+use ieee.std_logic_1164.all, std.textio.all;
+entity neg4bit is
+end entity neg4bit;
+architecture fileio of neg4bit is
+  file input_file, output_file : text;
+begin
+  process
+    variable input_line, output_line : Line;
+    variable v : bit_vector(3 downto 0);
+  begin
+    file_open(input_file, "input.txt", read_mode);
+    file_open(output_file, "output.txt", write_mode);
+    while not(endfile(input_file)) loop
+      readline(input_file, input_line);
+      read(input_line, v);
+      for i in 0 to 3 loop v(i) := not v(i); end loop;
+      write(output_line, v);
+      writeline(output_file, output_line);
+    end loop;
+    file_close(input_file); file_close(output_file);
+    wait;
+  end process;
+end architecture fileio;
+\end{verbatim}
+\normalsize
+
+\subsection{Event-Driven Simulation}
+
+Event: Signal plus Wert plus Zeitpunkt\\
+
+Es wird eine Event-Queue mit Delta-Delays benutzt um das Ganze zu simulieren, dabei muss man die Delta-Delays beachten, das sind Verz"ogerungen zwischen Events, die eigentlich zur gleichen Zeit eintreten.
+
+\subsubsection{Single-Pass Even}
+
+\small
+\begin{verbatim}
+for (i = each event at current_time) {
+  update_node (i);
+  for (j = each gate on the fanout list of i) {
+     update input values of j;
+     evaluate (j);
+     if (new_value (j) != last_scheduled_value (j)) {
+       schedule new_value (j) at (current_time + delay (j));
+       last_scheduled_value (j) = new_value (j);
+     }
+   }
+}
+\end{verbatim}
+\normalsize
+
+\subsubsection{Delta-Delays}
+
+Evaluation eines VHDL-Ausdruckes kostet ein Delta, also wird so z.B. ein Signal, welches durch zwei Inverter geht um ein Delta nachher in Event-Queue behandelt, als eines, welches nur durch einen Inverter geht.
+
+\section{Test}
+
+Test: h"aufig eingeschr"ankt auf Testen von Chips auf Fabrikationsfehler. Unter einem \textit{Funktionalen Test} versteht man das Testen aller Eingabe-Kombinationen. Bei einem \textit{Strukturellen Test} werden alle potentiellen Stuck-at-Faults getestet, unter einem \textit{Stuck-at-fault} versteht man ein Leiter, der immer mit logisch 1 oder 0 verbunden ist.
+
+\subsection{ATPG}
+
+Automatic Test Pattern Generation (ATPG).
+
+\subsubsection{Algorithmus zur Generierung aller Test-Vektoren}
+
+\begin{enumerate}
+	\item Generiere Liste von Test-Vektoren f"ur alle potentiellen Stuck-at-Faults (Stuck-at-0 und Stuck-at-1 f"ur alle Signale). Also bei $n$ Gattern $2n$ Testvektoren.
+	\item W"ahle ungebrauchten Test-Vektor und simuliere ihn (f"ur den Fault-Free und den Faulty-Circuit).
+	\item streiche von der Liste alle zus"atzlich abgedeckten Faults (ein Testvektor kann mehrere Faults testen).
+	\item Coverage definiert als Anteil abgedeckter Faults.
+	\item Falls Coverage nicht gut genug und Zeit nicht abgelaufen gehe zu 2.
+\end{enumerate}
+
+\subsubsection{Test-Vektor-Generierung}
+
+Controllability: Gibt es ein Eingabe-Vektor, mit $S=\overline{X}$ im Fault-Free Circuit? Suche nach partiellen Eingabe-Vektor im Input-Cone.\\
+
+Observability: Kann $S=\overline{X}$ im Fault-Free Circuit zu einem Ausgang propagiert werden? Kann $S=X$ im Faulty-Free Circuit zu demselben Ausgang propagiert werden? Suche nach Propagierungs-Pfad im Output-Cone. Miteinbeziehung von Input-Cones der Signale auf dem Propagierungs-Pfad.
+
+\subsubsection{Fault Equivalence}
+
+Zwei Faults heissen "aquivalent gdw. sie die gleichen Tests haben. Also z.B. 0 an Ausgang von AND sowie an einem der Eing"ange.
+
+\subsubsection{D-Algorithmus}
+
+\begin{itemize}
+	\item Repr"asentiere Differenz zwischen Fault-Free und Faulty Circuit symbolisch
+	\item Neuer Wahrheitswert ''$D$'': Signal 1 im Fault-Free und 0 im Faulty Circuit
+	\item Negation ''$\overline{D}$'': Signal 0 im Fault-Free und 1 im Faulty Circuit
+	\item Neues Propagierungsziel: $D$ oder $\overline{D}$ muss am Ausgang erscheinen!
+	\item Suche mit Backtracking wie zuvor
+	\item Falls man $D$ od. $\overline{D}$ am Ausgang nicht bekommt, so ist dieser Stuck nicht testbar.
+\end{itemize}
+
+\begin{tabular}{c|ccccc}
+	AND &	0 &	1 &	D &	$\overline{D}$ &	X \\ \hline
+	0 &	0 &	0 &	0 &	0 &			0 \\
+	1 &	0 &	1 &	D &	$\overline{D}$ &	X \\
+	D &	0 &	D &	D &	0 &			X \\
+	$\overline{D}$ &	0 &	$\overline{D}$ &	0 &	$\overline{D}$ &	X \\
+	X &	0 &	X &	X &	X &			X
+\end{tabular}
+
+%TODO f"ur OR und XOR
+
+\subsubsection{Scan-Chain Design}
+
+Das ganze Design der Schaltung wird am Ende so modifiziert, dass alle Flip Flops linear angeordnet sind und die eigentliche kombinatorische Schaltung davon getrennt ist. Die FF haben jeweils einen Multiplexer vorgeschaltet.
+
+\section{Synthese vs. Simulation}
+
+Wenn man von der Architektur nach Gattern synthetisiert, so nennt man dies Behavioural Synthese, wenn es von RTL nach Gatter geschieht, RTL Synthese.
+
+\subsection{Abgeleitete Latches}
+
+Abdeckung aller F"alle bei einem \verb#process# bei den if Abfragen erzeugt kombinatorische Logik und umgekehrt.
+
+\subsection{Formale(re) Analyse von Asynchronen Schaltkreisen}
+
+\textbf{Fundamental Mode}\\
+Annahme 1: immer nur ein Eingang "andert sich\\
+Annahme 2: "Anderung eines Eingangs erst nach Stabilisierung\\
+
+Idee: f"uge bei Feedback-Loops einen \textit{virtuellen} Buffer ein. Weitere Annahme: gesamte Delays nur noch im Buffer, andere Gates haben also Zero-Delay.
+
+\section{Repr"asentation kombinatorischer Logik / SAG}
+
+Verschiedene M"oglichkeiten um Boolsche Logik darzustellen: Funktionstabellen, welche kanonisch (= eindeutig) sind aber immer $2^n$ Platz ben"otigen, oder z.B. DNF.
+
+\subsection{Syntaktische Darstellung}
+
+Man kann z.B. ein Parse-DAG (Directed Acylic Graph) f"ur kombinatorische Logik erstellen. Daf"ur benutzt man Knoten mit einem Typ (VAR, XOR, OR, AND, ...) und 2 Pointer zu Argumenten (ausser bei VAR). Somit kann man das ganze als DAG kompakt darstellen.
+
+\subsection{Signed-And-Graphs (SAG)}
+
+Logische Basis-Operationen: Konjunktion und Negation. DAG-Darstellung: Operations-Knoten sind alles Konjunktionen; Negation/Vorzeichen als Kanten-Attribut (daher \textit{signed}) (kann man platzsparend als LSB im Pointer implementieren)
+
+\subsubsection{Syntaktisches Sharen}
+
+Invariante: zwei Knoten haben immer unterschiedliche Kinder. Wenn ein neuer Knoten erzeugt wird, wird zuerst nach "aquivalentem Knoten gesucht und falls einer vorhanden, so wird dieser benutzt. Doch die SAGs bleiben auch so nicht-kanonisch.
+
+\section{Binary Decision Diagrams}
+
+Neue dreistellige Basis-Operation ITE (if-then-else), wobei die Bedingung immer eine Variable ist. Es werden meistens ROBDDs verwendet welche bewiesenermasen kononisch sind.
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.3\textwidth]{bdd.ps}
+	\end{center}
+\end{figure}
+
+\subsection{Semantik}
+
+Innere Knoten sind ITE, Bl"atter sind boolsche Konstanten. Schreibweise $ite(x,f_1,f_0)$ bedeutet, wenn $x$ dann $f_1$ ansonsten $f_0$. $eval$ produziert booleschen Ausdruck aus einem BDD:
+
+\begin{eqnarray}
+	eval(0) &	\equiv &	0\\
+	eval(1) &	\equiv &	1 \\
+	eval(ite(x,f_1,f_0)) &	\equiv &	x \cdotp eval(f_1) \lor \overline{x} \cdotp eval(f_0)
+\end{eqnarray}
+
+\subsection{Reduced Ordered BDDs}
+
+Es werden folgende Bedingungen an die BDDs gestellt:
+\begin{itemize}
+	\item Maximale algebraische und semantische Reduktion
+	\item Variablen von der Wurzel zu den Bl"attern sind gleich geordnet
+\end{itemize}
+
+\subsubsection{Algebraische Reduktions-Regel}
+
+Maximales Sharen isomorpher Teil-Graphen. Wenn 2 Knoten die gleichen Kinder haben und auch dieselbe Variable beinhalten so kann man sie zusammennehmen.
+
+\subsubsection{Semantische Reduktions-Regel}
+
+Knoten, welche f"ur if und else den gleichen Nachfolger haben, k"onnen entfernt werden.
+
+\subsection{Tautologie, Erf"ullbarkeit, "Aquivalenz}
+
+\begin{itemize}
+	\item ein BDD ist eine Tautologie, gdw. er nur aus dem 1-Blatt besteht
+	\item ein BDD ist erf"ullbar, gdw. er nicht aus dem 0-Blatt besteht
+	\item zwei BDDs sind "aquivalent, gdw. die BDDs isomorph sind
+\end{itemize}
+
+\subsection{Shannonsche Expansionsregel}
+
+\begin{displaymath}
+	f(x) \equiv x \cdotp f(1) \lor \overline{x} f(0)
+\end{displaymath}
+
+Sei nun $x$ die oberste Variable zweier BDDs $f$ und $g$:
+\begin{displaymath}
+	f \equiv ite(x,f_1,f_0) \qquad g \equiv ite(x,g_1,g_0)
+\end{displaymath}
+
+mit $f_i$ bzw. $g_i$ die Kinder von $f$ und $g$ f"ur $i=0,1$. Dann folgt
+
+\begin{displaymath}
+	f(0) = 0 \quad g(0) = g_0 \quad f(1) = f_1 \quad g(1) = g_1
+\end{displaymath}
+
+da nach dem R in ROBDD $x$ nur ganz oben in $f$ und $g$ vorkommt.
+
+\begin{eqnarray}
+	(f @ g) (x) &	\equiv &	x \cdotp (f @ g)(1) \lor \overline{x}(f @ g)(0)\\
+	&		\equiv &	x \cdotp (f(1)@ g(1))\lor \overline{x}\cdotp (f(0) @ g(0))\\
+	&		\equiv &	x \cdotp (f_1 @ g_1) \lor \overline{x} (f_0 @ g_0)
+\end{eqnarray}
+
+Weobi $@$ eine beliebige zweistellige boolsche Operation ist.
+
+\end{document}

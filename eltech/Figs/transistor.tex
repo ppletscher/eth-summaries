@@ -1,0 +1,83 @@
+% maschenmethode.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{pa 325 750}%
+    \special{pa 325 525}%
+    \special{pa 319 525}%
+    \special{fp}%
+    \special{pa 325 0}%
+    \special{pa 325 225}%
+    \special{pa 319 225}%
+    \special{fp}%
+    \special{pa 125 475}%
+    \special{pa 125 275}%
+    \special{fp}%
+    \special{pa 0 375}%
+    \special{pa 125 375}%
+    \special{fp}%
+    \special{pa 325 525}%
+    \special{pa 125 435}%
+    \special{fp}%
+    \special{pa 275 502}%
+    \special{pa 175 458}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 240 517}%
+    \special{pa 175 458}%
+    \special{pa 262 466}%
+    \special{pa 240 517}%
+    \special{fp}%
+    \special{pa 325 225}%
+    \special{pa 125 315}%
+    \special{fp}%
+    \graphtemp=\baselineskip\multiply\graphtemp by 1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.800in
+    \rlap{\kern 0.325in\lower\graphtemp\hbox to 0pt{\hss \hbox{\sl E}\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.375in
+    \rlap{\kern 0.000in\lower\graphtemp\hbox to 0pt{\hss \hbox{\sl B}\hbox{$\:$}}}%
+    \graphtemp=\baselineskip\multiply\graphtemp by -1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.000in
+    \rlap{\kern 0.325in\lower\graphtemp\hbox to 0pt{\hss \hbox{\sl C}\hss}}%
+    \special{pa 1075 750}%
+    \special{pa 1075 525}%
+    \special{pa 1069 525}%
+    \special{fp}%
+    \special{pa 1075 0}%
+    \special{pa 1075 225}%
+    \special{pa 1069 225}%
+    \special{fp}%
+    \special{pa 875 475}%
+    \special{pa 875 275}%
+    \special{fp}%
+    \special{pa 750 375}%
+    \special{pa 875 375}%
+    \special{fp}%
+    \special{pa 1075 525}%
+    \special{pa 875 435}%
+    \special{fp}%
+    \special{pa 1025 502}%
+    \special{pa 925 458}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 960 443}%
+    \special{pa 1025 502}%
+    \special{pa 938 494}%
+    \special{pa 960 443}%
+    \special{fp}%
+    \special{pa 1075 225}%
+    \special{pa 875 315}%
+    \special{fp}%
+    \graphtemp=\baselineskip\multiply\graphtemp by 1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.800in
+    \rlap{\kern 1.075in\lower\graphtemp\hbox to 0pt{\hss \hbox{\sl E}\hss}}%
+    \graphtemp=.5ex\advance\graphtemp by 0.375in
+    \rlap{\kern 0.750in\lower\graphtemp\hbox to 0pt{\hss \hbox{\sl B}\hbox{$\:$}}}%
+    \graphtemp=\baselineskip\multiply\graphtemp by -1\divide\graphtemp by 2
+    \advance\graphtemp by .5ex\advance\graphtemp by 0.000in
+    \rlap{\kern 1.075in\lower\graphtemp\hbox to 0pt{\hss \hbox{\sl C}\hss}}%
+    \hbox{\vrule depth0.800in width0pt height 0pt}%
+    \kern 1.450in
+  }%
+}%

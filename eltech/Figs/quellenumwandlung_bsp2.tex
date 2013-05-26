@@ -1,0 +1,71 @@
+% quellenumwandlung.m4
+\expandafter\ifx\csname graph\endcsname\relax \csname newbox\endcsname\graph\fi
+\expandafter\ifx\csname graphtemp\endcsname\relax \csname newdimen\endcsname\graphtemp\fi
+\setbox\graph=\vtop{\vskip 0pt\hbox{%
+    \special{pn 11}%
+    \special{pa 875 770}%
+    \special{pa 875 520}%
+    \special{fp}%
+    \special{pa 875 520}%
+    \special{pa 825 520}%
+    \special{pa 825 270}%
+    \special{pa 925 270}%
+    \special{pa 925 520}%
+    \special{pa 875 520}%
+    \special{fp}%
+    \special{pa 875 270}%
+    \special{pa 875 20}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.395in
+    \rlap{\kern 0.925in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$20 k\Omega$\hbox{$\:$}\hss}}%
+    \special{pa 875 20}%
+    \special{pa 500 20}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{ar 500 20 20 20 0 6.28319}%
+    \special{pa 500 20}%
+    \special{pa 500 270}%
+    \special{fp}%
+    \special{pa 500 270}%
+    \special{pa 550 270}%
+    \special{pa 550 520}%
+    \special{pa 450 520}%
+    \special{pa 450 270}%
+    \special{pa 500 270}%
+    \special{fp}%
+    \special{pa 500 520}%
+    \special{pa 500 770}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.395in
+    \rlap{\kern 0.550in\lower\graphtemp\hbox to 0pt{\hbox{$\:$}$5 k\Omega$\hbox{$\:$}\hss}}%
+    \special{sh 1.000}%
+    \special{ar 500 770 20 20 0 6.28319}%
+    \special{pa 500 20}%
+    \special{pa 125 20}%
+    \special{fp}%
+    \special{pa 125 20}%
+    \special{pa 125 270}%
+    \special{fp}%
+    \special{ar 125 395 125 125 0 6.28319}%
+    \special{pa 125 301}%
+    \special{pa 125 489}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pa 100 401}%
+    \special{pa 125 301}%
+    \special{pa 150 401}%
+    \special{pa 100 401}%
+    \special{fp}%
+    \special{pa 125 520}%
+    \special{pa 125 770}%
+    \special{fp}%
+    \graphtemp=.5ex\advance\graphtemp by 0.395in
+    \rlap{\kern 0.000in\lower\graphtemp\hbox to 0pt{\hss \hbox{$\:$}$9 mA$\hbox{$\:$}}}%
+    \special{pa 125 770}%
+    \special{pa 875 770}%
+    \special{fp}%
+    \hbox{\vrule depth0.790in width0pt height 0pt}%
+    \kern 0.925in
+  }%
+}%
+

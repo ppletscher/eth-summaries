@@ -1,0 +1,2103 @@
+% Informationssysteme summary
+% written during my studies at ETH Zuerich
+% based on the lecture of Prof. Moira Norrie
+% Copyright (C) 2004  Patrick Pletscher
+                                                                                
+\documentclass[german, 10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{babel}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+
+% PSTricks in combination with PS4PDF
+\usepackage{ps4pdf}
+\PSforPDF{
+        \usepackage{pstricks}
+}
+
+
+% caption below figures
+\setkomafont{captionlabel}{\usekomafont{descriptionlabel}}
+
+
+% theorems, definitions
+\newtheorem{theorem}{Theorem}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Bemerkung}
+
+\newtheoremstyle{example}{\topsep}{\topsep}%
+{}%         Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{}%        Punctuation after thm head
+{\newline}%     Space after thm head (\newline = linebreak)
+{\thmname{#1}\thmnumber{ #2}\thmnote{ #3}}%         Thm head spec
+
+\theoremstyle{example}
+\newtheorem{example}{Beispiel}[subsection]
+
+                                                                                
+% dimensions of document
+\textwidth = 19 cm
+\textheight = 25 cm
+\oddsidemargin = -1.5 cm
+\evensidemargin = -1.5 cm
+\hoffset = 0.0 cm
+\marginparwidth = 0.0 cm
+\topmargin = -1.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0 cm
+
+
+% depth of toc
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+                                                                                
+% informations about the document
+\title{Informationssysteme - Zusammenfassung}
+\author{Patrick Pletscher}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Benutzung eines Datenbanksystems}
+
+\subsection{Allgemeines}
+
+\subsubsection{Typen und Subtypen}
+
+\begin{verbatim}
+ type contact
+ (  name : string;
+    phone: string;
+    fax  : string;
+    email: url;
+    www  : url;
+ )
+\end{verbatim}
+
+Vererbung von Eigenschaften. In folgendem Beispiel ist \texttt{person} ein Subtyp von \texttt{contact}.
+
+\begin{verbatim}
+ type person subtype of contact
+ (  title       : string;
+    photo       : uri;
+
+    work_places : ()->
+     (locations : set of location);
+ )
+\end{verbatim}
+
+\subsubsection{Association}
+
+Eine Source Collection verbunden mit einer Target Collection, z.Bsp. \texttt{Situated\_at} das \texttt{Contacts} und \texttt{Locations} assozieren kann. Dabei wird die Notation \texttt{(x:y)} f"ur die Art der Bindung benutzt, \texttt{x} ist dabei die minimale Anzahl (meistens \texttt{0} oder \texttt{1}) und \texttt{y} die maximale Anzahl (meistens \texttt{*}).\\
+Dies ist eine Binary Collection.
+
+\subsection{Schema Definition}
+
+\subsubsection{Typen}
+
+\begin{verbatim}
+ struct phone_struct
+ (  description : string;
+    number      : string;
+ );
+
+ type private subtype of person
+ (  birthdate   : date;
+    phone       : set of phone_struct;
+    music       : uri;
+    transport   : uri;
+    age         : () -> (years:integer);
+ )
+\end{verbatim}
+
+\subsubsection{Un"are Collections}
+
+\begin{verbatim}
+ collection Contacts   : set of contact;
+\end{verbatim}
+
+\subsubsection{Bin"are Collections}
+
+\begin{verbatim}
+ struct works_for_struct
+ (  employee : person;
+    employer : organisation;
+ )
+ collection Works_for : set of works_for_struct;
+\end{verbatim}
+
+\subsubsection{Constraints}
+
+\begin{verbatim}
+ constraint Works_for association from
+   Persons (0:*) to Organisations (0:*)
+ ...
+ constraint Persons subcollection of Contacts;
+ constraint Organisations subcollection
+  of Contacts;
+ ...
+ constraint (Persons and Organisations)
+   partition Contacts;
+\end{verbatim}
+
+\subsection{AQL Query Language}
+
+\subsubsection{Numerische Werte}
+
+Arithmetische Ausdr"ucke:
+\begin{verbatim}
+ r"3.14"+i"6"
+\end{verbatim}
+
+Unterst"utzt Typen: Integer(i) und Real(r).\\
+
+Unterst"utzte Operationen: \texttt{+, i, *, /, mod, }\verb@^@\texttt{, abs, integer, float, floor, sin, cos, atan, sqrt, log, exp}
+
+\subsubsection{Boolsche Werte}
+
+\begin{verbatim}
+ l"true", l"false"
+\end{verbatim}
+
+Boolsche Operatoren: \texttt{not, and, or, xor}\\
+
+Vergleiche: \verb@=, <, >, =<, >=, <>@ wobei \texttt{<>} ungleich ist.
+
+\subsubsection{Operationen auf Objekte}
+
+Objekt Attribute und Methoden:
+\begin{verbatim}
+ t"eth_person"(o"0805").office
+ 
+ t"private"(o"0804").age()
+\end{verbatim}
+
+\subsubsection{Operationen auf Collections}
+
+Mengenoperationen: \texttt{union, intersection, minus}
+\begin{verbatim}
+ c"Persons" union c"Organisations"
+\end{verbatim}
+
+Kardinalit"at:
+\begin{verbatim}
+ count c"Persons"
+\end{verbatim}
+
+\subsubsection{Selektieren}
+
+\begin{verbatim}
+ all P in c"Persons" having (P.title = "Prof")
+\end{verbatim}
+
+\subsubsection{Bin"are Collections}
+
+Alle bisherigen Collections Operationen sind auch darauf anwendbar, zus"atzlich gibt es die \texttt{domain}/\texttt{range} Funktionen, die \texttt{domain\_restriction}/ \texttt{range\_restriction} und die \texttt{domain\_subtraction}/ \texttt{range\_subtraction}
+
+Beispiel um alle Associations ohne ETHZ contacts auszuw"ahlen:
+\begin{verbatim}
+ c"Situated_at"
+ domain_subtraction
+ ( all C in c"Contacts"
+   having (C.name = "ETH Zurich")
+ )
+\end{verbatim}
+
+\subsubsection{Inverse}
+
+Um Associations umzukehren:
+\begin{verbatim}
+ inverse c"Works_for"
+\end{verbatim}
+
+\subsubsection{Compose}
+
+Um Associations zu verbinden.\\
+
+Z.Bsp: Wie finde ich die m"oglichen Arbeitsorte von Personen?
+\begin{verbatim}
+ c"Works_for" compose c"Situated_at"
+\end{verbatim}
+
+\subsubsection{Closure}
+
+Repetiertes Compose mit sich selber. Also der transitive Abschluss.
+\begin{verbatim}
+ closure c"Part_of"
+\end{verbatim}
+
+\subsubsection{Map}
+
+Wende eine Operation auf jedes Objekt in einer Collection an.
+\begin{verbatim}
+ map P in c"Persons" by (P.name)
+\end{verbatim}
+
+\subsubsection{Element Extraction}
+
+\begin{verbatim}
+ first c"Persons".name
+ last c"Persons".name
+ the 3 in c"Persons".name
+\end{verbatim}
+
+\subsubsection{Reduce}
+
+Z.Bsp. ein Totalwert berechnen
+
+\begin{verbatim}
+ reduce P in c"Privates"
+ aggregate A by ((P.age()).years + A)
+ default 0
+\end{verbatim}
+
+\subsubsection{Nest}
+
+Gruppieren von Associations. Also wenn z.Bsp. mehrere Personen f"ur die selbe Firma arbeiten, so wird danach nur noch eine Association erscheinen mit einem Set von Personen.
+
+\begin{verbatim}
+ nest( inv(c"Works_for"))
+\end{verbatim}
+
+\subsubsection{Division}
+
+Z.Bsp. wer arbeitet f"ur jede Organisation?
+
+\begin{verbatim}
+ c"Works_for" div c"Organisations"
+\end{verbatim}
+
+\section{Operationen in OMS}
+
+\subsection{Objekte}
+
+Alle Daten werden als Objekte gespeichert, auch Typen usw.\\
+
+Informationen "uber Typen werden als Objekte repr"asentiert, diese Typen sind Werte vom Typ \texttt{ptype}. Attribute von Typen sind andere Typen entweder als \texttt{uni} oder \texttt{set}.
+
+\subsection{Methoden}
+
+Methoden sind Operationen die an Objekttypen gebunden sind, sie werden f"ur individuelle Objekte aufgerufen.
+
+\subsubsection{Deklaration}
+
+Navigation:
+\begin{verbatim}
+type test1(
+ ...
+ work_places: () -> (locations: set of locations);
+)
+\end{verbatim}
+
+Hergeleitete Attribute:
+\begin{verbatim}
+type test2(
+ ...
+ age: () -> (years: integer);
+)
+\end{verbatim}
+
+Operationen:
+\begin{verbatim}
+type test3(
+ ...
+ send_email: () -> ();
+)
+\end{verbatim}
+
+\subsection{Implementierung von Operationen}
+
+Definiert als eine Regel der Form:
+\begin{verbatim}
+ method(ParameterList, ResultList) :- method body.
+\end{verbatim}
+
+Der \texttt{method body} besteht aus mehreren Bedingungen, welche erf"ullt werden m"ussen, sie k"onnen entweder mit \texttt{,} (und) oder \texttt{;} (oder) verkn"upft werden. Prolog versucht immer die Bedingungen zu erf"ullen, und benutzt dazu Backtracking. Mit \texttt{cond1, !, cond2} kann man das Backtracking unterbinden.
+
+\subsubsection{self}
+
+\begin{verbatim}
+ self(-Self)
+\end{verbatim}
+
+Gibt einem das aktuelle Objekt zur"uck.
+
+\subsubsection{AQL Pr"adikat / get\_ext}
+
+\begin{verbatim}
+ aql(+Query, -Type -Object)
+\end{verbatim}
+
+F"uhre ein AQL-Query aus. Falls die Abfrage eine Collection ausgibt und man gerne ein \texttt{set} zur"uckgeben m"ochte, so muss man die Collection noch in ein Set verwandeln, dies geschieht mit \verb#get_ext(?CollObj, ?CollExt)#.
+
+\subsubsection{get\_coll}
+
+\begin{verbatim}
+ get_coll(?Object, ?Name, ?Type)
+ get_coll(?Object, ?Name, ?Type, ?Extent)
+\end{verbatim}
+Collection holen, einmal einfach die Collection nach Object, das andere Mal den Extent nach Extent.
+
+\subsubsection{findall / member}
+
+\begin{verbatim}
+ findall(?Template, :Goal, ?Result)
+\end{verbatim}
+
+selektiert Elemente f"ur die das Prolog-Goal True ist, w"ahlt dabei alle Template-Variablen und speichert alle erf"ullenden Belegungen in der Result Liste.
+
+\begin{verbatim}
+ member(?Element, ?List)
+\end{verbatim}
+
+Ist Element in List vorhanden?
+
+\subsubsection{Beispiel}
+
+\begin{verbatim}
+ method([],[Locations]) :-
+   self(Self),
+   get_coll(_,'Works_for',_,Works_for),
+   get_coll(_,'Situated_at',_,Situated_at),
+   findall(L,(member((Self,O),Works_for),
+              member((O,L),Situated_at)),
+          Ls),
+   list_to_set(Ls,Locations).
+\end{verbatim}
+
+\subsection{Macros}
+
+Macros sind ''Applikationen'' die mit Datenbanken verkn"upft sind. Wie Methoden werden auch Macros als Objekte in der Datenbank repr"asentiert.
+
+\subsection{Triggers}
+
+Werden aufgerufen, falls ein Ereigniss (\texttt{create, update, delete, commit}) auftritt.
+
+\subsubsection{Beispiel}
+
+\begin{verbatim}
+ type contact add(init: trigger on create);
+
+ contact::init :-
+   self(Self),
+   get_coll(C,'Contacts',_),
+   add_obj_to_coll(Self,C).
+\end{verbatim}
+
+
+
+\section{Datenmodellierung}
+
+\subsection{Metadata}
+
+Daten "uber Daten.
+
+\subsubsection{Vom System definierte Typen}
+
+\tiny
+\begin{tabular}{lll}
+	type &		beschreibt &			Beispiel\\ \hline
+	ptype &		persistent types &		person\\
+	tisa &		subtype relationships &		person subtype contact\\
+	collection &	collections &			Persons\\
+	cisa &		subcollection relationsships &	Persons subcollection Contacts\\
+	association &	associations &			Works\_for\\
+	method &	methods &			age()
+\end{tabular}
+\normalsize
+
+\subsubsection{Extension Operation}
+
+\begin{verbatim}
+ ext t"person"
+ % collection of all objects of type person
+
+ ext t"collection"
+ % collection of all objects of type collection
+
+ ext t"ptype"
+ % collection of all objects of type ptype
+\end{verbatim}
+
+\subsubsection{Metadata Queries}
+
+Finde die Namen von allen Typen, welche direkte Subtypes von contact sind.
+
+\begin{verbatim}
+ (
+   (all T in (ext t"tisa")
+     having ((T.supertype).name = "contact")
+   )
+ ).name
+\end{verbatim}
+
+\subsection{Data Modellierung}
+
+\subsubsection{Disjoint}
+
+Die Subcollections einer Collection sind disjunkt, keiner kann also beide Typen haben.\\
+
+$\mathsf{ext(Secretaires)} \cap \mathsf{ext(Technicals)} = \emptyset$
+
+\subsubsection{Cover}
+
+Jeder Member einer Collection muss in einer der Subcollections sein.\\
+
+$\mathsf{ext(Programmers)} \cup \mathsf{ext(Managers)} = \mathsf{ext(Technicals)}$
+
+
+\subsubsection{Partition}
+
+Jeder Member einer Collection genau in einer Subcollection.\\
+$\mathsf{ext(Females)} \cap \mathsf{ext(Males)} = \emptyset$\\
+$\mathsf{ext(Females)} \cup \mathsf{ext(Males)} = \mathsf{ext(Persons)}$
+
+\subsubsection{Intersect}
+
+Jeder Member von allen Subcollections ist auch in der Collection.
+
+\subsection{Design Database}
+
+\subsubsection{Form von Collections}
+
+Set Collection: Keine Duplikate, keine Ordnung\\
+Bag Collection: Duplikate, keine Ordnung\\
+Sequence Collection: Duplikate, Ordnung\\
+Ranking Collection: Keine Duplikate, Ordnung
+
+\subsubsection{Collections}
+
+\begin{verbatim}
+// Unary Collections
+collection Employees: set of employee;
+
+// Binary Collections
+collection Works_for : set of
+ (secretary, technical);
+\end{verbatim}
+
+\subsection{Object Evolution}
+
+dress und strip Operationen auf Objekte, migrate zwischen Collections.
+
+\subsubsection{Kinds und Roles}
+
+Kinds: fundamentale, fixierte Klassifikation.\\
+Roles: ver"andern sich w"ahrend dem Lebenszyklus.\\
+
+$C_1 \preccurlyeq C_2$ bezeichnet dass $C_1$ Subcollection von $C_2$ ist.\\
+
+F"ur eine Collection $C$:
+\begin{displaymath}
+	\text{kinds } C =  \{ K\ |\ \text{K ist ein kind und } C \preccurlyeq K\}
+\end{displaymath}
+\begin{eqnarray*}
+	\text{roles } C &	= &	\{ R\ | \ R \text{ ist eine role und } C \preccurlyeq R\} \\
+	&			&	\{ R\ | \ C \preccurlyeq R \text{ und } R \text{ ist kein kind }  \}
+\end{eqnarray*}
+
+Annahmen:
+\begin{itemize}
+	\item Jede Klassifikation hat einen einzigen Root
+	\item Ein Root ist ein Kind
+	\item Wenn $C \preccurlyeq C_1$ und es kein $C_2$ gibt mit $C_1 \preccurlyeq C_2$ dann ist $C_1$ die maximale Collection von $C$.
+	\item Jede Collection hat eine einzige maximale Collection.
+\end{itemize}
+
+\subsubsection{Migration}
+
+\verb#x :: C_1 -> C_2# g"ultig wenn:
+\begin{enumerate}
+	\item x nicht zu einer Subcollection von $C_1$ geh"ort
+	\item x kann nur einen Kind verlieren, wenn es die kontextuelle Role von diesem Kind verliert
+		\begin{displaymath}
+			\forall K \in (\mbox{kinds } C_1 - \mbox{kinds } C_2) \exists R \in \mbox{ roles } K \mbox{ s.t. } R \not \in \mbox{ roles } C_2
+		\end{displaymath}
+\end{enumerate}
+
+
+
+\section{Datenmodelle}
+
+\subsection{Datenmanagement Anforderungen}
+
+Die drei E's des effektiven Datenmanagement:
+\begin{labeling}{\usekomafont{descriptionlabel}Expedient}
+	\item[\usekomafont{descriptionlabel}Effectual] Wirksam, macht gew"unschte Funktionalit"at.
+	\item[\usekomafont{descriptionlabel}Expedient] Einfach zu benutzen.
+	\item[\usekomafont{descriptionlabel}Efficient] Befriedigende Performance.
+\end{labeling}
+
+\subsection{Datenmodell}
+
+Spezifiziert Menge von Konstrukten und Operationen.\\
+
+\begin{enumerate}
+	\item Konzeptuelles Modellieren
+	\item Design \& Prototyping
+	\item Implementation
+\end{enumerate}
+
+\subsubsection{Beispiele}
+
+\begin{itemize}
+	\item OM Modell (Konzeptuelles Modellieren und Daten Management)
+	\item Entity-Relationship Modell (Konzeptuelles Modellieren)
+	\item Relationelles Datenmodell (Daten Management)
+\end{itemize}
+
+\subsubsection{Datenmodell Definition}
+
+Im Allgemeinen 3 Komponenten:
+\begin{labeling}{\usekomafont{descriptionlabel}Operationen}
+	\item[\usekomafont{descriptionlabel}Strukturen] Konstrukte, in denen ausgedr"uckt Konzepte beschrieben werden und wie Information dargestellt wird.
+	\item[\usekomafont{descriptionlabel}Auflagen] Constraints. 
+	\item[\usekomafont{descriptionlabel}Operationen] Einige Modelle haben volle Operationsmodelle, andere limitierte oder gar keine.
+\end{labeling}
+
+\pagebreak
+\subsection{Entity-Relationship Datenmodell}
+
+\subsubsection{Attribute}
+
+\begin{figure}[htb]
+\begin{center}
+\PSforPDF{
+	\begin{pspicture}(10,6)
+		\psline[linestyle=dashed]{-}(0,1)(1,1)
+		\psellipse[linestyle=dashed](2,1)(1,0.4)
+		\put(1.75,0.9){age}
+		\put(4.3,0.9){Abgeleitetes Attribut}
+		
+		\psline{-}(0,2.5)(1,2.5)
+		\psellipse[linewidth=1.5pt](2,2.5)(1,0.4)
+		\put(1.55,2.4){phone}
+		\put(4.3,2.4){Mehr-Wert Attribut}
+		
+		\psline{-}(0,4)(1,4)
+		\psellipse(2,4)(1,0.4)
+		\put(1.65,3.9){\underline{alias}}
+		\put(4.3,3.9){Key Attribut (Einmaliger Wert)}
+
+		\psline{-}(0,5.5)(1,5.5)
+		\psellipse(2,5.5)(1,0.4)
+		\put(1.59,5.4){name}
+		\put(4.3,5.4){Ein-Wert Attribut}
+
+		
+	\end{pspicture}
+}
+\end{center}
+\caption{Verschiedene Arten von Attributen}
+\end{figure}
+
+\subsubsection{Keys}
+
+Ein Key f"ur eine Entity-Menge $E$ ist eine Menge $K$ von einem oder mehreren Attributen, so dass zwei disjunkte Entities $e_1$ und $e_2$ in $E$, $e_1$ und $e_2$ k"onnen nicht identische Werte haben f"ur alle die Attribute.
+
+\subsection{Relationelles Modell}
+
+Modellinformationen als Tabellen von Daten. Kollektionen von Records. Der Key spielt eine wichtige Rolle um Tupel zu identifizieren.
+
+
+\section{DBMS Features \& Architektur}
+
+Ein DBMS ist ein Softwaresystem f"ur das effiziente Erstellen und Managen von grossen Datenmengen und das dauerhafte Speichern f"ur lange Zeit.
+
+\begin{description}
+	\item[Dauerhaftes Speichern] Memory, Buffer Management und Datenstrukturen, welchen schnellen Zugriff auf grosse Datenmengen erm"oglichen.
+	\item[Programmierinterface] Kr"aftige Sprachen f"ur den User und die Applikationen um Daten zu definieren (DDL), manipulieren (DML) und Query (QL).
+	\item[Transaktions Management] Unterst"utzt gleichzeitigen Zugriff von mehreren Benutzern und Recovery von Fehlern.
+\end{description}
+
+\subsection{Query Processing}
+
+\subsubsection{Query Compiler}
+
+Parser, Optimiser und generieren von Execution Plan.
+
+\subsubsection{Execution Engine}
+
+Ausl"osen von Anfragen nach Daten, unternimmt entsprechenden Operationen.
+
+\subsection{Storage und Buffer Manager}
+
+Der Storage Manager kontrolliert das Platzieren von Daten auf der Disk und den Transfer von Daten zwischen Disk und Memory. Der Buffer Manager partioniert das Memory in Buffer. Der Ganze Zugriff auf Daten, die auf der Disk gespeichert sind geschieht "uber den Buffer Manager.
+
+\subsubsection{Was f"ur Daten?}
+
+\begin{description}
+	\item[Daten] Applikationsdaten, Datenbankinhalt
+	\item[Metadata] Datenbank Schemas
+	\item[Indexes] Datenstrukturen um den effizienten Zugriff auf Daten zu erm"oglichen
+	\item[Statistiken] Informationen "uber die Charakteristiken (z.B. Gr"osse von Relationen oder die statistische Verteilung von Attributwerten), welche benutzt werden um die Abfragen zu beschleunigen.
+\end{description}
+
+\subsection{Beschleunigen von Zugriff auf Secondary Storage}
+
+\begin{itemize}
+	\item Platzieren von Bl"ocken, auf die zusammen zugegriffen wird in dem gleichen Disk Zylinder.
+	\item Einf"uhren von Parallelismus (RAID)
+	\item Spiegelung von Daten
+	\item Effizientes Caching
+	\item Prefetching von Disk Blocks
+\end{itemize}
+
+\subsection{Transaktionsmanagement}
+
+\subsubsection{Eigenschaften}
+
+\begin{description}
+	\item[Atomacity] Alles-oder-Nichts. Transaktionen sind entweder komplett erfolgreich oder versagen.
+	\item[Consistency] Garantieren, dass Datenbank konsistent, bevor man eine Transaktion commited. Constraints m"ussen gepr"uft werden.
+	\item[Isolation] Der Effekt von Transaktionen ist anderen nicht sichtbar, bis commited.
+	\item[Durability] Recovery in jedem Fall, somit m"ussen die Logs an sicherem Speicherplatz gespeichert werden.
+\end{description}
+
+\subsubsection{Probleme bei Parallelen Transaktionen (gel"ost durch Isolation)}
+
+\begin{definition}[Lost Update Problem]
+	Eine Transaktion $T_i$ updated ein Objekt in der Datenbank. Eine zweite Transaktion $T_j$ updated dasselbe Objekt basierend auf den Werten von $T_i$.
+\end{definition}
+
+\begin{definition}[Dirty Read Problem]
+	Eine Transaktion $T_i$ liest Datenbankobjekte welche durch eine Transaktion $T_j$ ver"andert wurden, aber $T_j$ hat noch nicht commited.
+\end{definition}
+
+\begin{definition}[Phantom Problem]
+	Eine Transaktion $T_i$ erstellt Datenbankobjekte (Phantome), welche zu einer Arbeitsdom"ane von einer anderen parallelen Transaktion $T_j$ geh"oren.
+\end{definition}
+
+
+\section{Relationenmodell}
+
+\subsection{Relationen}
+
+\subsubsection{Dom"ane}
+
+Der Wertebereich, eine Menge \textit{atomarer} Werte, normalerweise sind dies bekannte \textit{Basistypen} wie z.B. String oder Integer.
+
+
+\subsubsection{Relationen Schema}
+
+Eine endliche Menge von Attributen $\{ A_1,A_2,\ldots,A_n\}$ wobei jedem Attribut eine Dom"ane $D_i$ zugeordnet ist.
+
+
+\subsubsection{Relation}
+
+Eine Untermenge des kartesischen Produkts $D_1\times D_2\times \ldots D_n$. Es wird $r(R)$ benutzt um zu bezeichnen, dass $r$ eine Relation auf $R$ ist.
+
+
+\subsubsection{Tupel}
+
+Ein \textit{Element} einer Relation $r$ wird als Tupel bezeichnet. Wenn $t=\langle d_1, d_2,\ldots,d_n\rangle \in r(R)$, so bezeichnet $t[A_i]$ den Attributwert $d_i$ eines Attributs $A_i$ von einem Tupel $t$. Kann f"ur Mengen von Attributen $X=\{A_1,\ldots,A_k\}$ erweitert werden, so dass $t[X] = \langle d_1,\ldots, d_k\rangle$.
+
+
+\subsubsection{Grad und Kardinalit"at}
+
+Die Kardinalit"at von $r$ ist die Anzahl Tupel in $r$ und der Grad von $r$ ist die Anzahl von Attributen in seinem Relationen Schema $R$.
+
+
+\subsubsection{Relationales Datenbank Schema $\mathcal{R}$}
+
+Ein Relationales Datenbank Schema $\mathcal{R}$ ist eine Menge von Relationen Schemas $\{R_1,R_2,\ldots, R_m\}$.
+
+
+\subsubsection{Relationale Datenbank auf $\mathcal{R}$}
+
+Eine Relationale Datenbank auf $\mathcal{R}$ ist eine Menge von Relationen $\{r_1(R_1),r_2(R_2),\ldots, r_m(R_m)\}$.
+
+
+\subsubsection{Key}
+
+Ein Key von $r(R)$ ist eine Untermenge $X$ von $R$, so dass f"ur verschiedene Tupel $t_1, t_2$ von $r$ gilt: $t_1[X]\neq t_2[X]$. Ein \textit{minimaler} Key ist ein Key welcher keine Keys enth"alt.
+
+
+\subsection{Relationale Algebra}
+
+\subsubsection{Mengenoperationen}
+
+F"ur zwei Relationen $r$ und $s$ auf demselben Schema $R$, sind die normalen Mengenoperationen definiert.
+
+\begin{eqnarray*}
+	r \cup s &	= &	\{ t \ | \ t \in r \lor t \in s \} \\
+	r \cap s &	= &	\{ t \ | \ t \in r \land t \in s \} \\
+	r - s &		= &	\{ t \ | \ t \in r \land t \not\in s \}
+\end{eqnarray*}
+
+\begin{remark}
+	Die entstehenden Schemata sind gleich wie $R$.
+\end{remark}
+
+
+\subsubsection{Kartesisches Produkt $\times$}
+
+Gegeben seien zwei Relationen $r(R)$ und $s(S)$, wobei $R\cap S = \emptyset$ (was durch Umbenennen der Attributnamen immer erreicht werden kann), dann ist das Kartesische Produkt definiert als:
+
+\begin{displaymath}
+	r\times x = \{ t \ | \ t[R] \in r \land t[S] \in s \}
+\end{displaymath}
+
+\begin{remark}
+	Das Schema von $r\times s$ ist $R\cup S$.
+\end{remark}
+
+\subsubsection{Projektion $\pi$}
+
+Die Projektion einer Relation $r(R)$ auf $X \subseteq R$ ist gegeben durch:
+
+\begin{displaymath}
+	\pi_X(r) = \{ t[X] \ | \ t \in r\}
+\end{displaymath}
+
+Wir w"ahlen also gewisse Attribute einer Relation aus.
+
+\begin{remark}
+	Das Schema von $\pi_X(r)$ ist gleich $X$.
+\end{remark}
+
+
+\subsubsection{Selektion $\sigma$}
+
+Gegeben sei die Relation $r(R)$, wir m"ochten die Tupel selektieren, welche ein bestimmtes Pr"adikat $P$ auf ihren Attributwerten erf"ullen. Dies kann durch den Selektionsoperator $\sigma_P$ erreicht werden, welcher definiert ist durch:
+
+\begin{displaymath}
+	\sigma_P(r) = \{ t \ | \ t \in r \text{ und } P(t)\}
+\end{displaymath}
+
+\begin{remark}
+	Das resultierende Schema bleibt das gleiche.
+\end{remark}
+
+\subsubsection{Nat"urlicher Join $\bowtie$}
+
+Gegeben seien zwei Relationen $r(R)$ und $s(S)$, der \textit{nat"urliche Join} von $r$ und $s$, geschrieben $r\bowtie s$ ist definiert als:
+
+\begin{displaymath}
+	r \bowtie s = \{ t \ | \ \exists t_1 \in r, t_2 \in s \text{ so dass } t_1=t[R] \text{ und } t_2=t[S] \}
+\end{displaymath}
+
+Falls also $R\cap S= \emptyset$ so ist $r\bowtie s = r \times s$ und f"ur den Fall $R\cap S \neq \emptyset$ so ist jedes $t\in r\bowtie s$ eine Kombination von Tupeln von $r$ und Tupeln von $s$ mit gleichen $(R\cap S)$-Werten.
+
+\begin{remark}
+	Das Schema von $r\bowtie s$ ist $R \cup S$.
+\end{remark}
+
+
+\subsubsection{$\theta$-Join}
+
+Wenn $X \subseteq R, Y \subseteq S$ und $X$ und $Y$ $\theta$-vergleichbar sind, so ist der $\theta$-Join von $r(R)$ und $s(S)$ definiert als:
+
+\begin{displaymath}
+	r \bowtie_{X \theta Y} s = \{ t \ | \ t[R] \in r \text{ und } t[S]\in s \text{ und } t[X]\theta t[Y] \}
+\end{displaymath}
+
+Zwei Mengen von Attributen sind $\theta$-vergleichbar gdw. sie die gleiche Zahl von Attributen enthalten, f"ur jedes $A_i\in X$ gibt es ein $V_i \in Y$ mit der selben Dom"ane $D_i$ und der Relationale Operator $\theta$ ist auf $D_i$ definiert. $\theta$ ist meistens einer der relationalen Operatoren: $=, \neq, >, \geq, <, \leq$.\\
+Falls der Operator $=$ ist, so spricht man von einem \textit{Equi-Join}.
+
+\begin{remark}
+	Das Schemata von $r\bowtie s$ ist $R \cup S$.
+\end{remark}
+
+
+\subsubsection{Division $\div$}
+
+Gegeben seien zwei Relationen $r(R)$ und $s(S)$ wobei $S \subset R$ und $R' = R-S$. Dann ist $r$ dividiert durch $s$, geschrieben $r\div s$, die Relation
+
+\begin{displaymath}
+	r'(R') = \{ t \ | \ \forall t_s \in s \ \exists t_r \text{ mit } t_r(R') = t \text{ und } t_r(S) = t_s \}
+\end{displaymath}
+
+\begin{remark}
+	Das Schema von $R\div S$ ist $R - S$. Die Division ist die einfachste Art, Anfragen der Art ''... f"ur alle ...'' auszudr"ucken.
+\end{remark}
+
+
+\subsubsection{Zusammenhang zwischen Nat"urlichem Join und kartesischem Produkt}
+
+Gegeben seien $r(R)$ und $s(S)$, es sei $Q = R \cap S$. Der Nat"urliche Join kann ausgedr"uckt werden als:
+
+\begin{displaymath}
+	r \bowtie s = \pi_{R\cup S - \{s(Q)\}} (\sigma_{r(Q) = s(Q)} r \times s)
+\end{displaymath}
+
+
+\subsubsection{Zusammenhang zwischen Division und Nat"urlichem Join}
+
+Gegeben seien $r(R)$ und $s(S)$, wobei $S \subset R$ und $R' = R-S$. Die Division kann ausgedr"uckt werden als:
+
+\begin{displaymath}
+	r \div s = \pi_{R'}(r) - \pi_{R'}((\pi_{R'}(r) \bowtie s) - r)
+\end{displaymath}
+
+
+\subsection{Datenabh"angigkeiten}
+
+Gewisse semantische Eigenschaften der Daten k"onnen durch Datenabh"angigkeiten ausgedr"uckt werden.
+
+
+\subsubsection{Funktionale Abh"angigkeit (FD)}
+
+Gegeben sei eine Relation $r(R)$ und $X, Y \subseteq R$, dann erf"ullt $r$ die funktionale Abh"angigkeit $X\rightarrow Y$ wenn f"ur beliebige Tupel $t_1,t_2 \in r,\ t_1[X] = t_2[X]$ impliziert, dass $t_1[Y] = t_2[Y]$.
+Wir sagen also, dass $X \rightarrow Y$ gilt, falls irgendein $X$ Wert gegeben, der $Y$ Wert eindeutig bestimmt ist.
+
+
+\subsubsection{Folgerungsregeln f"ur FDs}
+
+Gegeben eine Relation $r(R)$ und $W,X,Y,Z \subseteq R$ so gilt:
+
+\begin{labeling}{\usekomafont{descriptionlabel} F1:}
+	\item[\usekomafont{descriptionlabel} F1:] (Reflexivit"at) $X \rightarrow X$
+	\item[\usekomafont{descriptionlabel} F2:] (Vergr"osserung) $X \rightarrow Y \Rightarrow XZ \rightarrow Y$
+	\item[\usekomafont{descriptionlabel} F3:] (Addivit"at) $X \rightarrow Y \land X \rightarrow Z \Rightarrow X \rightarrow YZ$
+	\item[\usekomafont{descriptionlabel} F4:] (Projektierung) $X \rightarrow YZ \Rightarrow X \rightarrow Y$
+	\item[\usekomafont{descriptionlabel} F5:] (Transitivit"at) $X \rightarrow Y \land Y \rightarrow Z \Rightarrow X \rightarrow Z$
+	\item[\usekomafont{descriptionlabel} F6:] (Pseudotransitivit"at) $X \rightarrow Y \land YZ \rightarrow W \Rightarrow XZ \rightarrow W$
+\end{labeling}
+
+F1, F2, F6 - Armstrong's Regeln.
+
+
+\subsubsection{Mehrwertige Abh"angigkeit (MVD)}
+
+Eine mehrwertige Abh"angigkeit $X\rightarrow\rightarrow Y$ gilt f"ur eine Relation $r(XYZ)$, wobei $X,Y,Z$ disjunkte Mengen von Attributen sind, gdw. f"ur alle Tupel $t_1$ und $t_2$ in $r$ welche denselben Wert f"ur Attribute $X$ haben, also $t_1[X] = t_2[X]$, $r$ auch immer $t_3$ und $t_4$ (nicht notwendigerweise disjunkt) enth"alt, so dass gilt:
+
+\begin{displaymath}
+	\begin{array}{c}
+		t_1[X] = t_2[X] = t_3[X] = t_4[X] \\
+		t_3[Y] = t_1[Y] \text{ und } t_3[Z] = t_2[Z]\\
+		t_4[Y] = t_2[Y] \text{ und } t_4[X] = t_1[Z]
+	\end{array}
+\end{displaymath}
+
+oder in anderen Worten wenn $t_1$ und $t_2$ gegeben sind durch:
+
+\begin{displaymath}
+	t_1 = (X, Y_1, Z_1) \text{ und } t_2 = (X, Y_2, Z_2)\\
+\end{displaymath}
+
+so m"ussen auch Tupel existieren, so dass
+
+\begin{displaymath}
+	t_3 = (X, Y_1, Z_2) \text{ und } t_4 = (X, Y_2, Z_1)
+\end{displaymath}
+
+Die obigen Bedingungen verlangen, dass $Y$ und $Z$ durch $X$ alleine bestimmt sind, und dass kein Zusammenhang zwischen $Y$ und $Z$ gilt, da alle $Y$ und $Z$ in jeder m"oglichen Paarung auftreten, somit repr"asentieren diese Paare keine Information.
+
+
+\subsubsection{Folgerungsregeln MVDs}
+
+Gegeben eine Relation $r(R)$ und $W, X, Y, Z \subseteq R$ so gilt:
+\begin{labeling}{\usekomafont{descriptionlabel} M1:}
+	\item[\usekomafont{descriptionlabel} M1:] (Reflexivit"at) $X \rightarrow\rightarrow X$
+	\item[\usekomafont{descriptionlabel} M2:] (Vergr"osserung) $X \rightarrow\rightarrow Y \Rightarrow XZ \rightarrow\rightarrow Y$
+	\item[\usekomafont{descriptionlabel} M3:] (Addivit"at) $X \rightarrow\rightarrow Y \land X \rightarrow\rightarrow Z \Rightarrow X \rightarrow\rightarrow YZ$
+	\item[\usekomafont{descriptionlabel} M4:] (Projektierung) $X \rightarrow\rightarrow  Y \land X\rightarrow\rightarrow Z \Rightarrow X \rightarrow\rightarrow Y \cap Z, X \rightarrow \rightarrow Z - Y \land X \rightarrow \rightarrow Y -Z$
+	\item[\usekomafont{descriptionlabel} M5:] (Transitivit"at) $X \rightarrow\rightarrow Y \land Y \rightarrow\rightarrow Z \Rightarrow X \rightarrow\rightarrow Z - Y$
+	\item[\usekomafont{descriptionlabel} M6:] (Pseudotransitivit"at) $X \rightarrow\rightarrow Y \land YW \rightarrow\rightarrow Z \Rightarrow XW \rightarrow \rightarrow Z- YW$
+	\item[\usekomafont{descriptionlabel} M6:] (Komplementierung) $X \rightarrow\rightarrow Y \land Z = R -XY \Rightarrow X \rightarrow \rightarrow Z$
+\end{labeling}
+
+\begin{labeling}{\usekomafont{descriptionlabel} FM1:}
+	\item[\usekomafont{descriptionlabel} FM1:] $X \rightarrow Y \Rightarrow X \rightarrow\rightarrow Y$
+	\item[\usekomafont{descriptionlabel} FM2:] $X \rightarrow\rightarrow Y \land Z \rightarrow W, \mbox{ wobei } W \subseteq Y \land Y \cap Z = \emptyset \Rightarrow X \rightarrow W$
+\end{labeling}
+
+
+\subsection{Normalformen}
+
+
+\subsubsection{Erste Normalform}
+
+Alle Felder eines Tupels m"ussen atomare Werte enthalten.
+
+
+\subsubsection{Zweite und Dritte Normalform}
+
+Ein Nicht-Schl"usselfeld muss ein Fakt "uber den Schl"ussel, den ganzen Schl"ussel und nichts als den Schl"ussel liefern.\\
+
+Enthalten Aussagen "uber FDs.
+
+
+\subsubsection{Zweite Normalform}
+
+Verletzt wenn ein Nicht-Schl"usselfeld ein Fakt "uber eine Untermenge vom Schl"ussel ist.\\
+
+\begin{example}\ 
+	\begin{displaymath}
+		\{ \underline{part, warehouse}, quantity, warehouse\_address \}
+	\end{displaymath}
+	Muss unterteilt werden in:
+	\begin{displaymath}
+		\begin{array}{c}
+			\{\underline{part, warehouse}, quantity\}\\
+			\{\underline{warehouse}, warehouse\_address\}
+		\end{array}
+	\end{displaymath}
+\end{example}
+
+
+\subsubsection{Dritte Normalform}
+
+Verletzt wenn ein Nicht-Schl"usselfeld ein Fakt "uber ein anderes Nicht-Schl"usselfeld ist.\\
+
+\begin{example} \
+	\begin{displaymath}
+		\{ \underline{employee}, departement, location \}
+	\end{displaymath}
+	Muss unterteilt werden in:
+	\begin{displaymath}
+		\{ \underline{employee}, departement\},\{ \underline{departement}, location \}
+	\end{displaymath}
+\end{example}
+
+
+\subsubsection{Vierte und F"unfte Normalform}
+
+Enthalten Aussagen "uber MVDs.
+
+
+\subsubsection{Vierte Normalform}
+
+Ein Tupel sollte nicht mehrere Mehrwertige Fakten beinhalten.\\
+
+\begin{example} \
+	\begin{displaymath}
+		\{ \underline{employee, skill, language} \}
+	\end{displaymath}
+	Muss unterteilt werden in:
+	\begin{displaymath}
+		\{ \underline{employee, skill} \}, \{\underline{employee, language} \}
+	\end{displaymath}
+\end{example}
+
+
+\subsubsection{F"unfte Normalform}
+
+Der Informationinhalt einer Relation kann nicht rekonstruiert werden von mehreren kleineren Relationen (nicht alle mit dem selben Schl"ussel).\\
+
+\begin{example} Ein Agent verkauft ein Produkt und repr"asentiert eine Firma, dann verkauft er die Produkte f"ur diese Firma. Dann k"onnte man 
+
+\begin{displaymath}
+	\{ agent, company, product \}
+\end{displaymath}
+
+wiefolgt in drei Relationen aufteilen
+\begin{displaymath}
+	\{ agent, company \} \quad \{agent, product\} \quad \{company, product\}
+\end{displaymath}
+\end{example}
+
+\subsection{Design}
+
+\begin{itemize}
+	\item Entwickle ein konzeptuelles Modell mit
+		\begin{itemize}
+			\item Entity-Relationship Model
+			\item Object Data Model
+		\end{itemize}
+	\item "Ubertrage es in ein Relationales Schema
+	\item Verhindert viele Fallgruben und Komplexit"aten des Relationalen Datenbank Designs
+\end{itemize}
+
+\subsubsection{Mapping von konzeptuellem Modell zu Relationenmodell}
+
+\begin{description}
+	\item[Typen] Jeder Objekttyp wird auf eine Relation gemappt, in welcher jedes Objekt als Tupel repr"asentiert wird. Falls das Objekt schon einen eindeutigen Key hat, so kann man diesen als Primary Key w"ahlen, sonst muss man einen eindeutigen Identifier hinzuf"ugen.
+	\item[Subtypen] Ein Subtyp wird wie andere Typen auf eine Relation gemappt. Aber hier hat die Relation einen Foreign Key f"ur den Supertyp.
+	\item[Collections] Im Allgemeinen werden Collections auf un"are Relationen gemappt mit einem Foreign Key auf das entsprechende Tupel, falls es aber Eins-zu-Eins Korrespondenz zwischen Typ und Collection gibt, so ist es nicht n"otig die Collection seperat darzustellen.
+	\item[Subcollections] Werden wie andere Collections als Relation dargestellt.
+	\item[Associations] Normalerweise eine neue Relation mit zwei Foreign Key zu der Domain und Range, falls es aber zumindest ein Kardinalit"atsconstraint von 1 gibt, so kann die entsprechende durch Foreign Keys eingebunden werden.
+\end{description}
+
+\section{SQL}
+
+\subsection{"Ubersicht}
+
+\subsubsection{Generelle Query Struktur}
+
+\begin{verbatim}
+ SELECT {attr to be included in answer | * for 
+   all attr}
+ FROM {relation(s) involved in query}
+ WHERE {selection condition};
+\end{verbatim}
+
+Mit \verb#SELECT DISTINCT ...# k"onnen Duplikate eliminiert werden.
+
+\subsubsection{Aggregation}
+
+\begin{verbatim}
+ SUM
+ AVG
+ MIN
+ MAX
+ COUNT
+\end{verbatim}
+
+\subsubsection{Stringvergleich}
+
+\verb#s LIKE p#, wobei \verb#p# ein Pattern ist, mit speziellen Chars (\% f"ur irgendwelche 0 oder mehr Chars oder \_ f"ur einen Char).
+
+\subsubsection{Null Values}
+
+Attribute k"onnen den Wert NULL haben. Vergleiche, die NULL beinhalten geben UNKNOWN zur"uck. Eine arithmetische Operation mit NULL gibt NULL zur"uck. NULL ist aber \textit{keine Konstante}: Attribute k"onnen den Wert NULL haben, NULL kann aber nicht in SQL Ausdr"ucken vorkommen. F"ur einen Check, ob ein Wert NULL ist, gibt es \verb#IS NULL#.
+
+
+\subsubsection{Ordnen von Resultaten}
+
+\begin{verbatim}
+ ...
+ ORDER BY surname DESC, forename ASC;
+\end{verbatim}
+
+
+\subsubsection{Gruppieren}
+
+"Ahnlich einem nest in OMS; wird v.a. im Zusammenhang mit Aggregationsfunktionen ben"otigt. Die Syntax ist wiefolgt:
+
+\begin{verbatim}
+ SELECT column,SUM(column)
+ FROM table GROUP BY column
+\end{verbatim}
+
+Wenn man z.B. eine Tabelle Sales hat mit Firmen und deren Verk"aufen
+
+\begin{center}
+\begin{tabular}{l|l}
+	Company &	Amount\\ \hline
+	IBM &		5600\\
+	Microsoft &	7800\\
+	IBM &		8300
+\end{tabular}
+\end{center}
+
+und man m"ochte deren Gesamtwert haben, so benutzt man \verb#GROUP BY# wiefolgt:
+
+\begin{verbatim}
+ SELECT Company, SUM(Amount) FROM Sales
+\end{verbatim}
+
+dies ergibt
+\begin{center}
+\begin{tabular}{l|l}
+	Company &	Amount\\ \hline
+	IBM &		13900\\
+	Microsoft &	7800
+\end{tabular}
+\end{center}
+
+
+\subsubsection{Tupel Variablen}
+
+\begin{verbatim}
+ SELECT p1.surname, p2.surname
+ FROM Persons p1, Persons p2
+ WHERE p1.phone = p2.phone;
+\end{verbatim}
+
+
+\subsubsection{Subqueries}
+
+\begin{verbatim}
+ SELECT surname
+ FROM Persons
+ WHERE phone =
+ (
+   SELECT phone
+   FROM Organisations
+   WHERE name='ETH Zurich'
+ );
+\end{verbatim}
+
+
+\subsubsection{Conditions f"ur Relationen}
+
+\begin{tabular}{lp{5cm}}
+	\verb#EXISTS R# &		true gdw. \verb#R# nicht leer\\
+	\verb#v IN R# &			true gdw. \verb#v# gleich wie ein Wert in \verb#R# ist, wobei \verb#R# un"ar ist.\\
+	\verb#v > ALL R# &		true gdw. \verb#v# gr"osser als alle Werte in \verb#R#, wobei \verb#R# un"ar ist.\\
+	\verb#v > ANY R# &		true gdw. \verb#v# gr"osser als ein Wert in \verb#R#, wobei \verb#R# un"ar ist.
+\end{tabular}
+
+
+\subsubsection{Mengenoperationen}
+
+\verb#UNION# kann "uber zwei Subqueries gemacht werden. Die Relationen m"ussen aber "uber die gleichen Attribute sein.\\
+
+\verb#MINUS# durch \verb#WHERE NOT EXISTS#\\
+
+\verb#INTERSECT# durch \verb#WHERE EXISTS#
+
+
+\subsection{JOIN Operationen und Kartesisches Produkt}
+
+
+\subsubsection{Kartesisches Produkt}
+
+\begin{verbatim}
+ r1 CROSS JOIN r2
+\end{verbatim}
+
+Das Kartesische Produkt zwischen Relation \verb#r1# und \verb#r2#.
+
+
+\subsubsection{Inner Join}
+
+\begin{verbatim}
+ r1 INNER JOIN r2 ON p
+\end{verbatim}
+
+\verb#p# ist dabei ein Vergleich zwischen Spalten von \verb#r1# und Spalten von \verb#r2#. Das Resultat sind alle Tupel wo es einen Match gibt. Wenn es Tupel von \verb#r1# welche keinen Match in \verb#r2# haben, werden die nicht angezeigt und umgekehrt.
+
+
+\subsubsection{Left Join}
+
+\begin{verbatim}
+ r1 LEFT JOIN r2 ON p
+\end{verbatim}
+
+Gleich wie Inner Join nur werden hier die Tupel von \verb#r1#, welche keinen Match in \verb#r2# haben, auch ausgegeben.
+
+
+\subsubsection{Right Join}
+
+\begin{verbatim}
+ r1 RIGHT JOIN r2 ON p
+\end{verbatim}
+
+Gleich wie Inner Join nur werden hier die Tupel von \verb#r2#, welche keinen Match in \verb#r1# haben, auch ausgegeben.
+
+
+\subsubsection{Full Join}
+
+\begin{verbatim}
+ r1 FULL JOIN r2 ON p
+\end{verbatim}
+
+Beh"alt alle Tupel.
+
+
+\subsubsection{Sonstige Joins}
+
+Nat"urlicher Join:
+\begin{verbatim}
+ r1 NATURAL JOIN r2 ON p
+\end{verbatim}
+
+$\theta$-Join:
+\begin{verbatim}
+ r1 JOIN r2 ON p
+\end{verbatim}
+
+Outer Join:
+\begin{verbatim}
+ r1 {LEFT|RIGHT} OUTER JOIN r2 ON p
+\end{verbatim}
+Dieser Typ von Join ergibt alle Tupel einer Relation und nur die Tupel der zweiten, wo die Joined Felder gleich sind.
+
+
+\subsection{Datenmanipulation/ Integrit"at}
+
+\subsubsection{Datenmanipulation}
+
+\begin{verbatim}
+ INSERT INTO Persons
+ (ahv,surname,forename,phone,fax)
+ VALUES
+ (123,'Smith','John','27534','27532');
+\end{verbatim}
+
+\begin{verbatim}
+ DELETE FROM Persons
+ WHERE ..
+\end{verbatim}
+
+\begin{verbatim}
+ UPDATE Persons
+ SET surname='Schmidt'
+ WHERE surname='Smith';
+\end{verbatim}
+
+
+\subsubsection{Daten Definitions Statements}
+
+\begin{verbatim}
+ CREATE TABLE Persons(
+    ahv      CHAR(14),
+    surname  VARCHAR(20)
+ );
+\end{verbatim}
+
+\verb#CHAR(14)# muss genau 14 Zeichen enthalten, \verb#VARCHAR(20)# kann beliebige Anzahl kleiner 20 enthalten.
+
+
+\subsubsection{Domain Integrit"at}
+
+Attribute m"ussen bekannt sein:
+\begin{verbatim}
+ surname VARCHAR(20) NOT NULL
+\end{verbatim}
+
+Allgemeine Attribut Constraints Regeln:
+\begin{verbatim}
+ CHECK (quantity > 0)
+ CHECK (title IN ('Mr', 'Miss', 'Dr'))
+ CHECK (orgname IN (SELECT orgname
+   FROM Organisations))
+\end{verbatim}
+
+
+\subsubsection{Entity Integrit"at}
+
+Primary Key
+\begin{verbatim}
+ CREATE TABLE Persons(
+   ahv CHAR(14) PRIMARY KEY,
+   ..
+ )
+ 
+ // oder als relation constraint
+ CONSTRAINT primary_person
+  PRIMARY KEY (ahv)
+ 
+ // fuer zusammengesetzen Key
+ CONSTRAINT primary_person
+  PRIMARY KEY (ahv,orgname)
+\end{verbatim}
+
+Unique.\\
+UNIQUE erlaubt NULL, w"ahrend PRIMARY KEY das nicht erlaubt.
+
+
+\subsubsection{Referential Integrit"at}
+
+\begin{verbatim}
+ CREATE TABLE contacts.Worksfor (
+   ahv     CHAR(14),
+   orgname VARCHAR(40),
+   
+   CONSTRAINT pk_worksfor
+    PRIMARY KEY (ahv,orgname),
+   
+   CONSTRAINT fk_worksfor_per FOREIGN KEY (ahv)
+    REFERENCES Persons(ahv) ON DELETE CASCADE,
+   
+   CONSTRAINT fk_worksfor_orgn
+    FOREIGN KEY (orgname)
+    REFERENCES Organisations(orgname)
+    ON DELETE CASCADE
+ );
+\end{verbatim}
+
+
+\subsubsection{Views}
+
+'Virtuelle Relationen'
+
+\begin{verbatim}
+ CREATE VIEW PublicPerson AS
+  SELECT surname,forename,www
+  FROM Persons;
+\end{verbatim}
+
+
+\subsection{Rekursion}
+
+Rekursion am Beispiel Microsoft SQL Server 2005 ''Yukon''. Finde die Anzahl von Personen die f"ur die ETH arbeiten.
+
+\small
+\begin{verbatim}
+ WITH Part_of_closure(ext_dom, ext_ran)
+ AS
+ ( -- Anchor Organisation
+   SELECT po.ext_dom, po.ext_ran
+   FROM Part_of po
+    JOIN contact c ON po.ext_ran = c.contact_id
+   WHERE c.name LIKE 'ETH%'
+   UNION
+   -- Recursive Suborganisations
+   SELECT po.ext_dom, po.ext_ran
+   FROM Part_of po
+    JOIN Part_of_closure po_closure ON po.ext_ran =
+    po_closure.ext_dom
+ )
+ SELECT COUNT(p.person_id) AS "Total"
+ FROM person p JOIN Works_for wf
+  ON p.person_id = wf.ext_dom
+  JOIN organisations o
+  ON wf.ext_ran = o.organisation_id
+ WHERE o.organisation_id IN (
+   SELECT c.contact_id FROM contact c
+   WHERE c.name LIKE 'ETH %'
+   UNION
+   SELECT po_closure.ext_dom FROM
+    Part_of_closure po_closure
+ )
+\end{verbatim}
+\normalsize
+
+\section{Query Verarbeitung und Optimierung}
+
+\subsection{Query Verarbeitung}
+
+\subsubsection{Query}
+
+\begin{itemize}
+	\item Deklarativ in Natur\\
+		Spezifiziert mehr WAS getan wird, als WIE
+	\item Optimierung\\
+		W"ahle zwischen verschiedenen m"oglichen Ausf"uhrungspl"anen\\
+		W"ahle eher eine GUTE als eine OPTIMALE
+	\item Code Generierung\\
+		Generiere Code um den gew"ahlten Ausf"uhrungsplan auszuf"uhren\\
+		Kompiliert oder interpretiert
+	\item Batch Queries\\
+		Gruppiere Queries und optimiere sie "uber die ganze Arbeitslast
+\end{itemize}
+
+\subsubsection{"Ubersicht "uber Verarbeitung}
+
+\begin{enumerate}
+	\item \textit{Parser} baut einen Query-Tree
+	\item \textit{Optimiser} entscheidet sich f"ur einen Ausf"uhrungsplan und generiert Code daf"ur
+	\item \textit{Evaluator} wertet den Ausf"uhrungsplan aus
+\end{enumerate}
+
+\subsubsection{Query Preprocessing}
+
+\begin{itemize}
+	\item Semantik "uberpr"ufen
+	\item Ersetze Referenzen zu Views durch ihre Parseb"aume
+\end{itemize}
+
+\subsubsection{Query Trees}
+
+Das Query muss in einen Tree konvertiert werden, welcher einen logischen Queryplan mit Operationen der Relationalen Algebra repr"asentiert. Jedes Stadium der algebraischen Query-Optimierung wird einen logischen Query Tree in einen anderen umformen. Am Ende wird der Tree in Code umgewandelt.
+
+\subsubsection{Von SQL zur Relationalen Algebra}
+
+\begin{itemize}
+	\item Produkt von allen Relationen in FROM Klausel
+	\item Selektieren von Bedingungen in WHERE Klausel
+	\item Projektion "uber Attribute spezifiziert in SELECT Klausel
+\end{itemize}
+
+Eine WHERE Klausel die ein Subquery enth"alt kann als eine zwei Argument Auswahl verarbeitet werden. Wir k"onnen es als Select Node ($\sigma$) mit keinen Parametern und zwei Unterb"aumen behandeln:
+\begin{itemize}
+	 \item Rechtes Kind repr"asentiert die Relation $R$ auf welcher die Auswahl ausgef"uhrt wird
+	 \item Linkes Kind repr"asentiert die Bedingung angewandt auf jedes Tupel von $R$
+\end{itemize}
+
+Die entstandenen Intermediate trees machen weitere Transformationen n"otig, so dass nur noch Operationen der Relationalen Algebra enthalten sind.
+
+\subsubsection{Heuristiken}
+
+Generell f"ur Relationale Systeme
+\begin{itemize}
+	\item Reduziere Gr"osse der Operandenrelationen so weit wie m"oglich, so fr"uh wie m"oglich
+	\item Verschiebe Selektion und Projektion nach unten im Query Tree
+	\item F"uhre die am meisten verkleinernden Selektion und Join Operation zuerst aus
+\end{itemize}
+
+\subsection{Algebraische Optimierung}
+
+Man benutzt eine Menge von Umschreibregeln f"ur algebraische Ausdr"ucke. Eine Auswahlfunktion welche Regeln wann und wie anwendet.
+
+\subsubsection{Kommutativit"at}
+
+\begin{itemize}
+	\item $\sigma_P (\pi_X (r)) \rightarrow \pi_X (\sigma_P (r))$
+	\item $\sigma_{P1}(\sigma_{P2}(r)) \rightarrow \sigma_{P2} (\sigma_{P1} (r))$
+	\item $\pi_{X1}(\pi_{X2}(r)) \rightarrow \pi_{X2}(\pi_{X1}(r)) \mbox{ if } X1 = X2$
+	\item $\pi_{X}(\sigma_{P}(r)) \rightarrow \sigma_P (\pi_X (r)) \mbox{ if attr}(P) \subseteq X$
+	\item $r \ op \ s \rightarrow s \ op \ r \mbox{ where } op \in \{ \cup, \times, \bowtie \}$
+\end{itemize}
+
+\subsubsection{Assoziativit"at}
+
+$(r \ op \ s) \ op \ u \rightarrow r \ op \ (s \ op \ u) \mbox{ where } op \ \in \{ \cup, \times, \bowtie \}$\\
+
+Bemerkung: Assoziativit"at kann nicht generell auf $\theta$-Join angewendet werden.
+
+\subsubsection{Idempotenz}
+
+\begin{itemize}
+	\item $\pi_{X1}(r) \rightarrow \pi_{X1}(\pi_{X2}(r)) \mbox{ where } X1 \subseteq X2$
+	\item $\sigma_P(r) \rightarrow \sigma_{P1}(\sigma_{P2}(r)) \mbox{ if } P=P1 \land P2$
+\end{itemize}
+
+\subsubsection{Distributivit"at}
+
+\begin{itemize}
+	\item $\sigma_P(r\ op\ s) \rightarrow \sigma_P(r) \ op \ \sigma_P(s) \mbox{ where } op \ \in \{ \cup, -\}$
+	\item $\sigma_P(r\ op\ s) \rightarrow \sigma_{P1}(r) \ op \ \sigma_{P2}(s) \mbox{ where } op \ \in \{ \times, \bowtie \}$\\
+		if $\exists P1, P2 . (P = P1 \land P2) \mbox{ and attr}(P1) \subseteq \mbox{ attr}(P2) \subseteq \mbox{ attr}(s)$
+	\item $\pi_X(r \cup s) \rightarrow \pi_X (r) \cup \pi_X (s)$
+	\item $\pi_X (r \times s) \rightarrow \pi_{X1}(r) \times \pi_{X2}(s)$\\
+		$\mbox{ where } X1=X2-\mbox{ attr}(s) \mbox{ and }X2=X-\mbox{attr}(r)$
+	\item $\pi_X (r \bowtie s) \rightarrow \pi_{X1} (r) \bowtie \pi_{X2} (s)$ where ..
+\end{itemize}
+
+\subsubsection{Faktorisierung}
+
+\begin{itemize}
+	\item $\sigma_P(r) \cup \sigma_P(s) \rightarrow \sigma_P(r \cup s)$
+	\item $\sigma_{P1}(r) - \sigma_{P2}(s) \rightarrow \sigma_{P1}(r - s) \mbox{ if }P1 \Rightarrow P2$
+	\item $\sigma_{P1}(r) \ op \ \sigma_{P2}(s) \rightarrow \sigma_P (r \ op \ s)$\\
+		$\mbox{where } op \in \{ \times, \bowtie \} \mbox{ and } P= P1 \land P2$
+	\item $\pi_X(r) \cup \pi_X (s) \rightarrow \pi_X (r \cup s)$
+	\item $\pi_{X1}(r) \ op \ \pi_{X2}(s) \rightarrow \pi_X (r \ op \ s)$\\
+		$\mbox{ where } op \in \{ \times, \bowtie \} \mbox{ and } X = X1 \cup X2$
+\end{itemize}
+
+\subsection{Implementation}
+
+\subsubsection{Absch"atzen der Kosten}
+
+Der physikalische Ausf"uhrungsplan wird selektiert, der die gesch"atzen Kosten f"ur eine Query Evaluation minimiert. Die Gr"osse der Zwischenrelationen hat hier einen grossen Einfluss. Daf"ur werden Mittelwerte der Anzahl Tupel in Zwischenresulaten ben"otigt, dies wird z.B. "uber statistische Sch"atzungen gemacht.
+
+\subsubsection{Absch"atzen der Gr"osse von Auswahlen}
+
+$T(R)$ ist die Anzahl Tupel in $R$, $V(R,A)$ die Anzahl Attribute $A$ in $R$. Wenn $S=\sigma_{A=c}(R)$ dann sch"atzt man im Allgemeinen
+\begin{displaymath}
+	T(S) = T(R) / V(R,A)
+\end{displaymath}
+
+\subsubsection{Select}
+
+Linear Search wird nur gew"ahlt, falls es keine bessere M"oglichkeit gibt. Sonst werden Zugriffsstrukturen wie Index Tabellen oder Hash Tabellen benutzt. F"ur Range Queries "uber die Schl"usselattribute ist es sehr gut, wenn man nur auf erstes zugreifen muss und die restlichen Tupel durch sequentiellen Zugriff bekommen kann (darum ist hier normales Hashing ung"unstig; B-Tree sind daf"ur z.Bsp. gut geeignet).
+
+\subsubsection{Join}
+
+Eine der teuersten Operationen, darum versucht man diese Operation in andere umzuformen.\\
+
+F"ur einen \textit{Nested Loop} greift man meist auf einen Blockzugriff und nicht einen Tupelzugriff zur"uck. Im Allgemeinen ist es vorteilhaft so viele Blocks wie m"oglich von der Outer-Loop Relation in den Buffer zu lesen. Die Relation mit den wenigsten Bl"ocken sollte als die Outer-Loop Relation gew"ahlt werden.
+
+\subsubsection{Mengenoperationen}
+
+Im Allgemeinen aufw"andig, v.a. das kartesische Produkt.
+
+\subsubsection{Operationen verbinden}
+
+Operationen k"onnen verbunden werden, so dass nicht so viele tempor"are Dateien generiert werden m"ussen.
+
+\section{Transaktionsmanagement}
+
+\begin{itemize}
+	\item Einheit von Arbeit
+	\item Sequenz von Operationen auf einer Datenbank
+	\item Ein konsistenter Zustand wird in einen anderen konsistenten Zustand "uberf"uhrt
+\end{itemize}
+
+Sei $DB = \{ x_1, \ldots, x_m \}$ eine Menge von Datenbankobjekten und $OP=\{R, W\}$ die Menge von Datenbankoperationen. Eine Transaktion $T= \langle A_1, \ldots A_n \rangle$ ist eine Sequenz von Aktionen, wobei $A_i, \ i=1\ldots n$  entweder $R(x_j)$ oder $W(x_j), \ j=1\ldots m$.
+
+\subsection{Serielle Transaktions Ausf"uhrung}
+
+Alle Transaktionen werden von verschiedenen, unabh"angigen Benutzern ausgef"uhrt. F"ur alle dieser Benutzer ist irgendeine sequentielle Ausf"uhrung von diesen Transaktionen zul"assig. Jede Aktion innerhalb einer Transaktion ist atomically. Wenn eine Menge von Transaktionen $T_1,\ldots, T_n$ seriell ausgef"uhrt wird, so wird es als korrektes Resultat angesehen.
+
+\subsection{Parallele Transaktions Ausf"uhrung}
+
+Parallele Ausf"uhrung erh"oht die Anwortzeit. Es gibt aber Probleme.
+
+\subsubsection{Nebenl"aufigkeits (Concurrency) Kontrolle}
+
+Parallele Ausf"uhrung von Transaktionen ist zul"assig, falls es "aquivalent zu einer Serie von sequentiell ausgef"uhrten und commiteden Transaktionen ist.
+
+\subsection{Schedule}
+
+Eine Schedule ist eine Menge von verzahnt geordneten Transaktionen $T_1,\ldots, T_n$. Ein Schedule ist serialisierbar, wenn sein Effekt derselbe ist, wie wenn die Transaktionen seriell ausgef"uhrt w"urden.\\
+
+Ein Schedule $S$ ist ein Tripel $(T,A, <)$ mit
+$T=\{T_1,\ldots, T_n\}$\\
+$A$ ist eine Menge von Datenbankoperationen von allen Transaktion in $T$\\
+$<$ ist eine partielle Ordnung auf der Aktionenmenge A und f"ur jedes Aktionspaar $(a,b) \in A \times A$ gilt:
+\begin{itemize}
+	\item $<$ erh"alt die Ordnung der Aktionen innerhalb einer Transaktion.
+	\item Wenn $a$ und $b$ von verschiedenen Transkationen sind und auf die diesselben Daten zugreifen und mindestens eines eine Schreiboperationen ist, so m"ussen sie mit R"ucksicht auf $<$ geordnet sein. Dies sind sogenannte Konfliktpaare.
+	\item Die "ubrigen Operationen k"onnen parallel ausgef"uhrt werden.
+\end{itemize}
+
+\subsubsection{Korrektheit}
+
+Zwei Schedules sind (konflikt vermeidend) "aquivalent, sofern sie die selben Mengen $T$ und $A$ haben und die Konfliktpaar gleich geordnet sind.\\
+
+Ein Schedule ist korrekt wenn er "aquivalent zu einem seriellen Schedule ist.
+
+\subsection{Test f"ur Serialisierbarkeit}
+
+\subsubsection{Dependency Graph}
+
+Sei $S=(T,A,<)$. Der Dependency Graph von $S$ ist ein gerichteter Graph mit Transaktionen als Knoten und einer Kante von $T_i$ nach $T_j$ wenn es ein Konfliktpaar $\langle a, b \rangle$ in $S$ gibt, wobei $a$ zu $T_i$ und $b$ zu $T_j$ geh"ort und $a<b$.
+
+\begin{theorem}
+	Ein Schedule ist serialisierbar, genau dann, wenn sein Dependency Graph nicht zyklisch ist.
+\end{theorem}
+
+\subsubsection{Algorithmus f"ur seriellen Schedule}
+
+\begin{itemize}
+	\item Konstruiere einen Dependency Graph vom Schedule.
+	\item F"uhre darauf einen topological sorting aus. Entferne also immer einen Knoten ohne incoming edges und entferne alle seine ausgehenden Kanten.
+	\item Wenn der Graph Zyklen enth"alt, so terminiert der Algorithmus schon bevor alle Knoten entfernt sind.
+\end{itemize}
+
+\subsection{Locking}
+
+lock(Transaction $T_i$, Object $x$, Mode $m$)\\
+unlock(Transaction $T_i$, Object $x$, Mode $m$)
+
+verschiedene Typen von Locking: $X, S$. Ein Objekt das mit S gelockt ist, darf auch noch mit $S$ zugegriffen werden von anderem, sonst verboten.\\
+
+Dies garantiert aber keine serialsierbarkeit.
+
+\subsection{Two-Phase Locking}
+
+Einschr"ankung zum Locking: Sobald eine Transaktion ein Objekt unlocked, so k"onnen keine weiteren Locks mehr beantragt werden. Es gibt also einen Punkt ab dem nur noch unlock m"oglich ist.
+
+\begin{theorem}
+	Das 2PL Protokoll garantiert serialsierbare Schedules.
+\end{theorem}
+
+Ist aber nicht Deadlock frei und es gibt Probleme bei abgebrochenen Transkationen.
+
+\subsubsection{Deadlock}
+
+Zwei Transaktionen $T_i$ und $T_j$ warten in einem Zyklus auf einen Lock von einer anderen Transkation.
+
+\subsubsection{Strict Two-Phase Locking}
+
+Alle Locks werden bis zum Schluss gehalten und zusammen freigegeben. So gibt es keine Probleme mit abgebrochenen Transkationen mehr. Wird in allen gr"osseren Datenbanksystemen implementiert.
+
+\subsection{Timestamp Ordering}
+
+Jeder Transaktion $T_i$ wird eine eindeutiger Timestamp $ts(T_i)$ in einer strikt monotonen Sequenz zugeordnet. Wenn $o_i(x)$ im Konflikt zu $o_j(x)$ so m"ussen sie geordnet sein $o_i(x) < o_j(x)$ genau dann wenn $ts(T_i)< ts(T_j)$. F"ur jeden Zugriff auf ein Objekt muss der Scheduler "uberpr"ufen, ob schon eine sp"atere Transaktion auf das Objekt zugegriffen hat: $maxts(mode\ m, object \ o)$, maximaler Timestamp einer Transkation, die auf Objekt $o$ mit dem Mode $m$ zugriff.\\
+
+\begin{itemize}
+	\item $T_i$ will Objekt $x$ lesen
+		\begin{itemize}
+			\item $ts(T_i) < maxts(w,x)$\\
+				$T_i$ will alte Daten lesen $\rightarrow$ reset $T_i$
+			\item $ts(T_i) > maxts(w,x)$\\
+				F"uhre Leseoperation aus und aktualisiere $maxts(r,x)$
+		\end{itemize}
+	\item $T_i$ will Objekt $x$ schreiben
+		\begin{itemize}
+			\item $ts(T_i) < maxts(r,x)$\\
+				Es gibt eine j"ungere Transaktion, die $x$ gelesen hat $\rightarrow$ reset $T_i$
+			\item $ts(T_i) < maxts(w,x)$\\
+				Schreiboperation ist "uberfl"ussig
+			\item $ts(T_i) \geq maxts(r,x) \land ts(T_i) \geq maxts(w,x)$\\
+				F"uhre Schreiboperation aus und aktualisiere $maxts(w,x)$
+		\end{itemize}
+\end{itemize}
+
+\section{RDMS Architektur}
+
+\subsection{Buffer Management}
+
+Beim Buffer Management geht es um das Laden und Unladen von Pages vom Zweitspeicher in den Hauptspeicher. Stellt Primitiven f"ur den Zugriff auf den Buffer zur Verf"ugung: fix, use, unfix, flush und force. Dies generiert I/O Operationen als Antwort auf diese Primitiven solange der Zugriff durch den Scheduler erlaubt wird.
+
+\begin{description}
+	\item[fix] Fordere Zugriff auf Page an und lade sie in den Buffer. Ausf"uhrung der Primitive muss nur auf Zweitspeicher zugreiffen, falls Page noch nicht im Buffer.
+	\item[use] Benutzt durch Transaktion um Zugriff zur Page die vorher geladen wurde zu erhalten.
+	\item[unfix] Transaktion zeigt Buffer Manager an, dass die Benutzung der Page beendet ist, sie ist nicht mehr l"anger g"ultig.
+	\item[force] Transferiere eine Page vom Buffer in den Zweitspeicher. Die anfrangende Transaktion wird suspended bis zum Ende der Primitive.
+	\item[flush] Vom Buffer Manager selber benutzt um inaktive oder ung"ultige Pages in den Zweitspeicher zu transferieren.
+\end{description}
+
+\subsubsection{Policies}
+
+Steal Policy
+\begin{itemize}
+	\item Benutzt w"ahrend fix Operation, erlaubt Buffer Manager andere aktive Page zu selektieren mit anderer Transaktion als Opfer.
+	\item Wird durch no-steal Policy verboten
+\end{itemize}
+
+Force Policy
+\begin{itemize}
+	\item Ben"otigt, dass alle aktiven Pages einer Transaktion in den Zweitspeicher geschrieben werden, wenn die Transaktion ein commit ausf"uhrt.
+	\item Wird durch no-force Policy verboten
+\end{itemize}
+
+Kombination von no-steal/no-force wird von meisten DBMS verwendet.
+
+\subsection{Index Strukturen}
+
+Primary Index immer "uber Unique Attribute Field, Secondary Index "uber Non-Unique Attribute Field.
+
+\subsubsection{$B^+$-Tree}
+
+Datenpointer nur in Leaf Nodes. Leaf Nodes sind meist zusammengelinkt. Gut f"ur dynamische Daten, Key Values; teilweise auch f"ur Secondary Index, kommt auf Anwendung draufan.
+
+\subsubsection{Hashing}
+
+Durch Extensible Hashing k"onnen mehrere Hash-Tabelleneintr"age auf den gleichen Bucket zeigen. Ein Bucket hat lokale Tiefe $d$ - die Anzahl Bits auf welcher Inhalt basiert. Falls nun ein Bucket erweitert werden soll, wird dessen $d$ um eins erh"oht und der Inhalt auf zwei Buckets aufgeteilt.
+
+\subsubsection{B-Trees in Oracle}
+
+Oracle erstellt automatisch B-B"aume f"ur alle Attribute mit Constraint
+\begin{verbatim}
+ PRIMARY KEY
+ UNIQUE
+\end{verbatim}
+
+Index Strukturen k"onnen auch explizit erstellt/gel"oscht werden
+\begin{verbatim}
+ CREATE INDEX person_names ON persons(name);
+ DROP INDEX person_names;
+\end{verbatim}
+
+\subsubsection{Bitmap Index in Oracle}
+
+Selektiert bin"ar welche Tupel welche Attribute haben. H"akchen bei Attribut, falls vorhanden.
+
+\subsubsection{Tablespace in Oracle}
+
+Benutzt um Metadata, Schemas von Application Data und Index Strukturen zu trennen.
+
+\subsection{Oracle Objekte}
+
+Unterst"utzen kein Polymorphism oder inheritance.
+
+\small
+\begin{verbatim}
+ CREATE TYPE sales.part_type AS OBJECT (
+  id INTEGER,
+  descrption VARCHAR2(50),
+  quantity INTEGER,
+  reorder_level INTEGER,
+  MEMBER FUNCTION
+   parts_on_hand(part_id IN INTEGER) RETURN INTEGER,
+  MEMBER PROCEDURE
+   order_part(part_id IN INTEGER, quantity IN INTEGER)
+ );
+\end{verbatim}
+\normalsize
+
+\subsubsection{Benutzerdefinierte Datentypen}
+
+\small
+\begin{verbatim}
+ CREATE TABLE sales.customers (
+  ..,
+  address pub.address_type
+ );
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+ INSERT INTO sales.customers VALUES (
+ ..,
+ pub.address_type('IFW', ...));
+\end{verbatim}
+\normalsize
+
+\subsubsection{Nested Relationen}
+
+\small
+\begin{verbatim}
+ CREATE TYPE sales.item_type AS OBJECT (
+  item_id INTEGER,
+  quantity INTEGER
+ );
+
+ CREATE TYPE sales.itme_list AS TABLE OF sales.item_type;
+
+ CREATE TABLE sales.orders(
+  ..,
+  line_items sales.item_list,
+  NESTED TABLE line_itmes STORE AS items
+ );
+\end{verbatim}
+\normalsize
+
+Oracle erstellt so zwei logische Tabellen (orders, items), Daten werden aber in einem physischen Datensegment gespeichert.
+
+\section{XML f"ur Informationsrepr"asentation}
+
+\subsection{Baumstruktur von XML Dokumenten}
+
+\begin{itemize}
+	\item Root node
+	\item Element nodes
+	\item Attribute nodes
+	\item Text nodes
+	\item Comment nodes
+	\item Processing instruction nodes
+	\item Namespace nodes
+\end{itemize}
+
+\subsection{Well-Formedness und Validity}
+
+Ein XML Dokument ist well-formed, wenn es den Regeln von XML folgt.\\
+
+Ein XML Dokument ist g"ultig entsprechend seiner Document Type Definition (DTD).\\
+
+Ein XML Dokument ist g"ultig, wenn es komplett selbst-erkl"arend "uber seine Struktur und Inhalt ist durch den Dokumentinhalt und zus"atzliche Dateien, auf welche im Dokument referenziert wird.
+
+\subsection{"Ubersicht "uber XML Technologien}
+
+\begin{itemize}
+	\item SAX und DOM. XML Programmierungs API (f"ur das Parsen eines XML Dokuments). SAX ist Event-based, also wenn z.Bsp. Start-Tag auftritt, wird ein Event ausgel"ost. DOM stellt einem einen Baum im Memory her.
+	\item XPath und XPointer. XPath ist eine Sprache die benutzt wird um bestimmte Elemente in einem XML Dokument zu adressieren, dabei werden versch. location steps mit / getrennt. XPointer benutzt XPath um auf Punkte oder Ranges in XML Dokumenten zu zeigen.
+	\item XSL. F"ur die Transformation von XML Dokumenten.
+	\item XQuery. Abfragen an XML Dokumente.
+\end{itemize}
+
+\subsection{Datenrepr"asentation}
+
+Es gibt im Groben 2 unterschiedliche M"oglichkeiten der Datenrepr"asentation in XML, Element-basiert, oder Attribut-basiert.
+
+\subsection{Document Type Definition (DTD)}
+
+Definiert Struktur des Dokuments.
+
+\subsubsection{Elements}
+
+\begin{verbatim}
+ <!ELEMENT ElementName Type>
+\end{verbatim}
+
+\verb#Type# kann \verb#Empty# sein, \verb@(#PCDATA)@ oder wiederum ein anderes Element. Man kann auch mehrere Typen angeben. Man kann die Kardinalit"at steuern:
+\begin{itemize}
+	\item \verb#?# optional, (0 oder 1)
+	\item \verb#*# irgendeine Anzahl von Vorkommen (0 oder mehr)
+	\item \verb#+# ben"otigt (1 oder mehr)
+	\item default ist genau 1 mal
+\end{itemize}
+
+\begin{verbatim}
+ <!ELEMENT person (name, title?, phone*)>
+ <!ELEMENT mixed (#PCDATA | itemA | itemB)*>
+\end{verbatim}
+
+Achtung: \verb@#PCDATA@ muss erstes Element in Liste sein.
+
+\subsubsection{Attribute}
+
+\begin{verbatim}
+ <!ATTLIST ElementName AttrName AttrType Default>
+\end{verbatim}
+
+Wobei \verb@Default@ sein kann:
+\begin{itemize}
+	\item \verb@#REQUIRED@
+	\item \verb@#IMPLIED@ optional
+	\item \verb@#FIXED value@ Attribut hat einen fixen Wert
+	\item \verb@value@ Attribut hat einen Default-Wert, von Hochkomma umschlossen
+\end{itemize}
+
+\verb@AttrType@ ist:
+\begin{itemize}
+	\item \verb#CDATA# irgendein String wird akzeptiert, sofern wellformed
+	\item \verb#NMTOKEN, NMTOKENS# eines oder mehrere name tokens getrennt durch a whitespace
+	\item \verb#ENUMERATION# Liste von m"oglichen Werten, z.B. \verb#(Article | Proceedings | ...)#
+	\item \verb#ENTITY, ENTITIES# Name von ungeparsder entity oder List von ungeparsder Entities getrennt durch whitespaces
+	\item \verb#ID# XML Name, welcher eindeutig ist in einem einzigen XML Dokument
+	\item \verb#IDREF, IDREFS# XML Name, welcher auf einen oder mehrere ID Type Attribute im gleichen Dokument verweist.
+	\item \verb#NOTATION# Attribut enth"alt den Namen einer Notation
+\end{itemize}
+
+\begin{verbatim}
+ <!ATTLIST price pricetype
+  (cost | sale | retail) 'sale'>
+ <!ATTLIST inventory colour CDATA #IMPLIED>
+\end{verbatim}
+
+\subsubsection{References}
+
+\begin{verbatim}
+<products>
+ <company id="celtic">
+  ...
+ </company>
+ <special company_id="celtic">
+  ...
+ </special>
+</products>
+\end{verbatim}
+
+\begin{verbatim}
+ <!ELEMENT company (company_name, product*)>
+ <!ATTLIST company id ID #REQUIRED>
+
+ <!ELEMENT special (#PCDATA)>
+ <!ATTLIST special company_id IDREF #REQUIRED>
+\end{verbatim}
+
+\subsubsection{Entities}
+
+Generelle Entities, k"onnen durch \verb@&entityName@ im XML Dokument benutzt werden.
+\begin{verbatim}
+ <!ENTITY globis "Global Information
+  Systems Group">
+\end{verbatim}
+
+Parameter Entities, k"onnen nur im DTD benutzt werden, intern oder extern
+\begin{verbatim}
+ <!ENTITY % gender "(male | female)">
+\end{verbatim}
+
+\subsubsection{Notations}
+
+Einbinden von nicht-XML Daten in dem man das Format beschreibt.
+
+\begin{verbatim}
+ <!NOTATION jpeg SYSTEM "image/jpeg">
+
+ <!ENTITY globisLogo
+    SYSTEM "http://myurl/g.jpg"
+    NDATA jpeg>
+\end{verbatim}
+
+\subsection{XML Schema}
+
+Ersetzt DTD, benutzt selbst auch XML Syntax.
+
+\subsubsection{Datentypen}
+
+Primitive Datentype sind die Basis f"ur alle anderen Datentypen. Sie k"onnen keine Child-Elemente enthalten und sind built-in.\\
+Derived Datentype sind durch einen bereits existierenden Datentypen und k"onnen Elemente und Attribute enthalten.\\
+
+Elemente welche keine Child Elemente und keine Attribute haben werden als simple types bezeichnet. Alle Attribute m"ussen simple types sein.
+
+\begin{verbatim}
+ <?xml version="1.0">
+ <xs:schema
+   xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="title" type="xs:string" />
+  ...
+ 
+ </xs:schema>
+ </xml>
+\end{verbatim}
+
+Komplexe Typen. Elemente mir Child Elementen oder Attributen sind definiert durch complex types. Complex type Definitionen enthalten eine Menge von Attribut- und Elementdeklaration, es gibt versch. M"oglichkeiten: sequence (geordnet), all (nicht geordnet) und choice (Auswahl eines Elementes)
+
+\begin{verbatim}
+ <xs:complexType name="personType">
+  <xs:sequence>
+   <xs:element name="surname" type="xs:string"/>
+   <xs:element name="forename" type="xs:string"/>
+  </xs:sequence>
+ </xs:complexType>
+\end{verbatim}
+
+Die so definierten complex types k"onnen auch wieder an anderen Orten f"ur den Typ eines Elements benutzt werden.
+
+\subsubsection{Attribut Deklarationen}
+
+\begin{verbatim}
+ <xs:element name="publication">
+  <xs:attribute name="type" type="pubtype">
+  </xs:attribute>
+ </xs:element>
+\end{verbatim}
+
+Man kann auch Constraints einf"ugen, wie z.B. die Anzahl Vorkommen. Daf"ur gibt es \verb#minOccurs# und \verb#maxOccurs#.
+
+\subsubsection{Userdefinierte Simple Types}
+
+Restriction
+
+\begin{verbatim}
+<xs:simpleType name="month">
+ <xs:restriction base="xs:integer">
+   <xs:minInclusive value="1" />
+   <xs:maxInclusive value="12" />
+ </xs:restriction>
+</xs:simpleType>
+\end{verbatim}
+
+\begin{verbatim}
+<xs:simpleType name="pubtype">
+ <xs:restriction base="xs:string">
+  <xs:enumeration value="article" />
+  <xs:enumeration value="book" />
+  ...
+ </xs:restriction>
+</xs:simpleType>		
+\end{verbatim}
+
+Derivation, z.Bsp. Listen von Basetypes.
+
+\begin{verbatim}
+<xs:simpleType name="ListOfIntegers"
+ base="integer" derivedBy="list">
+ <xs:minLength value="1" />
+ <xs:maxLength value="10" />
+</xs:simpleType>
+\end{verbatim}
+
+\subsubsection{Schema Zusammenf"ugen}
+
+\begin{verbatim}
+<include schemaLocation=
+  "http://www.macbain.inf.ethz.ch/customer.xsd"/>
+
+<redefine schemaLocation=
+  "http://www.macbain.inf.ethz.ch/customer.xsd"/>
+  <simpleType name="nameType">
+  <restriction base="string">
+    <maxLength value="40"/>
+  </restriction>
+ </simpleType>
+</redefine>
+\end{verbatim}
+
+\section{Metamodell}
+
+Ein Metamodel ist ein Model von einem Modell.
+
+\subsection{Metadata und Metaschema}
+
+Schema und Metaschema sind die Beschreibung der Datenbank, Metadata und Data die eigentliche DB.\\
+
+Das Datenbankschema kann auch als Werte in der Datenbank gespeichert sein - Metadata. Metaschema ist eine Beschreibung der Metadata. Ein Metaschema bietet die Regeln und Grammatiken f"ur eine bestimmte Sprache.
+
+\section{Distributed Databases}
+
+\subsection{Fragmentation}
+
+\subsubsection{Horizontal Fragmentation}
+
+Man kann z.B. die Datenbank einer grosse Organisation, so fragmentieren, dass alle Gesch"aftssitze die Daten ihrer Stadt haben.
+
+\subsubsection{Vertical Fragmentation}
+
+Employees z.B. in zwei Datens"atze aufteilen: name, grade, address und andererseits salary, taxcode.
+
+\subsubsection{Derived Horizontal Fragmentation}
+
+Unterteilung nach einer anderen Distribution. Z.B. Employees nach St"adten fragmentieren, soferen Organisation nach St"adten fragmentiert. Daf"ur benutzt man ein Semi-Join.
+
+\begin{displaymath}
+	Employees \ \triangleright \! \! < \sigma_{city=Zurich}(Organisations)
+\end{displaymath}
+
+
+\subsection{Distribution}
+
+Ein Globales Schema und versch. verteilte Datenbanken mit unterschiedlichen Schemas. Bei einem Hetereogenen DDB werden die Queries gemappt von dem globalen Schema auf ein ''kleineres'' Modell, der User muss nicht "uber die Verteilung wissen. Bei einem Multi-Database System weiss der User aber "uber die versch. DB und es gibt kein Mapping.
+
+\appendix
+
+\section{Prolog}
+
+\subsection{Einf"uhrung}
+
+$[]$ entspricht dabei leerer Liste, $[A | R]$ einer Liste mit Kopfelement A, und Restliste R und $[a, b, c]$einer Liste mit den genannten Elementen. \texttt{app(X,Y,A)} h"angt die Listen X und Y zu A zusammen, \texttt{rev(X,Y)} dreht X in Y um. \texttt{list(L)} ist eine Liste (ein geschlossener Term). \texttt{select(X,L1,L2)} l"oscht das erste Vorkommen von X in L1 und gibt L2 zur"uck. \texttt{delete(X,L1,L2)} l"oscht alle Vorkommen.
+\begin{verbatim}
+ app([], L, L).
+ app([X|L1],L2,[X|L3]) :- app(L1,L2,L3).
+ 
+ rev([], []).
+ rev([X],[X]).
+ rev(L1,L2) :- app([X|LA], [Y], L1),
+               app([Y|LB], [X], L2),
+ rev(LA, LB).
+
+ /*2te Variante*/
+ rev([],[]).
+ rev([X|L],M):-
+  rev(L,N),
+  app(N,[X],M).
+
+ /*1ter und letzter Eintrag loeschen*/
+ r(L1,L2) :- app([_|L2],[_],L1).
+
+ /*Permutation*/
+ perm([],[]).
+ perm([X|L1],[Y|L2]):-
+  sel([X|L1],Y,L3),
+  perm(L3,L2).
+ 
+ sel([X|L],X,L).
+ sel([Y|L1],X,[Y|L2]):-
+  sel(L1,X,L2).
+
+ suffix(L1,L2) :- append(_,L1,L2).
+ prefix(L1,L2) :- append(L1,_,L2).
+
+ list([]).
+ list([_|L]) :- list(L).
+
+ sublist(L1,L2) :- 	
+  suffix(L3,L2),
+  prefix(L1,L3).
+
+ member(X,[X|_]).
+ member(X,[_|L]) :- member(X,L).
+
+ select(X,[X|L],L).
+ select(X,[Y|L1],[Y|L2]) :- select(X,L1,L2).
+
+ delete([],_,[]).
+ delete([Y|L1],X,L2) :-
+  ( X=Y ->
+   delete(L1,X,L2)
+  ; L2=[Y|L3],
+   delete(L1,X,L3)
+  ).
+ 
+ /*loescht den zweiten Eintrag*/
+ second(X,[_,X|L]).
+
+ /*X letztes Element der Liste?*/
+ final(X,L) :- append(L1,[X],L).
+ 
+ /*oder*/
+ final(X,[X]).
+ final(X,[_|L]):-final(X,L).
+
+ /*L1 identisch mit L2, bis auf
+ Vertauschung von letztem und
+ erstem? */
+ swapf1([],[]).
+ swapf1([X],[X]).
+ equalminuslast([X],[Y]).
+ equalminuslast([X|L1],[X|L2]) :-
+  equalminuslast(L1,L2).
+ swapf1([X|L1],[Y|L2]) :-
+  final(X,[Y|L2]),
+  final(Y,[X|L1]),
+  equalminuslast(L1,L2).
+
+ /*auf 2x vorkommen testen*/
+ twice(X,L) :-
+  append(_,[X|L1],L),
+  member(X,L1).
+\end{verbatim}
+
+\subsection{Deklarative Konstrukte in Prolog}
+
+\begin{description}
+ \item[Rule =] Atom ':-' Goal'.'
+ \item[Goal =] 'true' $|$ 'fail' $|$ Atom $|$ Term '=' Term $|$ Goal ',' Goal $|$ Goal ';' Goal $|$ '$\backslash$+' Goal $|$ Goal '-$>$' Goal ';' Goal
+\end{description}
+
+= : ''gleich''\\
+, : ''und''\\
+; : ''oder''\\
+$\backslash$+ : ''nicht''\\
+-$>$; : ''if-then-else''\\
+
+\end{document}

@@ -1,0 +1,512 @@
+% Logik Zusammenfassung aus dem Informatikstudium an der ETH Zuerich
+% basierend auf der Vorlesung von Prof. Dr. Robert Staerk
+% Copyright (C) 2003  Patrick Pletscher
+
+%This program is free software; you can redistribute it and/or
+%modify it under the terms of the GNU General Public License
+%as published by the Free Software Foundation; either version 2
+%of the License, or (at your option) any later version.
+
+%This program is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
+
+%You should have received a copy of the GNU General Public License
+%along with this program; if not, write to the Free Software
+%Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\documentclass[11pt, a4paper,twocolumn]{scrartcl}
+
+\usepackage{german}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage{amsfonts}
+%\usepackage{hyperref}
+
+
+\textwidth = 16.5 cm
+\textheight = 25 cm
+\oddsidemargin = 0.0 cm
+\evensidemargin = 0.0 cm
+\topmargin = 0.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0cm
+
+
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\title{Logik I - Zusamenfassung}
+\author{Patrick Pletscher}
+\begin{document}
+
+\maketitle
+
+\section{Aussagenlogik}
+
+\subsection{Sprachkonstrukte}
+\begin{description}
+ \item[$\lor$] Das logische OR (Disjunktion)
+ \item[$\land$] Das logische AND (Konjunktion)
+ \item[$\lnot$] Das logische NOT
+ \item[$\top$] Das logische TRUE
+ \item[$\bot$] Das logische FALSE
+ \item[$\rightarrow$] Die logische Implikation
+ \item[$\leftrightarrow$] Die logische "Aquivalenz
+\end{description}
+
+[bindet stark] $\lnot\:\land\:\lor\:\rightarrow\:\leftrightarrow$ [bindet schwach]\\
+Die Konjunktion ($\land$) und die Disjunktion ($\lor$) sind linksgeklammert, die Implikation ($\rightarrow$) ist rechtsgeklammert.\\
+
+$A\rightarrow B$:
+\begin{itemize}
+ \item A hinreichend f"ur B
+ \item B notwendig f"ur A
+ \item Wenn A dann B
+ \item A nur wenn B
+ \item $\lnot B$ nicht, solange A
+ \item B solange A
+ \item nicht A ausser B
+\end{itemize}
+
+$A\leftrightarrow B$\\
+A genau dann wenn B\\
+
+$\lnot A\land\lnot B$\\
+weder A noch B
+
+\subsection{Formale Beweise}
+%AND
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A \; B}{A \land B}(\land i)\end{displaymath}\end{minipage}
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A \land B}{A \; B}(\land e)\end{displaymath}\end{minipage}
+%OR
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A}{A \lor B}(\lor i)\end{displaymath}\end{minipage}
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{B}{A \lor B}(\lor i)\end{displaymath}\end{minipage}
+\begin{minipage}{7.6cm}\begin{displaymath}\frac{A \lor B \; A \rightarrow C \; B \rightarrow C}{C}(\lor e)\end{displaymath}\end{minipage}
+%NOT
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A \rightarrow \bot}{\lnot A}(\lnot i)\end{displaymath}\end{minipage}
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A \; \lnot A}{B}(\lnot e)\end{displaymath}\end{minipage}
+%Aequivalence
+\begin{minipage}{7.6cm}
+\begin{displaymath}\frac{A \rightarrow B \; B \rightarrow A}{A \leftrightarrow B}(\leftrightarrow i)\end{displaymath}
+\end{minipage}
+\begin{minipage}{3.8cm}
+\begin{displaymath}\frac{A \leftrightarrow B}{A \rightarrow B}(\leftrightarrow e)\end{displaymath}
+\end{minipage}
+\begin{minipage}{3.8cm}
+\begin{displaymath}\frac{A \leftrightarrow B}{B \rightarrow A}(\leftrightarrow e)\end{displaymath}
+\end{minipage}
+%Implication
+\begin{minipage}{3.8cm}
+\begin{displaymath}\frac{A \; A \rightarrow B}{B}(MP)\end{displaymath}
+\end{minipage}
+%OTHER
+\begin{minipage}{3.8cm}
+\begin{displaymath}\frac{}{\top}(\top i)\end{displaymath}
+\end{minipage}
+\begin{minipage}{3.8cm}
+\begin{displaymath}\frac{\bot}{A}(EFQ)\end{displaymath}
+\end{minipage}
+\begin{minipage}{3.8cm}
+\begin{displaymath}\frac{}{A \lor \lnot A}(TND)\end{displaymath}
+\end{minipage}
+
+\subsection{Ausgew"ahlte Gesetze}
+\begin{eqnarray*}
+ (A \land (B \lor C)) & \leftrightarrow & ((A \land B) \lor (A \land C)) \\
+ (A \lor (B \land C)) & \leftrightarrow & ((A \lor B) \land (A \lor C)) \\
+ (A \rightarrow (B \lor C)) & \leftrightarrow & ((A \rightarrow B) \lor (A \rightarrow C)) \\
+\lnot (A \lor B) & \leftrightarrow & (\lnot A \land \lnot B)\\
+ \lnot (A \land B) & \leftrightarrow & (\lnot A \lor \lnot B)\\
+ (A \rightarrow B) & \leftrightarrow & (\lnot A \lor B)
+\end{eqnarray*}
+
+\subsection{Boolsche Funktionen}
+\paragraph{}
+ IO-Tabelle $\Rightarrow$ logische Funktion, zwei Wege
+ \begin{enumerate}
+ \item 
+  \begin{enumerate}
+   \item Betrachte nur die Zeilen, bei denen der Ausgabewert 1 ist.
+   \item Bilde eine Konjunktion nach dem Muster: $1 \Rightarrow p_i$, $0 \Rightarrow \lnot p_i$.
+   \item Bilde daraus eine Disjunktion (DNF)
+  \end{enumerate}
+ \item
+  \begin{enumerate}
+   \item Betrachte nur die Zeilen, bei denen der Ausgabewert 0 ist.
+   \item Bilde eine Disjunktion nach dem Muster: $1 \Rightarrow \lnot p_i$, $0 \Rightarrow p_i$.
+   \item Bilde daraus eine Konjunktion (KNF)
+  \end{enumerate}
+ \end{enumerate}
+
+\subsubsection{Funktionale Vollst"andigkeit}
+Es gibt $2^4$ m"ogliche Funktionen mit zwei Argumenten. Sie alle k"onnen durch die ausschliessliche Benutzung von $\lnot, \land$, $\lnot, \rightarrow$ oder auch nur durch das NAND ($p\ NAND\ q = \lnot(p \land q)$) dargestellt werden, sie sind ``funktional Vollst"andig''
+\begin{enumerate}
+ \item $\mathit{\lnot, \land}$
+  \begin{enumerate}
+   \item NAND: $\lnot(p\land q)$
+   \item XOR: $\lnot(p\land q)\land\lnot(\lnot p\land \lnot q)$
+   \item $p\leftrightarrow q$: $\lnot(p\land \lnot q)\land \lnot(q\land \lnot p)$
+  \end{enumerate}
+ \item $\mathit{\rightarrow, \lnot}$
+  \begin{enumerate}
+   \item $p\lor q$: $\lnot p\rightarrow q$
+   \item $p\land q$: $\lnot(p\rightarrow\lnot q)$
+   \item $p\leftrightarrow q$: $\lnot((p\rightarrow q)\rightarrow \lnot(q\rightarrow p))$
+  \end{enumerate}
+\end{enumerate}
+
+\subsection{Normalformen}
+
+\subsubsection{Negationsnormalform (NNF)}
+ \begin{enumerate}
+  \item Elimination der Aequivalenz\\
+   $A \leftrightarrow B$ wird "uberall ersetzt durch $(A \rightarrow B)\land(B \rightarrow A)$
+  \item Elimination der Implikation\\
+   $A \rightarrow B$ wird "uberall ersetzt durch $\lnot A \lor B$
+  \item Hineinziehen der Negation \\
+   $\lnot\lnot A$ wird ersetzt durch A\\
+   $\lnot(A \land B)$ wird ersetzt durch $\lnot A \lor \lnot B$ [DeMorgan]\\
+   $\lnot(A \lor B)$ wird ersetzt durch $\lnot A \land \lnot B$ [DeMorgan]
+ \end{enumerate}
+
+\subsubsection{konjunkte Normalform (KNF)}
+Eine Konjunktion von Disjunktionen von Literalen. Alternativ auch mit IO-Tabelle.
+
+
+ \begin{enumerate}
+  \item $A \lor (B \land C)$ wird ersetzt durch $(A \lor B)\land(A \lor C)$
+  \item $(B \land C) \lor A$ wird ersetzt durch $(B \lor A)\land(C \lor A)$
+ \end{enumerate}
+
+\subsubsection{disjunkte Normalform (DNF)}
+Eine Disjunktion von Konjunktionen von Literalen. Alternativ auch mit IO-Tabelle.
+
+
+ \begin{enumerate}
+  \item $A \land (B \lor C)$ wird ersetzt durch $(A \land B)\lor(A \land C)$
+  \item $(B \lor C)\land A$ wird ersetzt durch $(B \land A)\lor(C \land A)$
+ \end{enumerate}
+
+
+\subsection{Resolution}
+
+$S=\{\{p,r\},\{q,\lnot r\}\}$ entspricht $(p \lor r)\land(q \lor \lnot r)$
+
+Ein Beweisschema mit nur einer Regel, um Formeln aus Literalen ($p$ oder $\lnot p$) und Klauseln (Menge von Literalen) zu beweisen. Eine Klausel $C = \{L_1, \ldots, L_n\}$ entspricht der Disjunktion $L_1 \lor \ldots \lor L_n$. Ihr Wahrheitswert ist:
+ \begin{displaymath}
+  [[C]]_a := \left\{\begin{array}{l}1;
+  \exists L \in C, [[L]]_a = 1\\0; else\end{array}\right.
+ \end{displaymath}
+
+Die leere Klausel ist immer Falsch, so f"allt das Beweisen durch zur"uckf"uhren des Gegenteils auf die leere Klausel leicht. Eine Klauselmenge
+entspricht einer Formel in der KNF. Der Wahrheitswert ist:
+ \begin{displaymath}
+  [[S]]_a := \left\{\begin{array}{l}1; \forall C \in S, [[C]]_a = 1\\0; else\end{array}\right.
+ \end{displaymath}
+																	  
+\begin{displaymath}
+ \frac{C \; D \; (L \in C) \; (\overline{L} \in D)}{(C \backslash \{L\}) \cup (D \backslash \{\overline{L}\})}
+\end{displaymath}
+
+\begin{enumerate}
+ \item W"ahle $L \in C$, $\overline{L} \in D$
+ \item Streiche $L$ in $C$ und $\overline{L}$ in $D$.
+ \item Vereinigt die verbleibenden Literale.
+\end{enumerate}
+
+Solange die Klauselmenge S nicht leer ist, mache die folgenden Schritte:
+
+ \begin{enumerate}
+  \item W"ahle eine Klausel $C$ aus $S$ und bewege sie von $S$ nach $U$.
+  \item Bestimme alle Resolventen von $C$ und Klauseln in $U$ und f"uge die Resolvente zu $S$ hinzu.
+  \item Falls eine Resolvente eine Tautologie ist, streiche sie.
+  \item Falls eine Resolvente von einer Klausel in $S$ oder $U$ subsumiert wird, streiche die Resolvente.
+  \item Falls eine Klausel in $S$ oder $U$ von einer Resolvente subsumiert wird, streiche die Klausel.
+ \end{enumerate}
+Falls man die leere Klausel erh"alt ist $S$ unerf"ullbar.
+
+\subsubsection{Beispiel}
+
+$p\land\lnot q\land\lnot r$ logische Konsequenz von Klauselmenge $S=\{\{\lnot p,\lnot q\},\{q,\lnot r\},\{p,r\},\{p,\lnot q,\lnot r\}\}$ ist.\\
+Also nimmt man das Gegenteil n"amlich $\lnot(p\land\lnot q\land\lnot r)=\lnot p\lor q\lor r$ an.\\
+
+\begin{tabular}{rll}
+ 1:&	$\{\lnot p, \lnot q\}$ \\
+ 2:&	$\{q,\lnot r\}$\\
+ 3:&	$\{p,r\}$\\
+ 4:&	$\{p,\lnot q,\lnot r\}$\\
+ 5:&	$\{\lnot p, q, r\}$\\
+ 6:&	$\{\lnot p, r\}$&		Res von 1,5\\
+ 7:&	$\{r\}$ &			Res von 3,6\\
+ 8:&	$\{\lnot p,\lnot r\}$ &		Res von 1,4\\
+ 9:&	$\{\lnot r\}$ &			Res von 2,8\\
+ 10:&	$\{\}$ &			Res von 7,9\\
+\end{tabular}\\
+
+Somit ist das Gegenteil unerf"ullbar und somit $p\land\lnot q\land\lnot r$ eine logische Konsequenz von S.
+\subsection{Davis-Putnam Prozedur}
+Dient dem effizienten Testen von Erf"ullbarkeit von Klauselmengen, man findet alle Belegungen von $S$, die sie wahr machen. Der Algoritmus ist:
+\begin{enumerate}
+ \item Wenn $S$ leer, gib die erf"ullende Belegung aus. (BackTracking)
+ \item Sonst w"ahle eine Aussagenvariable $p \in S$.
+ \item Erg"anze die Belegung durch $p := 1$, entferne alle Klauseln von $S$ mit $p$, streiche in den anderen alle $\lnot p$.
+ \item Gehe rekursiv zu 1.
+ \item Mache die "Anderungen von 3. r"uckg"angig und setze $p := 0$, entferne alle Klauseln von $S$ mit $\lnot p$, streiche in den anderen alle $p$.
+ \item Gehe rekursiv zu 1.
+ \end{enumerate}
+
+F"ur den manuellen Gebrauch wird oft eine Baumdarstellung gew"ahlt, wobei der Baum beim Auftreten von leeren Klauseln fr"uh abgeschnitten werden k"onnen. So l"asst sich das Vorgehen stark optimieren.\\
+leere Klausel $\{\Box\}$: keine erf"ullende Belegung\\
+leere Klauselmenge $\{\}$: erf"ullende Belegung
+
+\subsection{Boolsche Algebra}
+\paragraph{}
+$*=\land,\:+=\lor, \:'=\not$\\
+Boolsche Algebren sind algebraische Strukturen $\langle A,*,+,',0,1\rangle$, wobei A eine Menge (Universum), 0 und 1 Elemente, *, + zweistellige und ' ein einstelliger Operatoren in A sind. Es gelten folgende Gesetze:
+\begin{description}
+ \item[Kommutativit"at] $x*y=y*x$, $x+y=y+x$
+ \item[Assoziativit"at] $x*(y*z)=(x*y)*z$, $x+(y+z)=(x+y)+z$
+ \item[Verschmelzung] $x*(x+y)=x$, $x+(x*y)=x$
+ \item[Distributivit"at] $x*(y+z)=(x*y)+(x*z)$, $x+(y*z)=(x+y)*(x+z)$
+ \item[Komplement] $x*x'=0$, $x+x'=1$
+\end{description}
+
+Mit Boolschen Algebren l"asst sich "ahnlich rechnen wie mit den "ublichen logischen Formeln. Alle logischen Konsequenzen lassen sich aus den Axiomen ableiten.
+\begin{description}
+ \item[0-1 Algebra] $\langle \{0,1\},\land,\lor,\lnot,0,1\rangle$
+ \item[Potenzmengen] $\langle \mathcal{P}(M),\cap,\cup,\overline{\;},[],M\rangle$
+\end{description}
+
+Jede endliche Boolsche Algebra ist isomorph zu einer Potenzmenge $\rightarrow$ nur $2^x$ Elemente m"oglich.
+
+
+\section{Pr"adikatenlogik}
+\subsection{Sprachkonstrukte}
+\begin{description}
+ \item[$\forall x A$]       F"ur alle x gilt A
+ \item[$\exists x A$]    Es gibt ein x, so dass A gilt
+ \item[$A \approx B$]    A ist das selbe wie B
+ \item[$f(x)$]   Funktion: Operieren im Universum
+ \item[$G(x)$]   Pr"adikat: Testen eine Bedingung
+ \item $\forall x,y(x*y)\approx 1 \rightarrow y*x\approx 1)$
+ \item $\forall x(1*x\approx x)$
+ \item $\forall x,y,z(x*y\approx 1 \land x*z\approx 1 \rightarrow y \approx z)$
+\end{description}
+
+\subsection{Quantorenregeln}
+{\bf Anzahlaussagen}\\
+es gibt mindestens ein x mit P $\leftrightarrow \exists x P(x)$\\
+es gibt h"ochstens ein x mit P $\leftrightarrow \forall x \forall y(P(x) \land P(y) \rightarrow x \approx y)$\\
+es gibt genau ein x mit P $\leftrightarrow \exists x (P(x) \land \forall y (P(y) \rightarrow x \approx y))$\\
+
+{\bf Negation von Quantoren}\\
+$\lnot\forall x P(x) \leftrightarrow \exists x \lnot P(x)$\\
+$\lnot\exists x P(x) \leftrightarrow \forall x \lnot P(x)$\\
+
+{\bf Negation von beschr"ankten Quantoren}\\
+$\lnot \forall x(P(x)\rightarrow Q(x)) \leftrightarrow \exists x (P(x)\land \lnot Q(x))$\\
+$\lnot \exists x (P(x)\land Q(x)) \leftrightarrow \forall x(P(x) \rightarrow \lnot Q(x))$\\
+
+{\bf Vertauschung von Quantoren der gleichen Art}\\
+$\forall x \forall y R(x,y) \leftrightarrow \forall y \forall x R(x,y)$\\
+$\exists x \exists y R(x,y) \leftrightarrow \exists y \exists x R(x,y$\\
+
+{\bf Hineinziehen von Quantoren}\\
+$\forall x (P(x)\land Q(x)) \leftrightarrow \forall x P(x) \land \forall x Q(x)$\\
+$\exists x (P(x)\lor Q(x)) \leftrightarrow \exists x P(x) \lor \exists x Q(x)$\\
+
+{\bf Nullquantifikation}\\
+x kommt nicht als freie Variable in A vor.\\
+$\forall x A \leftrightarrow A$\\
+$\exists x A \leftrightarrow A$\\
+$\forall x (A \lor P(x)) \leftrightarrow A \lor \forall x P(x)$\\
+$\exists x (A \land P(x)) \leftrightarrow A \land \exists x P(x)$\\
+
+
+\subsection{Formale Beweise}
+%ALL
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{\forall x \; A}{A \frac{t}{x}}(\forall e)\end{displaymath}\end{minipage}
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A}{\forall x \; A}(\forall i)\end{displaymath}\end{minipage}
+
+%EXISTS
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A \frac{t}{x}}{\exists x \; A}(\exists i)\end{displaymath}\end{minipage}
+
+%misc
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{A}{t \approx t}(ID)\end{displaymath}\end{minipage}
+\begin{minipage}{3.8cm}\begin{displaymath}\frac{s \approx t \; A\frac{s}{x}}{A\frac{t}{x}}(SUB)\end{displaymath}\end{minipage}
+
+
+
+
+\section{Logikprogrammierung}
+
+\subsection{Grundlagen}
+
+Prolog/Datalog arbeiten mit Klauseln, welche durch Backtracking ausgewertet werden. Eingegeben werden diese durch \texttt{Fakten}, welche als Wahrheitsaussage gelten, und \texttt{Regeln}, welche der Implikation "ahneln. Ist ein Programm dadurch bestimmt, kann man durch die Formulierung von Zielen etwas beweisen lassen. Dabei werden Grossbuchstaben als Variablen, Kleinbuchstaben und Zahlen als Konstanten betrachtet.
+\begin{description}
+ \item[Faktum] $A.$
+ \item[Regel] $A :- B_1, \ldots, B_n.$
+ \item[Ziel] $R(t_1, \ldots, t_n).$
+\end{description}
+Prolog eignet sich f"ur das L"osen von Problemen durch Backtracking, aber man kann auch relationale Datenbanken nachbilden.
+                                                                                                                                               
+\subsection{Datalog}
+Ein Beispiel aus Serie 10, Aufgabe 3 (gek"urzt). Durch die Datenbank aus Fakten (unterer Teil) und die Wissensbasis aus Regeln lassen sich Fragen wie ``Ist r2 ein Auto'' (\texttt{interpretation(r2, car)}) oder ``Was ist r3'' (\texttt{interpretation(r3, X)}) schnell durch Prolog beantworten.
+\begin{verbatim}
+ large(Region, yes) :-
+     size(Region, X), X >= 10000.
+ large(Region, no) :- 
+     size(Region, X), X =< 500.
+ 
+ interpretation(Region, forrest) :-
+     large(Region, yes),
+     vegetation(Region, yes),
+     water(Region, no).
+ 
+ interpretation(Region, road) :-
+     elongated(Region, yes),
+     vegetation(Region, no),
+     water(Region, no).
+				 
+ interpretation(Region, car) :-
+     large(Region, no),
+     vegetation(Region, no),
+     water(Region, no).
+				 
+ size(r2, 632). 
+ size(r3, 56).
+ elongated(r2, yes). 
+ elongated(r3, no).
+ vegetation(r2, no). 
+ vegetation(r3, no).
+ water(r2, no).
+ water(r3, no). 
+\end{verbatim}
+
+\subsection{Unifikation}
+
+\subsubsection{Unifikationsalgorithmus}
+Eingabe: Zwei Terme s und t.
+\begin{description}
+ \item[U1:] Setze $\theta_0:=\epsilon$ und $k:=0$. Gehe zu U2.
+ \item[U2:] Falls $s\theta_k=t\theta_k$, dann stoppe mit Resultat $\theta_k$. Sonst gehe zu U3.
+ \item[U3:] Gehe von links her durch $s\theta_k$ und $t\theta_k$. Seien a und b die Teilterme, die an der ersten Position stehen, wo sich $s\theta_k$ und $t\theta_k$ unterscheiden.\\
+ Falls b eine Variable ist und a keine, dann vertausche a und b.\\
+ Falls a eine Variable ist und a nicht in b vorkommt, dann setze $\theta_{k+1}:=\theta_k\{b/a\}$, addiere 1 zu k und gehe zu U2.\\
+ Sonst stoppe mit Antwort ''nein''.
+\end{description}
+Das Resultat des Unifikationsalgorithmus ist entweder eine Substitution oder die Meldung \"nein\".\\\\
+
+Definiton {\textit MGU}: Falls zwei Terme s und t unifizierbar sind, dann bezeichnen wir mit mgu(s,t) den vom Unifikationsalgorithmus berechneten allgemeinsten Unifikator von s und t (most general unifier).\\
+
+\textit{Beispiel}\\
+\tiny
+\begin{tabular}{l|l|l|l|l|l}
+ k &	$s\theta_k$ &		$t\theta_k$ &		a &		b &		$\theta_{k+1}$\\\hline
+ 0 &	$f(a,x,f(g(y)))$ &	$f(z,f(z),f(w))$ &	a &		z &		$\frac{a}{z}$\\
+ 1 &	$f(a,x,f(g(y)))$ &	$f(a,f(a),f(w))$ &	x &		$f(a)$ &	$\frac{f(a)}{x}$\\
+ 2 &	$f(a,f(a),f(g(y)))$ &	$f(a,f(a),f(w))$ &	$g(y)$ &	$w$ &		$\frac{g(y)}{w}$\\
+ 3 &	$f(a,f(a),f(g(y)))$ &	$f(a,f(a),f(g(y)))$ &	&		&		\\
+\end{tabular}
+\normalsize
+
+\subsection{Prolog}
+Aber auch komplexere Probleme wie das Zusammenh"angen einer Liste oder das Umdrehen ihrer Elemente lassen sich in Prolog Formulieren. $[]$ entspricht dabei einer leeren Liste, $[A | R]$ einer Liste mit Kopfelement A, und Restliste R und $[a, b, c]$einer Liste mit den genannten Elementen. \texttt{app(X,Y,A)} h"angt die Listen X und Y zu A zusammen, \texttt{rev(X,Y)} dreht X in Y um. \texttt{list(L)} ist eine Liste (ein geschlossener Term). \texttt{select(X,L1,L2)} l"oscht das erste Vorkommen von X in L1 und gibt L2 zur"uck. \texttt{delete(X,L1,L2)} l"oscht alle Vorkommen.
+\begin{verbatim}
+ app([], L, L).
+ app([X|L1],L2,[X|L3]) :- app(L1,L2,L3).
+ 
+ rev([], []).
+ rev([X],[X]).
+ rev(L1,L2) :- app([X|LA], [Y], L1),
+               app([Y|LB], [X], L2),
+ rev(LA, LB).
+
+ /*2te Variante*/
+ rev([],[]).
+ rev([X|L],M):-
+  rev(L,N),
+  app(N,[X],M).
+
+ /*1ter und letzter Eintrag loeschen*/
+ r(L1,L2) :- app([_|L2],[_],L1).
+
+ /*Permutation*/
+ perm([],[]).
+ perm([X|L1],[Y|L2]):-
+  sel([X|L1],Y,L3),
+  perm(L3,L2).
+ 
+ sel([X|L],X,L).
+ sel([Y|L1],X,[Y|L2]):-
+  sel(L1,X,L2).
+
+ suffix(L1,L2) :- append(_,L1,L2).
+ prefix(L1,L2) :- append(L1,_,L2).
+
+ list([]).
+ list([_|L]) :- list(L).
+
+ sublist(L1,L2) :- 	
+  suffix(L3,L2),
+  prefix(L1,L3).
+
+ member(X,[X|_]).
+ member(X,[_|L]) :- member(X,L).
+
+ select(X,[X|L],L).
+ select(X,[Y|L1],[Y|L2]) :- select(X,L1,L2).
+
+ delete([],_,[]).
+ delete([Y|L1],X,L2) :-
+  ( X=Y ->
+   delete(L1,X,L2)
+  ; L2=[Y|L3],
+   delete(L1,X,L3)
+  ).
+ 
+ /*loescht den zweiten Eintrag*/
+ second(X,[_,X|L]).
+
+ /*X letztes Element der Liste?*/
+ final(X,L) :- append(L1,[X],L).
+ 
+ /*oder*/
+ final(X,[X]).
+ final(X,[_|L]):-final(X,L).
+
+ /*L1 identisch mit L2, bis auf
+ Vertauschung von letztem und
+ erstem? */
+ swapf1([],[]).
+ swapf1([X],[X]).
+ equalminuslast([X],[Y]).
+ equalminuslast([X|L1],[X|L2]) :-
+  equalminuslast(L1,L2).
+ swapf1([X|L1],[Y|L2]) :-
+  final(X,[Y|L2]),
+  final(Y,[X|L1]),
+  equalminuslast(L1,L2).
+
+ /*auf 2x vorkommen testen*/
+ twice(X,L) :-
+  append(_,[X|L1],L),
+  member(X,L1).
+\end{verbatim}
+
+{\bf Deklarative Konstrukte in Prolog}\\
+\begin{description}
+ \item[Rule =] Atom ':-' Goal'.'
+ \item[Goal =] 'true' $|$ 'fail' $|$ Atom $|$ Term '=' Term $|$ Goal ',' Goal $|$ Goal ';' Goal $|$ '$\backslash$+' Goal $|$ Goal '-$>$' Goal ';' Goal
+\end{description}
+
+= : ''gleich''\\
+, : ''und''\\
+; : ''oder''\\
+$\backslash$+ : ''nicht''\\
+-$>$; : ''if-then-else''\\
+
+\end{document}

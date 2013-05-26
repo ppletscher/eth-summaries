@@ -1,0 +1,2384 @@
+% Wissenschaftliches Rechnen summary
+% written during my studies at ETH Zuerich
+% based on the lecture of Prof. Gander
+% Copyright (C) 2004  Patrick Pletscher
+                                                                                
+\documentclass[german, 10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage[german]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage[bf]{caption2}
+\usepackage{multirow}
+%\usepackage{pstricks}
+\usepackage{ps4pdf}
+\PSforPDF{
+	\usepackage{pstricks}
+	\usepackage{pst-plot}
+}
+\usepackage{subfigure}
+                                                                                
+% text below figures
+\renewcommand{\captionfont}{\small\itshape}
+                                                                                
+% theorems, definitions
+\newtheorem{satz}{Satz}[section]
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+                                                                                
+% dimensions of document
+\textwidth = 19 cm
+\textheight = 25 cm
+\oddsidemargin = -1.5 cm
+\evensidemargin = -1.5 cm
+\hoffset = 0.0 cm
+\marginparwidth = 0.0 cm
+\topmargin = -1.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0 cm
+
+% depth of toc
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+                                                                                
+% informations about the document
+\title{Wissenschaftliches Rechnen - Zusammenfassung}
+\author{Patrick Pletscher}
+
+\begin{document}
+
+\maketitle
+
+\section{Endliche Arithmetik}
+
+\subsection{Reelle Zahlen $\leftrightarrow$ Maschinenzahlen}
+
+Jeder Computer ist ein \textit{endlicher} Automat, d.h. er kann nur
+\begin{itemize}
+	\item endlich viele Operationen durchf"uhren
+	\item endlich viele Zahlen speichern
+\end{itemize}
+
+Die reellen Zahlen $\mathbb{R}$ werden durch die endliche Menge der Maschinenzahlen $\mathbb{M}$ approximiert. Dabei wird jeweils ein ganzes Intervall (z.B. alle reellen Zahlen deren ersten 10 Ziffern gleich sind) auf eine Maschinenzahl abgebildet.
+
+\subsubsection{Darstellung einer Maschinenzahl}
+
+\begin{displaymath}
+	\tilde{a}\in \mathbb{M} \qquad \tilde{a} = \pm m \cdotp B^{\pm e}
+\end{displaymath}
+
+$m= D.D\cdots D$ Mantisse\\
+$e=D\cdots D$: Exponent\\
+$B$: Basis\\
+
+Wobei $D$ eine Ziffer $\in\{0,1,\ldots,9\}$\\
+
+Heute ist B meistens 2 (nach dem IEEE Standard for floating Point operations), fr"uher oftmals 10.
+
+\subsection{Gleitkommazahlen nach dem IEEE Standard}
+
+\subsubsection{Single Precision (32 Bits)}
+
+\scriptsize
+\begin{verbatim}
+ +-+-+-+-+-+-+-+-+-+-+-+-+
+ | S |    E    |    M    |
+ +-+-+-+-+-+-+-+-+-+-+-+-+
+ 0   1         9        31
+\end{verbatim}
+\normalsize
+
+S: Vorzeichen\\
+E: Exponent 8 Bits\\
+M: Mantisse 23 Bits\\
+
+\begin{displaymath}
+	V = (-1)^S \cdotp 1.M \cdotp 2^{E-127} \quad \mbox{falls } 0 < E < 255
+\end{displaymath}
+
+Ausnahmen:\\\\
+\begin{tabular}{l l}
+	$E=255, M\neq 0$ &		$V=NaN$ (not a number)\\
+	$E=255, M=0, S=0$ &		$V=Inf (=\infty)$\\
+	$E=255, M=0, S=1$ &		$V=Inf (=-\infty)$\\
+	$E=0, M\neq 0$ &		$V=(-1)^{s}\cdotp 0.M\cdotp 2^{-126}$\\
+	&				(nicht normalisierte Zahl)\\
+	$E=0, M=0, S=1$ &		$V=-0$\\
+	$E=0, M=0, S=0$ &		$V=0$
+\end{tabular}
+
+\subsubsection{Double Precision (64 Bits)}
+
+Double Precision ist heute der Normalfall.
+
+\scriptsize
+\begin{verbatim}
+ +-+-+-+-+-+-+-+-+-+-+-+-+
+ | S |    E    |    M    |
+ +-+-+-+-+-+-+-+-+-+-+-+-+
+ 0   1        11        63
+\end{verbatim}
+\normalsize
+
+Die Zahl ist:
+\begin{displaymath}
+	V = (-1)^S \cdotp 1.M \cdotp 2^{E-1023} \quad \mbox{falls } 0 < E < 2047
+\end{displaymath}
+
+anders geschrieben:
+\begin{displaymath}
+	V = (-1)^S \cdotp (1+M/2^{52})\cdotp 2^{E-1023}
+\end{displaymath}
+
+Ausnahmen:\\\\
+\begin{tabular}{l l}
+	$E=2047, M\neq 0$ &		$V=NaN$ (not a number)\\
+	$E=2047, M=0, S=0$ &		$V=Inf (=\infty)$\\
+	$E=2047, M=0, S=1$ &		$V=Inf (=-\infty)$\\
+	$E=0, M\neq 0$ &		$V=(-1)^{s}\cdotp 0.M\cdotp 2^{-1022}$\\
+	&				$V = (-1)^S \cdotp M/2^{52}\cdotp 2^{-102}$\\
+	&				(nicht normalisierte Zahl)\\
+	$E=0, M=0, S=1$ &		$V=-0$\\
+	$E=0, M=0, S=0$ &		$V=0$
+\end{tabular}\\\\
+
+Es gibt eine gr"osste und eine kleinste Maschinenzahl. Der Rechenbereich ist $[-\texttt{realmax}, \texttt{realmax}]$, wobei $\texttt{realmax} = 2^{1024}$. Es gibt auch eine kleinste normalisierte Zahl $\texttt{realmin} = 2^{-1022}$. Die kleinste nicht normalisierte Zahl ist $0.0\cdots 01 \cdotp 2^{-1022}$.\\
+
+\subsubsection{Maschinengenauigkeit eps}
+
+\begin{definition}[Maschinengenauigkeit]
+	Die Maschinengenauigkeit $eps$ ist die kleinste pos. Maschinenzahl welche zu 1 addiert ein Resultat $\neq 1$ ergibt. Eine neuere Definition lautet: Der Abstand zwischen zwei aufeinanderfolgenden Floating Point Numbers zwischen 1 und 2.
+\end{definition}
+
+In IEEE ist $eps = 2^{-52}$.
+
+\subsection{Rechnen mit Maschinenzahlen}
+
+\subsubsection{Rundungsfehler}
+
+absoluter Rundungsfehler: $r_a = \tilde{c} - c$\\
+relativer Rundungsfehler: $r = \frac{r_a}{c}$\\
+
+Wie gross sind die Rundungsfehler? Bei heutigen Computern gilt:
+\begin{displaymath}
+	a \tilde{\oplus} b = (a \oplus b) (1+r)
+\end{displaymath}
+
+Wobei $r$ relativer Rundungsfehler mit $|r|\leq \varepsilon$ und $\oplus \in \{+, - ,\times, /\}$.
+
+\subsubsection{Assoziativgesetz}
+
+Gesetze der Mathematik gelten nicht, so z.Bsp. Assoziativgesetz. Man muss also "uberlegen wie klammern. F"ur eine Summe ist es also von Vorteil mit dem kleinsten Element zu beginnen und das gr"osste Element erst als Letztes zu addieren.
+
+\subsubsection{Kahan's Summenalgorithmus}
+
+Um Summen auf dem Computer m"oglichst richtig zu berechnen, benutzt man den Algorithmus von Kahan.
+
+\begin{displaymath}
+	s = \sum^N_{j=1} x_j
+\end{displaymath}
+
+\small
+\begin{verbatim}
+ s = 0
+ c = 0
+ for j=1:N
+   y = x(j) + c
+   t = s + y
+   c = (s-t)+y
+   s = t
+ end
+ s = s + c
+\end{verbatim}
+\normalsize
+
+\subsubsection{Monotonie}
+
+In IEEE wurden die Standardfunktionen sehr sorgf"altig von W. Kahan implementiert. Aber im allgemeinen kann Monotonie nicht garantiert werden.
+
+\subsubsection{Vermeiden von "Uberlauf beim Radizieren}
+
+\begin{displaymath}
+	r = \sqrt{x^2+y^2}
+\end{displaymath}
+
+\small
+\begin{verbatim}
+ if abs(x) > abs(y)
+   r = abs(x)*sqrt(1 + (y/x)^2)
+ elseif y == 0
+   r = 0
+ else
+   r = abs(y)*sqrt((x/y)^2 + 1)
+\end{verbatim}
+\normalsize
+
+Oder:
+\small
+\begin{verbatim}
+ m = max(abs(x), abs(y))
+ if m == 0
+   r = 0
+ else
+   r = sqrt( (x/m)^2 + (y/m)^2 )*m
+ end
+\end{verbatim}
+\normalsize
+
+\subsubsection{Test f"ur "Uberlauf f"ur $x^2$}
+
+Mit IEEE:
+\small
+\begin{verbatim}
+ if x^2 == Inf
+\end{verbatim}
+\normalsize
+
+Ohne IEEE:
+\small
+\begin{verbatim}
+ if (1/x)/x == 0
+\end{verbatim}
+\normalsize
+
+Noch besser ohne nichtnormalisierten Zahlen:
+\small
+\begin{verbatim}
+ if (eps/x)/x == 0
+\end{verbatim}
+\normalsize
+
+\subsubsection{numerische Ausl"oschung}
+
+Wenn 2 nahezu gleichgrosse Zahlen subtrahiert werden. Viele Bits der Mantisse sind dann unbekannt und werden mit 0 gef"ullt.
+
+\subsection{Maschinenunabh"angige Algorithmen}
+
+These: Gute Algorithmen funktionieren dank der Rundungsfehler!
+
+\subsubsection{Beispiel: Exponentialfunktion}
+
+\small
+\begin{verbatim}
+ function y= e2(x);
+ % stable computation of the exponential
+ % function using the series
+ if x<0, v=-1; x = abs(x); else v=1; end
+ sn = 1; term = 1; k=1;
+ while sn+term ~= sn
+   s = sn; term = term*x/k;
+   sn = s + term; k=k+1;
+ end
+ if v<0, y=1/sn; else y=sn; end
+\end{verbatim}
+\normalsize
+
+\subsubsection{Beispiel: Quadratwurzel}
+
+\small
+\begin{verbatim}
+ xa = (1+a) / 2;
+ xn = (xa + a/xa) / 2;
+ while xn < xa
+   xa = xn;
+   xn = (xa+a/xa)/2;
+ end
+\end{verbatim}
+\normalsize
+
+\subsection{Abbruchkriterium}
+
+Wann soll Iteration im Allgemeinen abgebrochen werden?
+
+\begin{enumerate}
+	\item Wenn sich zwei 2 N"aherungen nicht stark unterscheiden
+		\begin{displaymath}
+			|x_{k+1} - x_k| < tol \quad \mbox{absolute Differenz}
+		\end{displaymath}
+		\begin{displaymath}
+			|x_{k+1} - x_k| < tol*|x_{k+1}| \quad \mbox{relativer ''Fehler''}
+		\end{displaymath}
+	\item Wenn Residuum $r=|x_k - x|$ klein ist, bzw. meist anderer Ausdruck, der die Abweichung vom zu erwartenden Resultat berechnet. Z.B. $r=|x_k^2 -a|$ f"ur $x = \sqrt{a}$.
+\end{enumerate}
+
+Diese beiden Bedingungen k"onnen aber nicht korrekte Resultate liefern! Darum sollte man immer Algorithmen benutzen, die keine Epsiliontik benutzen.
+
+
+\subsection{Kondition und Stabilit"at}
+
+\subsubsection{Kondition: Definition}
+
+Ein Problem kann gut oder schlecht konditioniert sein. Gut konditioniert heisst: die L"osung eines ''benachbarten'' Problems (= Problem mit leicht ge"anderten Anfangsdaten) unterscheidet sich nicht sehr von der urspr"unglichen L"osung.\\
+
+$P$ mit L"osung $x$ und $P(z)$ mit L"osung $x(\varepsilon)$.
+
+\begin{definition}
+	$P$ ist gut konditioniert wenn $|P-P(\varepsilon)| =$ klein $\Rightarrow | x - x(\varepsilon)|=$ klein.
+\end{definition}
+
+Schlechte Kondition: Die L"osung ist sehr empfindlich auf "Anderung der Anfangsdaten.
+
+\subsubsection{Gut/ Schlecht gestelltes Problem: Definition}
+
+\begin{definition}
+	Sei $A: X \rightarrow Y$ eine Abbildung eines Raumes $X$ nach $Y$. Das Problem $Ax = y$ heisst gut gestellt (well posed) wenn
+	\begin{enumerate}
+		\item Zu jedem $y\in Y$ existiert eine L"osung $x\in X$.
+		\item Die L"osung ist eindeutig.
+		\item Die L"osung h"angt stetig von den Daten ab.
+	\end{enumerate}
+
+	Ist eine der drei Bedingungen verletzt dann ist das Problem \textit{schlecht gestellt}. Ist 3 verletzt, so ist das Problem \textit{schlecht konditioniert}.
+\end{definition}
+
+\subsubsection{Prinzip von Wilkinson}
+
+R"uckw"artsfehleranalyse
+\begin{eqnarray}
+	a\cdotp b&	= &	a\cdotp b \cdotp (1+r) \nonumber \\
+	&		= &	a \cdotp (b+\underbrace{b\cdotp r}_{\mbox{St"orung von }b}) \nonumber
+\end{eqnarray}
+
+Das numerische Resultat $a\cdotp b (1+r)$ ist das exakte Resultat mit leicht gest"orten Anfangsdaten $b+br$ statt $b$.
+
+\subsubsection{Kondition eines linearen Gleichungssystem}
+
+\begin{displaymath}
+	\mathbf{A} \mathbf{x} = \mathbf{b} \qquad \mathbf{A} \in \mathbb{R}^{n\times n} \mbox{ nicht singul"ar}
+\end{displaymath}
+
+Gest"ortes System:
+\begin{displaymath}
+	(\mathbf{A} + \mathbf{E}) \mathbf{y} = \mathbf{b}
+\end{displaymath}
+
+Die Konditionszahl ist nun wie folgt definiert:
+\begin{displaymath}
+	\frac{\parallel \mathbf{x} - \mathbf{y} \parallel}{ \parallel \mathbf{y} \parallel} \leq \varepsilon \underbrace{\parallel \mathbf{A}^{-1} \parallel \parallel \mathbf{A} \parallel}_{\kappa(\mathbf{A})}
+\end{displaymath}
+
+$\kappa(\mathbf{A})$ ist also die Norm von $\mathbf{A}$ multipliziert mit der Norm von $\mathbf{A}^{-1}$. Dabei wird $\kappa(A)$ als die Konditionszahl von $\mathbf{A}$ bezeichnet. F"ur die 2-Norm gilt
+\begin{displaymath}
+	\kappa(\mathbf{A}) = \frac{\sigma_{\max}}{\sigma_{\min}}
+\end{displaymath}
+
+$\sigma_{\max}$ bzw. $\sigma_{\min}$ ist der gr"osste bzw. kleinste Singul"arwert: $\sigma_i = \sqrt{\lambda_i (\mathbf{A}^T \mathbf{A})}$.\\
+
+F"ur spezielle Matrizen vereinfacht sich die Rechnung:
+\begin{itemize}
+	\item Falls $\mathbf{A}$ eine symmetrische Matrix ist, so gilt
+		\begin{displaymath}
+			\kappa(\mathbf{A}) = \frac{\max_i |\lambda_i|}{\min_i |\lambda_i|}
+		\end{displaymath}
+		Wobei $\lambda_i$ die Eigenwerte von $\mathbf{A}$ sind.
+	\item F"ur orthogonale Matrizen, also wo gilt $\mathbf{Q} \mathbf{Q}^T = \mathbf{I}$ gilt
+		\begin{displaymath}
+			\kappa(\mathbf{Q}) = 1
+		\end{displaymath}
+\end{itemize}
+
+Bei einem lin. Gleichungssystem $\mathbf{A} \mathbf{x} = \mathbf{b}$ muss damit gerechnet werden, dass die numerisch berechnete L"osung um $\kappa(\mathbf{A}) \cdotp \varepsilon \cdotp \mathbf{x}$ falsch ist.
+
+\subsubsection{Stabile und instabile Algorithmen}
+
+Ein Algorithmus heisst \textit{stabil} wenn der Einfluss der Rundungsfehler beschr"ankt bleibt. Bei einem instabilen Algorithmus werden die Rundungsfehler aufgeschaukelt.\\
+Ein \textit{instabiler} Algorithmus liegt vor, wenn er die Kondition eines Problems verschlechtert. Ein Beispiel eines instabilen Algorithmus ist der Gausseliminationsschritt ohne Pivotstrategie.\\
+Heute verwenden die meisten Implementationen die Kolonnenmaximumstrategie, doch man kann zeigen, dass diese nicht stabil ist.
+
+\begin{satz}
+	Bei Elimination mit orthogonalen Matrizen (z.B. mit Givensrotationen) verschlechtert sich die Kondition nicht.
+\end{satz}
+
+\subsection{Schlussbemerkungen}
+
+Mit sehr grossen Registern ''exakte'' Zwischenergebnisse zu liefern kann in einigen F"allen sinnvoll sein, so z.B. die \textit{Nachiteration}.
+
+\subsubsection{Nachiteration}
+
+Problem: $\mathbf{A}\mathbf{x} = \mathbf{b}$, wo $\mathbf{A}$ eine schlechte Kondition hat. Dann f"uhrt man ein Korrektur $\mathbf{\Delta x}$ ein.
+
+\begin{displaymath}
+	\mathbf{A}(\mathbf{\widetilde{x}}+\mathbf{\Delta x}) = \mathbf{b}
+\end{displaymath}
+\begin{displaymath}
+	\mathbf{A}\mathbf{\widetilde{x}} + \mathbf{A}\mathbf{\Delta x} = \mathbf{b}
+\end{displaymath}
+\begin{displaymath}
+	\mathbf{A}\mathbf{\Delta x} = \mathbf{b} - \mathbf{A}\mathbf{\widetilde{x}} = \mathbf{r}
+\end{displaymath}
+
+Dieses Gleichungssystem l"ost man f"ur $\mathbf{\Delta x}$ und setzt
+\begin{displaymath}
+	\mathbf{x_{neu}} = \mathbf{\widetilde{x}} + \mathbf{\Delta x}
+\end{displaymath}
+
+\section{Quadratur}
+
+\subsection{Computer Algebra und Numerische Approximation}
+
+\subsubsection{Riemann Summe}
+
+Gesucht ist die numerische Approximation eines bestimmten Integrals mit Grenzen $[a,b]$. Man w"ahlt $a = x_0 < x_1 < \ldots < x_n = b$ und $y_i = f(x_i)$.
+
+\begin{displaymath}
+	\int^b_a f(x) dx \approx \sum w_i f(\xi_i)
+\end{displaymath}
+
+Wobei $\xi_i \in [x_{i-1}, x_i]$ und $w_i$ eine Gewichtung ist.
+
+\subsubsection{Probleme}
+
+Ein Programm, das numerisch integriert funktioniert nicht immer. Dies, da die Algorithmen "uber endlichen Intervallen arbeiten und nicht alle Funktionswerte dazwischen ber"ucksichtigen k"onnen; falls es dort Pole usw. gibt, versagen die Algorithmen.
+
+\subsection{Newton-Cotes}
+
+\subsubsection{Idee}
+
+Interpoliere $f(\xi_i)$ durch Polynom $P$ und integriere das Polynom.
+
+\begin{displaymath}
+	\int^b_a f(x)dx \approx \int^b_a P(x)dx
+\end{displaymath}
+
+\subsubsection{Allgemeiner Fall}
+
+Wir konstruieren das Interpolationspolynom $P_n(x)$ f"ur die Daten\\
+
+\begin{tabular}{c|ccc}
+	$x$ &		$\xi_0$ &	$\ldots$ &	$\xi_n$ \\ \hline
+	$f(x)$ &	$y_0$ &		$\ldots$ &	$y_n$
+\end{tabular}\\
+
+und durch Integration erhalten wir die Quadratur Regel:
+\begin{displaymath}
+	\int^b_a P_n(x) dx = \sum^n_{i=0} w_i y_i
+\end{displaymath}
+
+Wir benutzen die Lagrange Form von $P_n$:
+\begin{displaymath}
+	P_n(x) = \sum^n_{i=0} l_i(x)\cdotp y_i
+\end{displaymath}
+\begin{displaymath}
+	l_i(x) = \prod^n_{j=0} \frac{x-\xi_j}{\xi_i - \xi_j}
+\end{displaymath}
+\begin{displaymath}
+	\int^b_a P_n(x) dx = \sum^n_{i=0} y_i \underbrace{\int^b_a l_i(x) dx}_{w_i}
+\end{displaymath}
+
+\subsubsection{Newton-Cotes Regeln}
+
+\textit{Gegeben}: St"utzstellen $\xi_i$\\
+Berechne Gewichte $w_i = \int^b_a l_i(x) dx$
+
+\begin{displaymath}
+	\int^b_a f(x)dx \approx \sum^n_{i=0} w_i f(\xi_i)
+\end{displaymath}
+
+\small
+\begin{verbatim}
+ closedcotes := n -> factor(int(interp(
+   [seq(i*h, i= 0..n)],
+   [seq(f(i*h), i=0..n)], z),z=0..n*h));
+\end{verbatim}
+\normalsize
+
+\subsubsection{Trapezregel}
+
+\begin{displaymath}
+	\int^b_a f(x) dx \approx \frac{b-a}{2} ( f(a) + f(b) )
+\end{displaymath}
+
+Als zusammengesetzte Regel f"ur das Intervall $[a,b]$ mit $n$ gleich grossen Intervallen $(x_i, x_{i+1})$ der L"ange $h = x_{i+1} - x_{i} = (b-a)/n$, wobei $y_i = f(x_i)$, ergibt sich:
+
+\begin{displaymath}
+	 T(h) = h \left ( \frac{1}{2} y_0 + y_1 + \hdots + y_{n-1} + \frac{1}{2} y_n \right )
+\end{displaymath}
+
+F"ur den Fehler der zusammengesetzten Regel gilt
+
+\begin{displaymath}
+	 \int^b_a f(x) dx - T(h) = - \frac{b-a}{12} h^2 f''(\xi) \qquad \xi \in [a,b]
+\end{displaymath}
+
+Zur geschickten Programmierung, so dass die $y_i$ neu ''dazwischen'' eingef"ugt werden und die alten Werte nicht nochmals berechnet werden m"ussen:
+
+\begin{displaymath}
+	T(h) = h(\underbrace{\frac{1}{2}y_0 + y_1 + y_2 + y_3 + \frac{1}{2} y_4}_{s_{alt}})
+\end{displaymath}
+\begin{displaymath}
+	s_{neu} = s_{alt} + y_{1/2} + y_{3/2}+ y_{5/2} + y_{7/2}
+\end{displaymath}
+\begin{displaymath}
+	T(h/2) = \frac{h}{2} \cdotp s_{neu}
+\end{displaymath}
+
+\small
+\begin{verbatim}
+ function T = trapez(f,a,b,tol);
+ h = b - a; s = (feval(f,a) + feval(f,b))/2;
+ tnew = h * s; zh = 1; told = 2*tnew;
+ while abs(told - tnew) > tol * abs(tnew),
+   told = tnew; zh = 2 * zh;
+   h = h / 2;
+   s = s + sum(feval(f,a + [1:2:zh]*h));
+   tnew = h * s;
+ end;
+ T = tnew;
+\end{verbatim}
+\normalsize
+
+\subsubsection{Simpsonregel}
+
+Ein Polynom zweiten Grades 
+
+\begin{displaymath}
+	\int^b_a f(x) dx \approx \frac{b-a}{6} \left ( f(a) + 4f \left ( \frac{a+b}{2} \right ) +f(b) \right)
+\end{displaymath}
+
+F"ur die zusammengesetze Simpsonregel m"ussen wir das Integrationsintervall $[a,b]$ in $2n$ Unterintervalle aufteilen und es ergibt sich:
+
+\begin{displaymath}
+	S(h) = \frac{h}{3} (y_0 + 4y_1 + 2 y_2 + 4 y_3 + \hdots + 2 y_{2n-2} + 4 y_{2n-1} + y_{2n} )
+\end{displaymath}
+
+Der Integrationsfehler ist
+
+\begin{displaymath}
+	\left | \int^b_a f(x) dx - S(h) \right | = \frac{b-a}{180} h^4 \left | f^{(4)}(\xi) \right | \qquad \xi \in [a,b]
+\end{displaymath}
+
+Zur Programmierung (Einf"ugen von neuen $\xi_i$ ''dazwischen''):\\
+
+F"ur $h$:
+
+\begin{eqnarray*}
+	s_1 &	= &	y_0 + y_4\\
+	s_2 &	= &	y_2\\
+	s_4 &	= &	y_1 + y_3
+\end{eqnarray*}
+
+Dann f"ur $\frac{h}{2}$:
+
+\begin{eqnarray*}
+	s_1^{neu}&	= &	s_1\\
+	s_2^{neu}&	= &	s_2 + s_4\\
+	s_4^{neu}&	= &	\mbox{neue Fkt. Werte}
+\end{eqnarray*}
+
+Dann ergibt sich f"ur Simpson:
+\begin{displaymath}
+	S ( h/2 ) = \frac{\frac{h}{2}}{3} (s_1^{neu} + 2\cdotp s_2^{neu} + 4\cdotp s_4^{neu})
+\end{displaymath}
+
+\small
+\begin{verbatim}
+ function S = simpson(f,a,b,tol);
+ h = (b-a)/2; s1 = feval(f,a) + feval(f,b); s2 = 0;
+ s4 = feval(f,a + h); snew = h *(s1 + 4 * s4)/3;
+ zh = 2; sold = 2*snew;
+ while abs(sold-snew)>tol*abs(snew),
+   sold = snew; zh = 2*zh; h=h/2;
+   s2 = s2 + s4;
+   s4 = sum(feval(f,a + [1:2:zh]*h));
+   snew = h*(s1 + 2*s2 + 4*s4)/3;
+ end
+ S = snew;
+\end{verbatim}
+\normalsize
+
+\subsubsection{"Uberblick}
+
+\begin{displaymath}
+	\int^b_a P_n(x) dx = \frac{b-a}{ns}\sum^n_{i=0} w_i f_i
+\end{displaymath}
+
+\small
+\begin{tabular}{lrrrrrrll}
+	\hline
+	$n$ &		$w_i$ & & & & &			$ns$ &		Fehler &		Name\\ \hline
+
+	1 &		1 & 1 & & & & 			$2$ &		$h^3 \frac{1}{12}f^{(2)}(\xi)$ &	Trapezregel \\
+	2 &		1 & 4 & 1& & & 			$6$ &		$h^5 \frac{1}{90}f^{(4)}(\xi)$ &	Simpsonregel \\
+	4 &		7 & 32 & 12& 32& 7& 		$90$ &		$h^7 \frac{8}{945}f^{(6)}(\xi)$ &	Milne-Regel \\ \hline
+\end{tabular}
+\normalsize
+
+\subsection{Fehler der Newton-Cotes Formeln}
+
+\subsubsection{Resultat von Steffenson}
+
+\begin{displaymath}
+	\int^b_a P(x) dx - \int^b_a f(x) dx = h^{p+1} \cdotp k \cdotp f^{(p)}(\xi),\quad \xi \in (a,b)
+\end{displaymath}
+
+Dabei h"angen $p$ und $k$ nicht von $f$ ab. Die Gleichung gilt nat"urlich nur f"ur gen"ugend oft differenzierbare $f$.
+
+\subsection{Euler-Mac Laurin Summationsformel}
+
+Suchen einer geschlossenen Funktion f"ur
+
+\begin{displaymath}
+	\sum^\beta_{i=\alpha} f(i)
+\end{displaymath}
+
+\begin{labeling}{\usekomafont{descriptionlabel}Idee: }
+	\item[\usekomafont{descriptionlabel}Idee:] Wir suchen eine Summenfunktion $s(x)$ mit der Eigenschaft
+		\begin{displaymath}
+			\Delta s(x)  = s(x+1) - s(x) = f(x)
+		\end{displaymath}
+		Dann gilt:
+		\begin{displaymath}
+			\sum^\beta_{i=\alpha} f(i) = s(\beta + 1) - s(\alpha)
+		\end{displaymath}
+\end{labeling}
+
+Wollen $s(x)$ als formale (= k"ummern uns nicht um Konvergenzbereich) Potenzreihe berechnen. Wir betrachten die Taylorreihe f"ur $f(x+h)$ f"ur $h=1$:
+\begin{displaymath}
+	f(x+1) = \sum^{\infty}_{k=0} f^{(k)}(x)\frac{1}{k!}
+\end{displaymath}
+
+\begin{displaymath}
+	\Delta f(x) = f(x+1) - f(x) = \sum^\infty_{k=1} f^{(k)}(x) \frac{1}{k!}
+\end{displaymath}
+
+F"ur Ableitungen gilt:
+\begin{displaymath}
+	\Delta f^{(i)}(x) = \sum^\infty_{k=1} f^{(k+i)}(x) \frac{1}{k!}
+\end{displaymath}
+
+Und f"ur das Integral:
+\begin{displaymath}
+	\Delta F(x) = F(x+1) - F(x) = \sum^{\infty}_{k=1} f^{(k-1)}\frac{1}{k!}
+\end{displaymath}
+
+In Matrixschreibweise:
+\begin{displaymath}
+	\mathbf{f} = \left ( 
+	\begin{array}{c}
+		f(x)\\
+		f'(x)\\
+		\vdots\\
+		f^{(m)}(x)\\
+		\vdots
+	\end{array}
+	\right )
+	\quad
+	\mathbf{\Delta f} = \left ( 
+	\begin{array}{c}
+		\Delta F(x)\\
+		\Delta f(x)\\
+		\vdots\\
+		\Delta f^{(m-1)}(x)\\
+		\vdots
+	\end{array}
+	\right )
+\end{displaymath}
+\begin{displaymath}
+	\mathbf{A} = \left (
+	\begin{array}{ccccc}
+		\frac{1}{1!} &	\frac{1}{2!} &	\frac{1}{3!} &	\frac{1}{4!} &	\hdots\\
+		&		\frac{1}{1!} &  \frac{1}{2!} &  \frac{1}{3!} &	\hdots\\
+		&		&		\ddots &	\ddots &	\ddots
+	\end{array}
+	\right )
+\end{displaymath}
+
+\begin{displaymath}
+	\mathbf{\Delta f} = \mathbf{A}\mathbf{f}
+\end{displaymath}
+
+Nach $\mathbf{f}$ aufgel"ost:
+\begin{displaymath}
+	\mathbf{f} = \mathbf{A}^{-1}\mathbf{\Delta f}
+\end{displaymath}
+
+Dabei ist $\mathbf{A}$ folgende Matrix:
+\begin{displaymath}
+	\mathbf{A}^{-1} = \left (
+	\begin{array}{cccc}
+		b_1 &	b_2 &	b_3 &	\hdots\\
+		&	b_1 &	b_2 &	\hdots\\
+		&	&	\ddots &\ddots
+	\end{array}
+	\right )
+\end{displaymath}
+
+Dabei sind die Koeffizienten $b_i$ aus den \textit{Bernoullizahlen} $B_k$ zu berechnen durch:
+\begin{displaymath}
+	b_k = \frac{B_{k-1}}{(k-1)!}
+\end{displaymath}
+
+Die ersten Bernoullizahlen:
+\begin{displaymath}
+	B_0 = 1, \quad B_1 = -\frac{1}{2}, \quad B_2 = \frac{1}{6}, \quad B_3 = 0
+\end{displaymath}
+
+Durch Umformen ergibt sich die Euler-Mac Laurin Summenformel
+
+\begin{eqnarray*}
+	\sum^\beta_{i=\alpha} f(i) &	= &	\int^\beta_\alpha f(x)dx + \frac{f(\alpha) + f(\beta)}{2}\\
+	&				&	\ + \sum^\infty_{j=1} \frac{B_{2j}}{(2j)!} (f^{(2j-1)}(\beta) - f^{(2j-1)}(\alpha))
+\end{eqnarray*}
+
+
+\subsubsection{Folgerung}
+
+F"ur Summen von Polynomen $P_m(x)$ werden alle Ableitungen gr"osser $m$ gleich 0 und somit ist es hinreichend die rechte Summe bei der Euler-Mac Laurin Formel nur bis zum Term $m/2$ zu bilden.
+
+\subsubsection{Spezialisierung f"ur Trapezsumme}
+
+\small
+\begin{displaymath}
+	T(h) = \underbrace{\int^b_a g(t) dt}_{\mbox{exaktes Integral}} + \underbrace{\sum^\infty_{j=1} \frac{B_{2j}}{(2j)!}(g^{(2j-1)}(b) - g^{(2j-1)}(a))h^{2j}}_{\mbox{Fehler der Trapezregel}}
+\end{displaymath}
+\normalsize
+
+Wir haben die asymptotische Entwicklung der Trapezregel erhalten
+
+\begin{displaymath}
+	T(h) = \int^b_a g(t) dt + c_1 h^2 + c_2 h^4 + \ldots + c_m h^{2m} + R_m
+\end{displaymath}
+
+Wobei f"ur das Restglied $R_m$ gilt:
+\begin{displaymath}
+	R_m = \frac{B_{2m+2}}{(2m+2)!} h^{2m+2}(b-a)^{(2m+2)}(\xi)
+\end{displaymath}
+
+\subsection{Romberg Integration}
+
+\begin{displaymath}
+	T(h) = \underbrace{\int^b_a g(t)dt}_{= c_0} + c_1 h^2 + c_2 h^4 + c_3 h^6 + \ldots
+\end{displaymath}
+
+Somit
+\begin{displaymath}
+	T(h) \approx P_m(h^2)
+\end{displaymath}
+
+Wir wollen $c_0 \approx P_m(0)$ berechnen.\\
+
+Vorgehen:
+\begin{itemize}
+	\item interpolieren durch Polynom vom Grade $i$
+	\item evaluieren f"ur $x=0$ ergibt N"aherung f"ur Integral.
+\end{itemize}
+
+F"ur die Interpolation k"onnte ein Lagrange-Polynom verwendet werden, besser ist es aber das \textit{Aitken-Neville Schema} zu ben"utzen.
+
+\subsubsection{Aitken Neville Schema}
+
+\begin{displaymath}
+\begin{array}{c|cccccc}
+	x &		y \\ \hline
+	x_0 &		T_{00}\\
+	x_1 &		T_{10} &	T_{11}\\
+	x_2 &		T_{20} &	T_{21} &	T_{22}\\
+	\hdots &	\hdots &	&		&		\ddots\\
+	x_i &		T_{i0} &	T_{i1} &	T_{i2} &	\hdots &	T_{ii}\\
+	\hdots &	\hdots &	\hdots &	\hdots &	&		\hdots &	\ddots
+\end{array}
+\end{displaymath}
+
+Wobei gilt 
+\begin{displaymath}
+	\left .
+	\begin{array}{lcl}
+		T_{i0} &	= &	y_i\\
+		T_{ij} &	= &	\frac{(x_i - z)T_{i-1,j-1}+(z-x_{i-j})T_{i,j-1}}{x_i - x_{i-j}}\\
+		j &		= &	1,2,\ldots, i
+	\end{array}
+	\right \} i = 1,2,3,\ldots
+\end{displaymath}
+
+$z$ ist dabei eine feste Stelle, an dem die Polynome im ANS ausgewertet werden.
+
+\subsubsection{Spezialisierung des ANS f"ur Romberg Integration}
+
+\begin{displaymath}
+	z = 0, \quad x_i = h_i^2, \quad h_i = \frac{h_{i-1}}{2} = \frac{h_0}{2^i}
+\end{displaymath}
+
+Somit ergibt sich das Romberg Schema:
+\begin{displaymath}
+	T_{ij} = \frac{4^{-j}T_{i-1,j-1} - T_{i,j-1}}{4^{-j}-1}
+\end{displaymath}
+
+\begin{satz}
+	In der 2. Kolonne des Rombergschemas stehen die Simpson Werte. In der 3. Kolonne die Milne's Regel.
+\end{satz}
+
+Integrale "uber periodische Funktionen f"ur eine Periode am Besten mit Trapez. Romberg bringt hier keine Verbesserung.
+
+\small
+\begin{verbatim}
+ function [I, T] = romberg(f,a,b,tol);
+ h = b - a; intv =1;
+ s = (feval(f,a)  + feval(f,b)) / 2;
+ T(1,1) = s * h;
+ for i = 2:15
+   intv = 2*intv; h = h/2;
+   s = s + sum(feval(f,a+[1:2:intv]*h));
+   T(i,1) = s * h;
+   vhj = 1;
+   for j = 2:i
+     vhj = vhj/4;
+     T(i,j) = (vhj*T(i-1,j-1) - T(i,j-1)) / (vhj -1);
+   end;
+   if abs(T(i,i)-T(i-1,i-1)) < tol * abs(T(i,i)),
+     I = T(i,i); return
+   end
+ end
+ warning(['limit of extrapolation steps reached. ', ...
+          'Required tolerance may not be met.']);
+ I = T(i,i);
+\end{verbatim}
+\normalsize
+
+\subsection{Gauss Quadratur}
+
+Wollen St"utzstellen optimieren.\\
+
+Transformation von ''normalem'' Integral zu $\int^1_{-1}$:
+
+\begin{displaymath}
+	\int^b_a f(x) dx = \frac{b-a}{2} \int^1_{-1} f \left (\frac{b-a}{2} t + \frac{a+b}{2} \right ) dt
+\end{displaymath}
+
+Nun versucht man die Gewichte $w_k$ und St"utzstellen $\xi_k$ optimal zu w"ahlen:
+
+\begin{equation}
+	\int^1_{-1} f(x)dx \approx \sum^n_{k=1} w_k f(\xi_k)
+	\label{eq:gauss_quadrature}
+\end{equation}
+
+\begin{satz}
+	Die Ordnung der Gauss Formel ~\ref{eq:gauss_quadrature} ist $\leq 2n - 1$
+\end{satz}
+
+Die $w_i$ und $\xi_i$ sind symmetrisch. Ungerade Monome werden automatisch richtig integriert, Gleichungen nur f"ur gerade Monome aufstellen.\\
+
+F"ur $n\leq 6$ k"onnen wir die L"osung noch analytisch bestimmen.
+\small
+\begin{verbatim}
+ gauss := proc(n)
+  local w, xi, i, j, firsteq, eqns, sols, m;
+  global res;
+
+  firsteq := 2 * sum(w[i], i=1..m);
+  if irem(n,2)=1 then firsteq := firsteq+w[0] fi;
+  eqns := {2 = firsteq};
+  for j from 2 by 2 to 2*(n-1) do
+    eqns := eqns union{
+    int(x^j, x=-1..1) = 2*sum(w[i]*xi[i]^j, i=1..m)};
+  od;
+  if irem(n,2)=1 then sols := {w[0]}
+    else sols := {}
+  fi;
+  for j from 1 to m do
+    sols := union {w[j], xi[j]};
+  od;
+  res := solve(eqns, sols);
+  evalf(res);
+end;
+\end{verbatim}
+\normalsize
+
+\subsubsection{Charakterisieren der $\xi_i, w_i$}
+
+\begin{equation}
+	\int^1_{-1} P_{2n-1}(x) dx = \sum^n_{i=1} P_{2n-1}(\xi_i)w_i
+	\label{eq:gauss_quadrature2}
+\end{equation}
+
+Annahme: $P_{2n-1}(x) = H_{n-1}(x)\cdotp Q_n(x) + R_{n-1}(x)$\\
+
+Somit ergibt sich f"ur die LHS von ~\ref{eq:gauss_quadrature2}:
+\begin{displaymath}
+	\int^1_{-1} P_{2n-1}(x) dx = \int^1_{-1} H_{n-1}(x) Q_n (x)dx + \int^1_{-1} R_{n-1}(x)dx
+\end{displaymath}
+
+\begin{enumerate}
+	\item Wir w"ahlen f"ur $Q_n$ das orthogonale Polynom zum Intervall $[-1,1]$ mit dem Skalarprodukt $(f,g)=\int^1_{-1} f(x)g(x)dx$\\
+		Mit dieser Wahl ist $\int^1_{-1}H_{n-1}(x)Q_n(x)dx = 0$
+	\item W"ahlen $\xi_i$ = Nullstellen des orthogonalen Polynoms $Q_n\Rightarrow \sum w_i H_{n-1}(\xi_i)Q_n(\xi_i) = 0$
+	\item Die $\xi_i$ sind fest also kann man die Gewichte nach Idee von Newton-Cotes bestimmen\\
+		$\Rightarrow w_i = \int^1_{-1}l_i(x)dx$ ($l_i$= Lagrange Polynome)\\
+		$\Rightarrow \int^1_{-1} R_{n-1} (x) dx = \sum^n_{i=1} w_iR_{n-1}(\xi_i)$
+\end{enumerate}
+
+\begin{satz}
+	Die Gauss-Quadraturregel ~\ref{eq:gauss_quadrature2} hat die Ordnung $2n-1$. Die $\xi_i$ sind Nullstellen der orthogonalen $Q_n$ und die $w_i$ sind die Integrale der Lagrangepolynome.
+\end{satz}
+
+\begin{verbatim}
+ n := 20;
+ X := sort([fsolve(orthopoly[P](n,x)=0,x)]);
+ Q := int(interp(X, [seq(y[i], i=1..n)],z),z=-1..1);
+\end{verbatim}
+
+\subsubsection{Orthogonale Polynome}
+
+Polynome $P_k$ (vom Grade k) sind orthogonal auf $[-1,1]$ wenn
+\begin{equation}
+	(P_i, P_k) = \int^1_{-1} P_i(x) P_k(x) dx = \left \{
+		\begin{array}{cc}
+			0 &	k\neq i\\
+			1 &	k = i
+		\end{array}
+	\right .
+	\label{eq:skalarprodukt_ortho}
+\end{equation}
+
+\begin{satz}
+	Die orthogonalen Polynome $p_0(x), p_1(x), \ldots$ gen"ugen der 3-gliedrigen Rekursionsformel
+	\begin{displaymath}
+		x \cdotp p_{k-1}(x) = \beta_{k-1}p_{k-2}(x) + \alpha_k p_{k-1}(x) + \beta_k p_k, \qquad k = 1,2,\ldots
+	\end{displaymath}
+	Mit $\alpha_k = (x p_{k-1}, p_{k-1}), \beta_k = (x p_{k-1},p_k)$ und mit der Initialisierung $\beta_0 := 0, p_{-1}(x) := 0$ und $p_0(x) := 1/\sqrt{2}$.
+	\label{th:lanczos}
+\end{satz}
+
+\small
+\begin{verbatim}
+ restart;
+ lanczos := proc(p, alpha, beta, n)
+   local k, q, x; p := array(0..n);
+   alpha := array (1..n); beta := array (1..n-1);
+   p[0] := 1/sqrt(2);
+   alpha[1] := int(x*p[0]*p[0], x=-1..1);
+   q := (x - alpha[1]) * p[0];
+   for k from 2 to n do
+     beta[k-1] := sqrt(int(q*q, x=-1..1));
+     p[k-1] := expand(q / beta[k-1]);
+     alpha[k] := int(x*p[k-1]*p[k-1], x= -1..1);
+     q := (x - alpha[k])*p[k-1] - beta[k-1]*p[k-2];
+   od;
+   RETURN (NULL);
+ end;
+\end{verbatim}
+\normalsize
+
+Bez"uglich dem Skalarprodukt \ref{eq:skalarprodukt_ortho} ergeben sich f"ur die $\alpha_k$ und $\beta_k$:
+\begin{displaymath}
+	\alpha_k = 0, \qquad \beta_k = \frac{k}{\sqrt{4k^2 - 1}}
+\end{displaymath}
+
+$\beta_{k-1}$ l"asst sich relativ bequem durch das Skalarprodukt $(\beta_k p_k, \beta_k p_k)$ berechnen, wobei $\beta_k p_k = (x-\alpha_k)p_{k-1} - \beta_{k-1}p_{k-2}$, dies berechnet man am Besten immer am Anfang der neuen Iteration f"ur die vorhergehende, also eigentlich $\beta_{k-1}$.
+
+
+\subsubsection{Golub-Welsh Algorithmus}
+
+Die 3-gliedrige Rekursionsformel von ~\ref{th:lanczos} in Vektor-Matrixschreibweise
+
+\scriptsize
+\begin{eqnarray*}
+	x \cdotp 
+	\underbrace{
+	\left (
+	\begin{array}{c}
+		p_0(x)\\
+		p_1(x)\\
+		\vdots\\
+		p_{n-1}(x)
+	\end{array}
+	\right )
+	}_{\mathbf{p}(x)} &
+	= &
+	\underbrace{
+	\left [
+	\begin{array}{cccccc}
+		\alpha_1 &	\beta_1\\
+		\beta_1 &	\alpha_2 &	\beta_2\\
+		&		\ddots &	\ddots &	\ddots \\
+		&		&		\ddots &	\alpha_{n-1} &	\beta_{n-1} \\
+		&		&		&		\beta_{n-1} &	\alpha_{n}
+	\end{array}
+	\right ]
+	}_{\mathbf{T_n}}
+	\left (
+	\begin{array}{c}
+		p_0(x)\\
+		p_1(x)\\
+		\vdots\\
+		p_{n-1}(x)
+	\end{array}
+	\right )\\
+	& &
+	\ +
+	\left (
+	\begin{array}{c}
+		0\\
+		\vdots\\
+		0\\
+		\beta_n p_n(x)
+	\end{array}
+	\right )
+\end{eqnarray*}
+\normalsize
+
+\begin{displaymath}
+	x \cdotp \mathbf{p}(x) = \mathbf{T_n} \cdotp \mathbf{p}(x) + \mathbf{e_n} \cdotp \beta_n \cdotp p_n(x)
+\end{displaymath}
+
+Die $\xi_i$ sind die Nullstellen von $p_n(x)$, d.h.
+\begin{displaymath}
+	\xi_i \mathbf{p}(\xi_i) = \mathbf{T_n}\cdotp \mathbf{p}(\xi_i)
+\end{displaymath}
+
+Die $\xi_i$ sind also die Eigenwerte von $\mathbf{T_n}$, da $\mathbf{T_n}$ symmetrische Matrix ist, sind die EW sehr gut konditioniert und reell.\\
+
+
+Da die Gaussquadraturregel sagt, dass Polynome bis Grad $2n-1$ korrekt integriert werden, im Speziellen auch die orthogonalen Polynome $p_i(x)$ f"ur $i=0,1,\ldots,n-1$ und alle Integrale "uber den Polynomen Null ergeben mit Ausnahme von $p_0(x)$, welches $\sqrt{2}$ ergibt, gilt f"ur die Gewichte $w_i$:
+\begin{displaymath}
+	\mathbf{P} \mathbf{w} = \sqrt{2}\cdotp \mathbf{e_1}
+\end{displaymath}
+
+Wobei $\mathbf{P}$ die Eigenvektormatrix von $\mathbf{T}$ ist, dabei ist zu beachten, dass die Vektoren so normiert sind, dass die ersten Komponenten gleich $\frac{1}{\sqrt{2}}$ sind, da $p_0(x)=\frac{1}{\sqrt{2}}$. Dies erreicht man am besten in dem man von der EW-Zerlegung $\mathbf{T_n} = \mathbf{Q}\mathbf{D}\mathbf{Q}^T$
+\begin{enumerate}
+	\item Jede Kolonne von $\mathbf{Q}$ durch das erste Element dividieren.
+	\item Multiplizieren jede Kolonne mit $1/\sqrt{2}$.
+\end{enumerate}
+dies kann auch geschrieben werden als
+\begin{displaymath}
+	\mathbf{P} = \mathbf{Q} \mathbf{V}, \qquad \mathbf{V} = \mathop{\rm diag} \left( \frac{1}{\sqrt{2}q_{1,1}}, \ldots \frac{1}{\sqrt{2}q_{1,n}} \right )
+\end{displaymath}
+
+$\mathbf{P}\mathbf{w} = \sqrt{2}\mathbf{e_1}$ kann nun gel"ost werden durch 
+\begin{eqnarray*}
+	\mathbf{Q}\mathbf{V}\mathbf{w} &	= &	\sqrt{2}\mathbf{e_1} \\
+	\mathbf{w} &				= &	\sqrt{2}\mathbf{V}^{-1}\mathbf{Q}^T \mathbf{e_1} = 2 \left (
+	\begin{array}{c}
+		q_{11}^2\\
+		q_{12}^2\\
+		\vdots\\
+		q_{1n}^2
+	\end{array}
+	\right )
+\end{eqnarray*}
+
+Dadurch ergibt sich der Gauss-Legendre Algorithmus
+
+\begin{verbatim}
+ function [xi, w] = gausslegendre(n)
+   beta = 0.5 ./ sqrt(1-(2*(1:n-1).^(-2)));
+   [Q, D] = eig(diag(beta,1) + diag(beta,-1));
+   [x, i] = sort(diag(D));
+   w = 2 * Q(1,i).^2;
+\end{verbatim}
+
+\subsection{Adaptive Quadratur}
+
+\begin{definition}[adaptiv]
+	Schrittweite $h$ dem Verlauf der Funktion anpassen, dass der Fehler f"ur die einzelnen Intervalle ungef"ahr gleich ist.
+\end{definition}
+
+\subsubsection{Divide \& Conquer}
+
+Idee: Zwei Integraln"aherungen f"ur Intervall bestimmen, z.B. mit Simpson f"ur $h$ und $h/2$, falls diese nicht gen"ugend nahe beieinander liegen wird das Intervall halbiert und der selbe Algorithmus rekursiv aufgerufen. Bei den Abbruchkriterien, muss man aber aufpassen.
+
+\begin{verbatim}
+ function Q = int(f, a, b)
+   i1 = ...
+   i2 = ...
+   is = ...
+
+   if is + (i1-i2) == is | m <= a | b <= m
+     Q = i1;
+   else
+     Q = int(f,a,(a+b)/2) + int(f,(a+b)/2,b);
+   end
+\end{verbatim}
+
+Wobei $m= (a+b)/2$ und \verb@is@ ist eine \textit{grobe Sch"atzung} f"ur $|\int^b_a f(x)dx|$, diese macht man meist mit der Monte-Carlo Sch"atzung. Dabei werden zuf"allige Funktionswerte $f(\xi_i)$ generiert und dann das Integral durch auswerten an diesen Stellen approximiert
+\begin{displaymath}
+	(b - a) \frac{1}{m}\sum^m_{i=1} f(\xi_i) \approx \int^b_a f(x) dx
+\end{displaymath}
+
+Man k"onnte z.B. $is$ so bestimmen:
+\begin{displaymath}
+	is = \frac{b-a}{8}(f(a) + f(m) + f(b) + \sum^5_{i=1} f(\xi_i))
+\end{displaymath}
+
+Falls man das Integral nicht auf Maschinengenauigkeit $eps$ integrieren m"ochte, sondern nur bis zu einer Toleranz $tol$, kann man folgende Abbruchbedingung benutzen:
+\begin{displaymath}
+	\frac{tol}{eps} \cdotp is + (i1-i2) == \frac{tol}{eps} \cdotp is
+\end{displaymath}
+
+Um die Neu-Berechnung von Funktionswerten zu vermeiden, kann man $f_a, f_m, f_b$ als Parameter der rekursiv aufgerufenen Funktion "ubergeben.\\
+
+Als weitere Verbesserung kann man das Romberg-Schema auf die beiden mit der Simpsonmethode gerechneten $i1, i2$ anwenden
+\begin{displaymath}
+	i1_{neu} = \frac{16\cdotp i2 - i1}{15}
+\end{displaymath}
+
+\small
+\begin{verbatim}
+ function Q = simadpt(f,a,b,tol,trace,varargin)
+  global warn1, warn2
+
+  if (nargin < 4), tol = []; end;
+  if (nargin < 5), trace = []; end;
+  if (isempty(tol)), tol = eps; end;
+  if (isempty(trace)), trace = 0; end;
+  if tol <= eps, tol = 10*eps; end
+  warn1 = 0; warn2 = 0;
+  x = [a (a+b)/2 b];
+  y = feval(f, x, varargin{:});
+  for p=1:length(y)
+    if isinf(y(p)) | isnan(y(p)),
+      y(p) = 0; warn1=1;
+    end
+  end
+  fa = y(1); fm = y(2); fb = y(3);
+  yy = feval(f, a + ...
+    [.9501 .2311 .6068 .4860 .8913]*(b-a), vargin{:});
+  for p=1:length(yy)
+    if isinf(yy(p)) | isnan(yy(p)),
+      yy(p) = 0; warn1=1;
+    end
+  end
+  is = (b-a)/8*(sum(y)+sum(yy));
+  if is==0, is = b-a; end;
+  is = is * tol/eps;
+  Q = simadaptstp(f,a,b,fa,fm,fb,is,trace,varargin{:});
+  if warn1==1,
+    warning(['Infinite or Not-a-Number function', ...
+      'value encountered. Singularity likely.', ...
+      'Required tolerance may not be met.']);
+  end
+  if warn2==1
+    warning(['Interval contains no more machine', ...
+      number. Singularity likely. Required', ...
+      'tolerance may not be met.']);
+  end
+
+ function Q = simadaptstp (f,a,b,fa,fm,fb,is, ...
+   trace,varargin)
+
+  global warn1 warn2
+  m = (a+b)/2; h = (b-a)/4;
+  x = [a + h, b - h];
+  y = feval(f, x, varargin{:});
+  for p=1:length(y)
+    if isinf(y(p)) | isnan(y(p)),
+      y(p) = 0; warn1 = 1;
+    end
+  end
+  fml = y(1); fmr = y(2);
+  i1 = h/1.5 * (fa + 4*fm + fb);
+  i2 = h/3 * (fa + 4*(fml + fmr) + 2*fm + fb);
+  i1 = (16*i2 - i1)/15;
+  if (is + (i1-i2) == is) | (m <= a) | (b<=m),
+    if ((m <= a) | (b <= m)), warn2=1; end;
+    Q = i1;
+    if (trace), disp([a b-a Q]), end;
+  else
+    Q = simadaptstp(f,a,m,fa,fml,fm,is,trace, ...
+        varargin{:}) + simadaptstp(f,m,b,fm, ...
+        fmr,fb,is,trace,varargin{:});
+  end;
+\end{verbatim}
+\normalsize
+
+\section{Gew"ohnliche Differentialgleichungen}
+
+\subsection{Notation, Definitionen}
+
+Eine DGL \textit{erster} Ordnung hat die Gestalt
+
+\begin{equation}
+	y' = f(x,y)
+	\label{eq:dgl_1ordnung}
+\end{equation}
+
+Wobei $f$ gegeben und $y(x)$ gesucht wird. $y(x)$ ist eine L"osung von ~\ref{eq:dgl_1ordnung} wenn 
+
+\begin{displaymath}
+	y'(x) = f(x,y(x))
+\end{displaymath}
+
+f"ur alle $x$ gilt. L"osung wird eindeutig, wenn zus"atzlich eine Anfangsbedingung (=AB)
+
+\begin{displaymath}
+	y(x_0) = y_0
+\end{displaymath}
+
+vorgegeben wird.\\
+
+Eine DGL 2. Ordnung hat die Gestalt
+
+\begin{displaymath}
+	y'' = f(x,y,y')
+\end{displaymath}
+
+Nun kann man daraus ein System von DGL's erster Ordnung bilden, im allg. lautet ein System von $n$ DGL 1. Ordnung
+
+\begin{eqnarray*}
+	y_1'&	= &	f_1(x,y_1,\ldots, y_n)\\
+	&	\vdots\\
+	y_n' &	= &	f_n(x,y_1,\ldots, y_n)
+\end{eqnarray*}
+
+oder in Vektorschreibweise
+
+\begin{equation}
+	\mathbf{y}' = \mathbf{f}(x,\mathbf{y})
+	\label{eq:dgl_system}
+\end{equation}
+
+Die allg. L"osung von ~\ref{eq:dgl_system} wird i.a. $n$ frei w"ahlbare Integrationskonstanten enthalten. Durch die Anfangsbedingung $\mathbf{y}(\mathbf{x_0}) = \mathbf{y_0}$ wird aus der L"osungsschar eine \textit{spezielle L"osung} ausgew"ahlt. Falls die Bedingungen f"ur spez. L"osung alle an \textit{einer} Stelle $x_0$ gegeben, so spricht man von einem \textit{Anfangswertproblem}; falls die Bedingungen aber "uber \textit{mehrere} Stellen verteilt sind, so spricht man von einem \textit{Randwertproblem}.
+
+\subsection{Analytische L"osung, Existenz}
+
+\begin{satz}
+ Sei $f(x,y)$ definiert und stetig auf dem Streifen $-\infty < a \leq x \leq b < \infty$, $-\infty < y < \infty$.\\
+ $f$ erf"ulle die Lipschitzbedingung
+ \begin{equation}
+ 	| f(x,y) - f(x,y^*)| \leq L \cdotp |y - y^*|
+	\label{eq:lipschitz}
+ \end{equation}
+ f"ur alle $x \in [a,b]$ und $y,y^*$, $L$ ist eine Konstante.\\
+ Sei ferner $\eta$ gegeben, dann gibt es genau eine Funktion $y(x)$ mit
+ \begin{enumerate}
+ 	\item $y$ ist stetig differenzierbar f"ur $x\in[a,b]$
+	\item $y'(x) = f(x,y(x))$ f"ur alle $x \in [a,b]$
+	\item $y(a) = \eta$
+ \end{enumerate}
+\end{satz}
+
+\subsection{Zur"uckf"uhren auf ein System 1. Ordnung}
+
+Alle num. Verfahren verlangen die Standardform $y' = f(x,y)$. Lineare DGL h"oherer Ordnung werden durch Einf"uhrung von neuen Variablen auf ein System 1. Ordnung zur"uckgef"uhrt.
+
+\subsubsection{Vorgehen f"ur System 1. Ordnung}
+
+\begin{enumerate}
+	\item DGL nach h"ochster Vorkommender Ableitung aufl"osen
+		\begin{displaymath}
+			y^{(n)} = f(x,y,y',\ldots,y^{(n-1)})
+		\end{displaymath}
+	\item Neue Variablen einf"uhren
+		\begin{eqnarray*}
+			z_1(x) &	= &	y(x) \\
+			z_2(x) &	= &	y'(x)\\
+			&		\vdots\\
+			z_{n}(x) &	= &	y^{(n-1)}(x)
+		\end{eqnarray*}
+		(bis h"ochste Ableitung - 1)
+	\item Neue Variablen ableiten und System aufschreiben:
+		\begin{displaymath}
+		\begin{array}{rcccl}
+			z_1' &	= &	y' &		= &	z_2\\
+			z_2' &	= &	y'' &		= &	z_3\\
+			&	\vdots\\
+			z_n' &	= &	y^{(n)} &	= &	f(x,y,y',\ldots, y^{(n-1)})
+		\end{array}
+		\end{displaymath}
+		Da DGL linear ist Matrix-Vektorschreibweise m"oglich
+		\begin{displaymath}
+			\mathbf{z}' = \mathbf{A}\mathbf{z} + \left ( 
+			\begin{array}{c}
+				0\\
+				\vdots \\
+				0\\
+				c
+			\end{array}
+			\right ), \quad
+			\mathbf{A} = \left (
+			\begin{array}{ccccc}
+				0 &	1 &	0 &	\hdots &	0\\
+				&	&	\ddots\\
+				&	&	&	\ddots	 \\
+				&	&	&	&		1\\
+				a_1&	a_2&	a_3&	\hdots &	a_{n}
+			\end{array}
+			\right )
+		\end{displaymath}
+		$a_i$ bezeichnen hier die Koeffizienten der Ableitungen in $f(x,y,y',\ldots,y^{n-1})$
+\end{enumerate}
+
+\subsection{Richtungsfeld, Verfahren von Heun und Euler}
+
+$y'=f(x,y)$ definiert ein Richtungsfeld. L"osung $y(x)$ ist \textit{Feldlinie} des Richtungsfeldes. Die AB legt eine Feldlinie fest.
+
+\subsubsection{Methode von Euler}
+
+Ausgehend von AB einen (kleinen) Schritt in Richtung Tangente gehen.
+\begin{displaymath}
+	y_1 = y_0 + h\cdotp f(x_0, y_0)
+\end{displaymath}
+
+wobei $h$ die Integrationsschrittweite. Die Methode von Euler ist aber ziemlich unbrauchbar, da man sehr viele Schritte gehen muss.
+
+\subsubsection{Methode von Heun}
+
+Vorausschauen wie die Steigung bei $x_1$ aussieht, danach Eulerschritt mit \textit{gemittelter} Steigung.
+
+\begin{eqnarray*}
+	y^* &		= &	y_0 + h\cdotp f(x_0,y_0)\\
+	y_1 &		= &	y_0 + \frac{h}{2}(f(x_0,y_0) + f(x_1,y^*))
+\end{eqnarray*}
+
+\subsection{Die Fehlerordnung eines Verfahrens}
+
+\begin{displaymath}
+	y' = f(x,y), \quad y(x_0) = y_0,\quad \text{exakte L"osung: } y(x)
+\end{displaymath}
+
+Integrationsschrittweite: $h$
+
+\begin{displaymath}
+	y_1 \approx y(x_0 + h) = y(x_1)
+\end{displaymath}
+
+\begin{definition}
+	$d_1(h) = y_1 - y(x_1)$ heisst lokaler Diskretationsfehler.
+\end{definition}
+
+Wegen $d_1(0) = 0$ (AB!) gilt
+\begin{displaymath}
+	d_1(h) = c_1\cdotp h^{p+1} + c_2 \cdotp h^{p+2} + \ldots \qquad p \geq 0
+\end{displaymath}
+
+\begin{definition}
+	$p$ heisst \textit{Fehlerordnung} des Verfahrens.
+\end{definition}
+
+F"ur den \textit{globalen} Fehler (= Fehler bei $x=x_0 + nh$) gilt:
+\begin{displaymath}
+	d_n(h) = y(x) - y_n = e_p(x)\cdotp h^p + o(h^{p+1})
+\end{displaymath}
+
+Bei einem Verfahren der Fehlerordnung $p$ nimmt bei Halbierung der Schrittweite der Fehler $2^p$ ab.
+
+
+\subsection{Konstruktion von Einschrittverfahren vom Typus Runge-Kutta}
+
+\begin{definition}[s-stufiges, explizites Runge-Kutta Verfahren] \
+	\begin{eqnarray*}
+		k_1 &	= &	f(x_0, y_0)\\
+		k_2 &	= &	f(x_0 + c_2h, y_0 + ha_{21} k_1)\\
+		k_3 &	= &	f(x_0 + c_3h, y_0 + h(a_{31} k_1 + a_{32} k_2))\\
+		&	\vdots\\
+		k_s &	= &	f(x_0 + c_s h, y_0 + h \sum^{s-1}_{i=1} a_{s,i} k_i)
+	\end{eqnarray*}
+
+	\begin{displaymath}
+		y_1 = y_0 + h(b_1 k_1 + b_2 k_2 + \ldots + b_s k_s)
+	\end{displaymath}
+\end{definition}
+
+Die Parameter $c_i, a_{ij}$ und $b_i$ werden "ublicherweise in eine $\Delta$-Matrix geschrieben
+
+\begin{displaymath}
+	\begin{array}{r|ccccc}
+		0\\
+		c_2 &		a_{21}\\
+		c_3 &		a_{31} &	a_{32}\\
+		\vdots &	\vdots &	&		\ddots\\
+		c_s &		a_{s1} &	a_{s2} &	\hdots &	a_{s,s-1} \\ \hline
+		&		b_1 &		b_2 &		\hdots &	b_s
+	\end{array}
+\end{displaymath}
+
+Die Parameter sollen so gew"ahlt werden, dass das Verfahren eine \textit{m"oglichst hohe Fehlerordnung} hat. \textit{Vereinfachung}: "ublicherweise wird verlangt, dass die DGL $y'=1, y(0) = 0$ mit exakter L"osung $y(x) = x$ alle Zwischenwerte $y_0 + h \sum^{j-1}_{i=1} a_{ji} k_i$ und der Endwert $y_i$ exakt sind. Es gelten dann folgende Gleichungen:
+
+\begin{eqnarray*}
+	c_j &			= &	\sum^{j-1}_{i=1} a_{ji}, \quad j = 2,\ldots,s\\
+	\sum^s_{i=1} b_i &	= &	1
+\end{eqnarray*}
+
+\subsubsection{Klassisches Runge-Kutta-Verfahren}
+
+\begin{displaymath}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{array}{r|cccc}
+		0\\
+		\frac{1}{2} &	\frac{1}{2}\\
+		\frac{1}{2} &	0 &		\frac{1}{2}\\
+		1 &		0 &		0 &		1\\ \hline
+		1 &		\frac{1}{6} &	\frac{2}{6} &	\frac{2}{6} &	\frac{1}{6}
+	\end{array}
+	\renewcommand{\arraystretch}{1.0}
+\end{displaymath}
+
+\begin{figure}[htb]
+	\begin{center}
+		\PSforPDF{
+		\psset{unit=0.5cm}
+		\begin{pspicture}(0,0)(12,10)
+			\psline{-}(0,1)(16,1)
+			\psline{-}(1,0)(1,10)
+			\put(1.2,0.2){$x_0$}
+			\put(0.1,1.7){$y_0$}
+			\psline{-}(0.8,2.8)(1.2,3)
+			\put(0.2,2.9){$k_1$}
+			\psline[linestyle=dotted]{-}(1.2,3)(5.2,5)
+			\psline{-}(5.2,1)(5.2,5)
+			\put(5.3,3){$y_a$}
+			\put(5.1,5.1){$k_2$}
+			\psline[linecolor=red]{-}(5,5.05)(5.4,4.95)
+			\psline[linecolor=red, linestyle=dotted]{-}(1,2.9)(5.2,1.85)
+			\put(4.3,1.6){$k_3$}
+			\put(5.3,1.3){$y_b$}
+			\psline[linecolor=green]{-}(5,1.7)(5.4,2)
+			\psline[linecolor=green, linestyle=dotted]{-}(1,2.9)(9.4,9.2)
+			\psline[linecolor=blue]{-}(9.2,9.3)(9.6,9.1)
+			\psline{-}(9.4,1)(9.4,9.2)
+			\put(9.6,7){$y_c$}
+			\psline[linecolor=yellow]{|-|}(9.4,1)(9.4,5)
+			\put(9.6,3.7){$y_1$}
+			\put(9.4,9.4){$k_4$}
+			\put(7.9,0.2){$x_1=x_0 + h$}
+		\end{pspicture}
+		}
+	\end{center}
+	\caption{Geometrische Interpretation des klassischen Runge-Kutta-Verfahrens}
+\end{figure}
+
+
+\begin{displaymath}
+\begin{array}{rclrcl}
+	k_1 &	= &	f(x_0,y_0) &			y_a &	= &		y_0 + \frac{h}{2} k_1\\
+	k_2 &	= &	f(x_0 + \frac{h}{2}, y_a) &	y_b &	= &		y_0 + \frac{h}{2} k_2\\
+	k_3 &	= &	f(x_0 + \frac{h}{2}, y_b) &	y_c &	= &		y_0 + h k_3\\
+	k_4 &	= &	f(x_0 + h, y_c)
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+	y_1 = y_0 + \frac{h}{6} (k_1 + 2 k_2 + 2 k_3 + k_4)
+\end{displaymath}
+
+\subsubsection{Bemerkungen}
+
+Man kann zeigen, dass $m$ Stufen $p^*(m) = $ maximale Fehlerordnung
+
+\begin{displaymath}
+	\left .
+	\begin{array}{rcl}
+		m &	= &	10 + n\\
+		p^* &	= &	8 + n
+	\end{array}
+	\right \}
+	\text{unm"oglich f"ur } n \geq 0
+\end{displaymath}
+
+\subsection{Eingebettete Runge-Kutta-Verfahren, automatische Schrittweitensteuerung}
+
+\begin{displaymath}
+	\begin{array}{r|cccc}
+		0 \\
+		c_2 &		a_{21}\\
+		\vdots &	\vdots\\
+		c_s &		a_{s1} &	\ldots &	a_{s,s-1}\\ \hline
+		&		b_1 &		\ldots &	b_{s-1} &		b_s\\ \hline
+		&		\hat{b}_1 &	\ldots &	\hat{b}_{s-1} &		\hat{b}_s
+	\end{array}
+\end{displaymath}
+
+\begin{eqnarray*}
+	y_1 &		= &	y_0 + h \sum^s_{i=1} b_i k_i \quad		\text{Fehlerordnung } p\\
+	\hat{y}_1 &	= &	y_0 + h \sum^s_{i=1} \hat{b}_i k_i \quad	\text{Fehlerordnung } q
+\end{eqnarray*}
+
+meistens ist $q=p + 1$
+
+\begin{displaymath}
+	y_1 - \hat{y}_1 = \underbrace{h \sum^s_{i=1} (b_i - \hat{b}_i)}_{\text{Fehlerabsch"atzung}} k_i
+\end{displaymath}
+
+\subsubsection{Schrittweitensteuerung f"ur $p$/$p+1$- Verfahren}
+
+\begin{eqnarray*}
+	y_k - y(x_k) &		\sim &		c_1 h^{p+1}\\
+	\hat{y}_k - y(x_k) &	\sim &		c_2 h^{p+2}
+\end{eqnarray*}
+
+F"ur kleines $h$ gilt:
+\begin{displaymath}
+	y_k - \hat{y}_k \sim c_1 h^{p+1} \quad \Rightarrow c_1 \approx \frac{y_k - \hat{y}_k}{h^{p+1}}
+\end{displaymath}
+
+Analog gilt:
+\begin{displaymath}
+	y_{k+1} - y(x_{k+1}) \sim c_3 h^{p+1}_{neu}
+\end{displaymath}
+
+Wir wollen $h_{neu}$ so w"ahlen, dass
+\begin{displaymath}
+	| y_{k+1} - y(x_{k+1}) | < tol |\hat{y}(x_{k+1})|
+\end{displaymath}
+
+wobei $tol$ die gew"unschte Genauigkeit ist.\\
+
+Man trifft folgende Annahmen
+\begin{enumerate}
+	\item $c_3 \approx c_1$
+	\item $y(x_{k+1}) \approx y(x_k) \approx y_k$
+\end{enumerate}
+
+So ergibt sich
+\begin{displaymath}
+	|c_3 | h_{neu}^{p+1} = \frac{|y_k - \hat{y}_k|}{h^{p+1}} h_{neu}^{p+1} < tol |\hat{y_{k}}|
+\end{displaymath}
+
+Durch Umformen erh"alt man
+\begin{displaymath}
+	h_{neu} < h \sqrt[p+1]{\frac{tol | \hat{y}_k |}{|y_k - \hat{y}_k|}}
+\end{displaymath}
+
+Durch Erfahrung w"ahlt man den Faktor $0.8$ statt $<$ und die Vektornorm anstatt $|\ |$
+
+% TODO m"oglicherweise eingebettete "ubernehmen
+
+\subsection{Bemerkungen}
+
+\subsubsection{schlecht konditionierte Probleme}
+
+Es gibt Differentialgleichungen, welche schlecht konditioniert sind, ein Beispiel daf"ur ist z.Bsp.
+
+\begin{displaymath}
+	y' = \lambda (y - F(x)) + F'(x)
+\end{displaymath}
+
+Dabei bewirkt eine kleine "Anderung der Anfangsdaten grosse "Anderungen der L"osungen. Nach dem Prinzip von Wilkinson verh"alt sich die numerische Berechnung wie die exakte Rechnung mit leicht gest"orten Anfangsdaten, somit ist es unm"oglich mit numerischen Verfahren eine genaue L"osung zu erhalten.
+
+\subsubsection{Instabilit"at des Verfahrens}
+
+\begin{displaymath}
+	\mathbf{y}' = \mathbf{A} \mathbf{y}, \quad \mathbf{y}(0) = \mathbf{y}_0
+\end{displaymath}
+
+Exakte L"osung
+\begin{displaymath}
+	\mathbf{y}(x_k) = e^{\mathbf{Ah}}\mathbf{y}(x_{k-1})
+\end{displaymath}
+
+Durch die Eigenwertzerlegung und Umformungen erh"alt man f"ur die exakte L"osung:
+
+\begin{eqnarray*}
+	\mathbf{z}(x_k) &	= &	\mathbf{Q}^{-1} \mathbf{y}(x_k)\\
+	\mathbf{y}(x_k) &	= &	\sum^n_{i=1} \mathbf{cQ}_i e^{\lambda_i h} z_i(x_{k-1})
+\end{eqnarray*}
+
+wobei $\mathbf{Q} = [ \mathbf{cQ}_1,\ldots, \mathbf{cQ}_n ]$. F"ur RK ergibt sich aber
+
+\begin{eqnarray*}
+	\mathbf{y}_k &		= &	\sum^n_{i=1} \mathbf{cQ}_i P_4 (\lambda_i h) z_i^{(k)}\\
+	z_{i}^{(k)} &		= &	P_4(\lambda_i h) z_i^{(k-1)}
+\end{eqnarray*}
+
+Falls $\Re(\lambda_i) < 0$ dann konvergiert $z_i(x_k)$ f"ur $k\to \infty$ nach 0. Aber die RK-L"osung $z_i^{(k)} \to 0$ f"ur $k \to \infty$ \textit{nur falls}
+
+\begin{displaymath}
+	|P_4(\lambda_i h)| < 1
+\end{displaymath}
+
+\begin{definition}
+	Sei $y' = \lambda y, \quad y(0) = 1$. Sei $y_1 = F(h\lambda)y_0$ ein durch ein numerisches Verfahren berechneter Wert. Die Menge
+	\begin{displaymath}
+		B = \{ \mu \in \mathbb{C} \text{ mit } |F(\mu)| < 1 \}
+	\end{displaymath}
+	heisst Gebiet der \textit{absoluten Stabilit"at}.
+\end{definition}
+
+F"ur R-K ist z.B. $F(\mu) = 1 + \frac{\mu}{1!}+ \frac{\mu^2}{2!} +\frac{\mu^3}{3!} +\frac{\mu^4}{4!}$.\\
+
+Damit sich die Komponenten der L"osung nicht aufschaukeln muss die Schrittweite $h$ so gew"ahlt werden, dass f"ur alle $\lambda_i$ von $\mathbf{A}$ gilt $\lambda_i h \in B$.
+
+\begin{definition}
+	Ein DGLsystem $\mathbf{y}' = \mathbf{Ay} + \mathbf{b}(x)$ heisst steif (stiff equations) falls die EW von $\mathbf{A}$ sehr verschiedene negative Realteile haben.
+\end{definition}
+
+\subsection{Beispiel f"ur die Benutzung \texttt{ode45}}
+
+\begin{displaymath}
+ \frac{dh}{dt} = \alpha(t) - \beta \sqrt{h}
+\end{displaymath}
+
+Wobei
+\begin{displaymath}
+ \alpha(t) = 10 + 4\sin(t) \qquad \beta=2 \qquad h_0 = 1
+\end{displaymath}
+
+\texttt{tankfill.m} erstellen:
+\small
+\begin{verbatim}
+ function dhdt = tankfill(t,h)
+ % RHS function for tank-fill problem
+
+ A = 10 + 4*sin(t);   % alpha(t)
+ H = 2 * sqrt(h);     % beta*sqrt(h)
+
+ dhdt = A - H;
+\end{verbatim}
+\normalsize
+
+Die L"osung kann dann mit \texttt{ode45} berechnet werden.
+\small
+\begin{verbatim}
+ >> tspan = [0 30]
+ >> h0 = 1;
+ >> [t,h] = ode45('tankfill',tspan,h0);
+\end{verbatim}
+\normalsize
+
+\texttt{tspan} ist dabei das Integrationsintervall.
+
+\section{Randwertprobleme}
+
+RWP der Form
+
+\begin{displaymath}
+	pu'' + qu = f \qquad u(0)= 0, \ u'(\pi)=0
+\end{displaymath}
+
+\subsection{Vorgehen bei analytischer L"osung}
+
+\begin{displaymath}
+	L u = f
+\end{displaymath}
+
+wo $L$ ein linearer Operator der definiert ist f"ur 2 stetig differenzierbare $u$ welche die RB erf"ullen. Man m"ochte Umkehrabbildung $L^{-1}$ bestimmen, also
+\begin{displaymath}
+	u = L^{-1} f
+\end{displaymath}
+
+berechnen.\\
+Entwicklung nach Eigenfunktionen. Man betrachtet das zugeh"orige EW Problem
+\begin{displaymath}
+	L u = \lambda u
+\end{displaymath}
+
+Wenn wir die Eigenwerte $\lambda_n$ und die zugeh"origen Eigenfunktionen $u_n(x)$ (welche normiert sein m"ussen bzgl. irgendeiner Norm) kennen, dann k"onnen wir das RW Problem wie folgt l"osen. Wir stellen $f(x)$ als Linearkombination der Eigenfunktionen dar.
+\begin{displaymath}
+	f(x) = \sum^\infty_{n=1} a_n u_n (x)
+\end{displaymath}
+
+sind die Koeffizienten $a_n$ (=Fourierkoeffizienten) bekannt, dann gilt
+
+\begin{displaymath}
+	u(x) = \sum^\infty_{n=1} \frac{a_n}{\lambda_n} u_n(x)
+\end{displaymath}
+
+\textit{Bemerkung}: Die kleinsten $|\lambda_i|$ sind die wichtigsten.
+
+\subsection{Numerische L"osung durch finite Differenzen}
+
+Wir betrachten ein etwas allg. Problem
+
+\begin{displaymath}
+	- \frac{d}{dx}\left ( p(x) \frac{du(x)}{dx} \right ) + q(x) u(x) = f(x)
+\end{displaymath}
+
+Wir diskretisieren und ersetzen die Ableitungen durch zentrale Differenzen:
+
+\begin{displaymath}
+	h = \frac{\pi}{n} \qquad u_i \overset{\sim}{=} u(i\cdotp h)
+\end{displaymath}
+\begin{displaymath}
+	u'(x) \approx \frac{u(x+\frac{h}{2}) - u(x - \frac{h}{2})}{h}
+\end{displaymath}
+\begin{displaymath}
+	(p(x)u'(x))' \approx \frac{p(x+\frac{h}{2})\frac{u(x+h) - u(x)}{h} - p(x-\frac{h}{2}) \frac{u(x) - u(x-h)}{h} }{h}
+\end{displaymath}
+
+mittels $u_i = u(i\cdotp h)$ erhalten wir f"ur $x=x_i = i \cdotp h$ die Gleichung
+
+\begin{eqnarray*}
+	f(x_i) &	= &	-\frac{1}{h^2}[p(x_i + \frac{h}{2})(u_{i+1} - u_i) - \\
+	&		&	\ p(x_i - \frac{h}{2})(u_i - u_{i-1})] + q(x_i)u_i
+\end{eqnarray*}
+
+Wir k"onnen diese Gl. f"ur alle inneren Punkte aufschreiben, dies gibt uns $n-1$ Gleichungen (f"ur $u_0$ nehmen wir die Randbedingung an). F"ur den rechten Rand haben wir zwei Varianten.
+
+\begin{enumerate}
+	\item $u'(\pi) = \frac{u_n - u_{n-1}}{h}= 0$ d.h. $u_n = u_{n-1}$
+	\item $u'(\pi) = \frac{u_{n+1} - u_{n-1}}{2h} = 0$ wobei $u_{n+1}$ eine zus"atzliche Unbekannte, aber DGL f"ur $x_n$ aufstellbar.
+\end{enumerate}
+
+Die zweite Methode ist in jedem Fall vorzuziehen, da der Diskretitionsfehler in der Ordnung $h^2$ ist, w"ahrend er bei der ersten Methode in $h$ ist.\\
+
+Es folgt: Darauf achten, dass "uberall mit der gleichen Ordnung diskretisiert wird.\\
+
+Die Gleichung des Systems beinhaltet ein lineares Gleichungssystem mit einer schwach besetzten Matrix, das L"osen dieses Gl.system ergibt eine Tabelle der unbekannten Funktion.
+
+\pagebreak
+
+\appendix
+
+\section{Trigonometrie}
+
+\subsection{Funktionswerte f"ur einige Winkel}
+
+\begin{displaymath}
+\renewcommand{\arraystretch}{1.7}
+\begin{array}{l||lllll}
+ \alpha &		0 &		\frac{\pi}{6} &		\frac{\pi}{4} &		\frac{\pi}{3} &		\frac{\pi}{2}\\ \hline\hline
+ \sin\alpha &		0 &		\frac{1}{2} &		\frac{\sqrt{2}}{2} &	\frac{\sqrt{3}}{2} &	1\\
+ \cos\alpha &		1 &		\frac{\sqrt{3}}{2} & 	\frac{\sqrt{2}}{2} &	\frac{1}{2} &		0\\
+ \tan\alpha &		0 &		\frac{\sqrt{3}}{3} &	1 &			\sqrt{3} &		-
+\end{array}
+\end{displaymath}
+
+\subsection{Trigonometrische Kurven}
+
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tabular}{lcr}
+
+		\multirow{7}{2.7cm}[0.2cm]{
+		\PSforPDF{
+			\psset{xunit=0.0111cm,yunit=0.75cm}
+			\begin{pspicture}(-105,-4.5)(130,4.5)
+				\psline[linewidth=1pt]{->}(-90,0)(90,0)
+				\psline[linewidth=1pt]{->}(0,-4.5)(0,4.5)
+				\psline[linestyle=dotted]%
+				  (-90, -4.5)(-90,4.5)\rput(-90,-0.3){-$\frac{\pi}{2}$}
+				\psline[linestyle=dotted]%
+				  (-45, -4.5)(-45,4.5)\rput(-45,-0.3){-$\frac{\pi}{4}$}
+				\psline[linestyle=dotted]%
+				  (45, -4.5)(45,4.5)\rput(45,-0.3){$\frac{\pi}{4}$}
+				\psline[linestyle=dotted]%
+				  (90, -4.5)(90,4.5)\rput(90,-0.3){$\frac{\pi}{2}$}
+				\multido{\n=-4+1}{9}{\psline[linestyle=dotted]%
+				  (-90,\n)(90,\n)\rput[r](-4,\n){\scriptsize \n}}
+				\psplot[plotstyle=curve,linewidth=1.5pt]%
+				  {-78}{78}{x sin x cos div}% postscript function
+				%\rput[l](-5,1.75){$\mathbf{y}$}
+				%\rput[l](105,-.3){$\mathbf{x}$}
+				\rput[l](-55,3.3){$y=\tan x$}
+			\end{pspicture}
+		}
+		}\\ \\
+
+		& &
+		\PSforPDF{
+			\psset{xunit=0.0111cm,yunit=1cm}
+			\begin{pspicture}(-20,-1.25)(410,1.25)
+				\psline[linewidth=1pt]{->}(-20,0)(400,0)
+				\psline[linewidth=1pt]{->}(0,-1.25)(0,1.25)
+				%\multido{\n=+90}{5}{\psline[linestyle=dotted]%
+				%  (\n,-1.25)(\n,1.25)\rput(\n,-0.25)%
+				%  {\scriptsize \n}}
+				\multido{\n=+90}{5}{\psline[linestyle=dotted]%
+				  (\n,-1.25)(\n,1.25)}
+				\rput(90,-0.25){\small $\frac{\pi}{2}$}
+				\rput(180,-0.25){\small $\pi$}
+				\rput(270,-0.25){\small $\frac{3 \pi}{2}$}
+				\rput(360,-0.25){\small $2 \pi$}
+
+				\multido{\n=-1+1}{3}{\psline[linestyle=dotted]%
+				  (0,\n)(405,\n)\rput[r](-4,\n){\scriptsize \n}}
+				\psplot[plotstyle=curve,linewidth=1.5pt]%
+				  {-20}{400}{x sin}% postscript function
+				\rput[l](-5,1.75){$\mathbf{y}$}
+				\rput[l](390,-.25){$\mathbf{x}$}
+				\rput[l](180,0.75){$y=\sin x$}
+			\end{pspicture}
+		}\\
+		\\
+		& &
+		\PSforPDF{
+			\psset{xunit=0.0111cm,yunit=1cm}
+			\begin{pspicture}(-20,-1.25)(410,1.25)
+				\psline[linewidth=1pt]{->}(-20,0)(400,0)
+				\psline[linewidth=1pt]{->}(0,-1.25)(0,1.25)
+				%\multido{\n=+90}{5}{\psline[linestyle=dotted]%
+				%  (\n,-1.25)(\n,1.25)\rput(\n,-0.25)%
+				%  {\scriptsize \n}}
+				\multido{\n=+90}{5}{\psline[linestyle=dotted]%
+				  (\n,-1.25)(\n,1.25)}
+				\rput(90,-0.25){\small $\frac{\pi}{2}$}
+				\rput(180,-0.25){\small $\pi$}
+				\rput(270,-0.25){\small $\frac{3 \pi}{2}$}
+				\rput(360,-0.25){\small $2 \pi$}
+				\multido{\n=-1+1}{3}{\psline[linestyle=dotted]%
+				  (0,\n)(405,\n)\rput[r](-4,\n){\scriptsize \n}}
+				\psplot[plotstyle=curve,linewidth=1.5pt]%
+				  {-20}{400}{x cos}% postscript function
+				\rput[l](-5,1.75){$\mathbf{y}$}
+				\rput[l](390,-.25){$\mathbf{x}$}
+				\rput[l](180,0.75){$y=\cos x$}
+			\end{pspicture}
+		}\\
+		\\
+		\end{tabular}
+	\end{center}
+	\caption{Trigonometrische Kurven}
+\end{figure}
+
+\section{Tschebyscheff-Polynom}
+
+\begin{displaymath}
+	\xi_k = \cos \left ( \frac{\pi(k-1/2)}{n} \right ) \qquad \text{f"ur } k=1,\ldots,n
+\end{displaymath}
+
+\section{Umwandlung von uneigentlichen Integralen}
+
+Gute Ans"atze:
+\begin{displaymath}
+	t = \frac{1}{x} \quad t = \frac{1}{x+1} \quad t = e^{-x}
+\end{displaymath}
+
+Beispiel
+\begin{displaymath}
+	t = \frac{1}{x+1}, x=\frac{1}{t} -1 \Rightarrow dx = - \frac{1}{t^2}dt
+\end{displaymath}
+
+
+\section{Differentialrechung}
+
+\subsection{Wichtige Ableitungen}
+
+\footnotesize
+\begin{tabular}{ll}
+ $f(x)=c$ & 		$f'(x)=0$\\
+ $f(x)=cx$ &		$f'(x)=c$\\
+ $f(x)=x^n$ &		$f'(x)=nx^{n-1}$\\
+ $f(x)=\sqrt{x}$ &	$f'(x)=\frac{1}{2\sqrt{x}}$\\
+ $f(x)=e^{cx}$ &	$f'(x)=ce^{cx}$\\
+ $f(x)=\ln |x|$ &	$f'(x)=\frac{1}{x}$\\
+ $f(x)=\log_a|x|$ &	$f'(x)=(\log_a e)\frac{1}{x}=\frac{1}{x\ln x}$\\
+ $f(x)=a^x$ &		$f'(x)=a^x\cdotp \ln(a)$\\
+ $f(x)=a^{cx}$ &	$f'(x)=a^{cx}\cdotp (c\ln a)$\\
+ $f(x)=x^{x}$ &		$f'(x)=(1+\ln x)x^x$\\
+ $f(x)=\sin(x)$ &	$f'(x)=\cos(x)$\\
+ $f(x)=\cos(x)$ &	$f'(x)=-\sin(x)$\\
+ $f(x)=\tan{x}$ &	$f'(x)=\frac{1}{\cos^2(x)}=1+\tan^2(x)$\\
+ $f(x)=\cot{x}$ &	$f'(x)=-\frac{1}{\sin^2(x)}=-(1+\cot^2(x))$\\
+ $f(x)=\arcsin(x)$ &	$f'(x)=\frac{1}{\sqrt{1-x^2}}$\\
+ $f(x)=\arccos(x)$ &	$f'(x)=-\frac{1}{\sqrt{1-x^2}}$\\
+ $f(x)=\arctan(x)$ &	$f'(x)=\frac{1}{1+x^2}$\\
+ $f(x)=arccot(x)$ &	$f'(x)=-\frac{1}{1+x^2}$\\
+ $f(x)=\sinh(x)$ &	$f'(x)=\cosh(x)$\\
+ $f(x)=\cosh(x)$ &	$f'(x)=\sinh(x)$\\
+ $f(x)=\tanh(x)$ &	$f'(x)=\frac{1}{\cosh^2(x)}=1-\tanh^2(x)$\\
+ $f(x)=coth(x)$ &	$f'(x)=-\frac{1}{\sinh^2(x)}=1-coth^2(x)$\\
+ $f(x)=arcsinh(x)$ &	$f'(x)=\frac{1}{\sqrt{x^2+1}}$\\
+ $f(x)=arccosh(x)$ &	$f'(x)=\frac{1}{\sqrt{x^2-1}}$\\
+ $f(x)=artanh(x)$ &	$f'(x)=\frac{1}{\sqrt{1-x^2}}$\\
+ $f(x)=arcoth(x)$ &	$f'(x)=\frac{1}{\sqrt{1-x^2}}$\\
+\end{tabular}
+\normalsize
+
+\subsection{Taylor Approximationspolynom}
+
+Sei $f: [a,b] \to \mathbb{R}$ gen"ugend oft differenzierbar. Das n-te Taylorpolynom von $f$ um $x_0$:
+\begin{displaymath}
+	j^n_{x_0} f(x) = \sum^n_{k=0}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k
+\end{displaymath}
+
+\subsection{Repetition: Taylorentwicklung}
+
+\begin{eqnarray*}
+	f(x + a, y+ b) & \approx & f(x,y) + f_x a + f_y b + f_{xx} \frac{a^2}{2} + f_{xy} a b\\
+	&	&	+ f_{yy} \frac{b^2}{2} + o(h^3)
+\end{eqnarray*}
+
+\begin{eqnarray*}
+	y' &	= &	f(x,y(x))\\
+	y'' &	= &	f_x + f_y y'\\
+	y'''&	= &	\ldots
+\end{eqnarray*}
+
+
+\section{Integralrechnung}
+
+\subsection{Wichtige Integrale}
+
+\footnotesize
+\begin{tabular}{lcl}
+ $\int x^n dx$ & = &				$\frac{x^{n+1}}{n+1}+C\:\:n\neq -1$\\
+ $\int \frac{1}{x} dx$ & = &			$\ln |x| +C$\\
+ $\int e^x dx$ & = &				$e^x +C$\\
+ $\int \ln |x| dx$ & = &			$x\ln |x| -x +C$\\
+ $\int \frac{f'(x)}{f(x)}dx$ & = &		$\ln|f(x)|$\\
+ $\int \sin x dx$ & = &				$-\cos x +C$\\
+ $\int \cos x dx$ & = &				$\sin x +C$\\
+ $\int \frac{1}{\cos^2 x}dx$ & = &		$\tan x +C$\\
+ $\int \tan x dx$ & = &				$-\ln|\cos x|+C$\\
+ $\int \frac{1}{\sqrt{1-x^2}}dx$ & = &	$\arcsin x +C$\\
+ $\int \frac{-1}{\sqrt{1-x^2}}dx$ & = &	$\arccos x +C$\\
+ $\int \frac{1}{1+x^2}dx$ & = &			$\arctan x +C$\\
+ $\int \sinh x dx$ & = &			$\cosh x +C$\\
+ $\int \cosh x dx$ & = &			$\sinh x +C$\\
+ $\int \frac{1}{\cosh^2 x}dx$ & = &		$\tanh x +C$\\
+ $\int \tanh x dx$ & = &			$\ln\cosh x + C$\\
+ $\int \frac{1}{\sqrt{1+x^2}}dx$ & = &		$arsinh x + C$\\
+ $\int \frac{1}{\sqrt{x^2-1}}dx$ & = &		$arcosh x + C$\\
+ $\int \frac{1}{1-x^2}dx$ & = &			$artanh x + C$\\
+ $\int \sin^2 x dx$ & = &			$\frac{1}{2}(x-\sin x \cos x) +C$\\
+ $\int \cos^2 x dx$ & = &			$\frac{1}{2}(x+\sin x \cos x) +C$\\
+ $\int \tan^2 x dx$ & = &			$\tan x-x +C$\\
+ $\int \cot^2 x dx$ & = &			$-\cot x-x +C$\\
+ $\int (ax+b)^ndx$ & = &			$\frac{(ax+b)^{n+1}}{a(n+1)}$\\
+ $\int \frac{1}{ax+b}dx$ & = &			$\frac{1}{a}\ln|ax+b| +C$\\
+ $\int (ax^p+b)^s x^{p-1}dx$ & = &		$\frac{(ax^p+b)^{s+1}}{ap(s+1)} +C$\\
+ $\int (ax^p+b)^{-1} x^{p-1}dx$ & = &		$\frac{1}{ap}\ln |ax^p+b| +C$\\
+ $\int \log_a |x|dx$ & = &			$x(\log_a|x|-\log_a e) +C$\\
+ $\int x^{-1}\ln x dx$ & = &			$\frac{1}{2}(\ln^x)^2 +C$\\
+ $\int \cot x dx$ & = &				$\ln|\sin x| +C$\\
+ $\int \sin (ax +b) dx$ & = &			$-\frac{1}{a}\cos(ax+b) +C$\\
+ $\int \cos (ax +b) dx$ & = &			$\frac{1}{a}\sin(ax+b) +C$\\
+ $\int \frac{1}{\sin x}dx$ & = &		$\ln|\tan\frac{x}{2}| +C$\\
+ $\int \frac{1}{\cos x}dx$ & = &		$\ln|\tan(\frac{x}{2}+4\pi)| +C$\\
+ $\int \sin^nxdx$ & = &				$-\frac{1}{n}\sin^{n-1}x\cos x+\frac{n-1}{n}\int\sin^{n-2} +C$\\
+ $\int \cos^nxdx$ & = &				$\frac{1}{n}\sin x\cos^{n-1} x+\frac{n-1}{n}\int\cos^{n-2} +C$\\
+\end{tabular}
+\normalsize
+
+\subsection{Partielle Integration}
+
+$$\int u(t)v'(t)\:dt = u(t)v(t) - \int u'(t)v(t)\:dt$$
+
+\subsection{Substitutionsmethode}
+
+$F(g(x))+c=\int f(g(x))\cdotp g'(x) dx$
+
+Beispiel:\\
+$\int \tan(x) dx=\int \frac{\sin(x)}{\cos(x)}dx$\\
+$t=\cos(x)$\\
+$dt = -\sin (x)dx\rightarrow dx=-\frac{dt}{\sin x}$\\
+$\Rightarrow-\int\frac{1}{t}dt=-ln|\cos (x)| + c$\\
+
+Oftmals auch umgekehrt:\\
+$\int \sqrt{1-t^2}dt$\\
+$t=\sin (x)$\\
+$dt=\cos (x)dx$\\
+$\Rightarrow\int \cos^2(x)dx$
+
+\section{Differentialgleichungen analytisch}
+
+\subsection{Differentialgleichungen I}
+
+\subsubsection{homogene DGL mit konstanten Koeffizienten}
+
+Gesucht $y(x)$ so dass
+\begin{equation}
+ \label{homog_diffgl}
+ y^{(n)}+a_{n-1}y^{(n-1)}+\ldots+a_1y'+a_0y=0
+\end{equation}
+
+\textbf{Satz}
+\begin{itemize}
+ \item Sind $y_1,y_2$ L"osungen von ~(\ref{homog_diffgl}), so auch $y_1+y_2$ und $\alpha\cdotp y_1$ $(\alpha \in \mathbb{R})$
+ \item Es gibt genau n linear unabh"anigige L"osungen $y_0,\ldots ,y_{n-1}$ und die allg. L"osung ist $y=c_0y_0 + c_1y_1+\ldots+c_{n-1}y_{n-1}$
+\end{itemize}
+
+Ansatz f"ur ~(\ref{homog_diffgl}): $y(x)=e^{\lambda\cdotp x}$\\
+$y'(x)=\lambda e^{\lambda x},\ldots , y^{(n)}(x)=\lambda^{n}e^{\lambda x}$\\
+~(\ref{homog_diffgl})$\rightarrow$ $\lambda^n e^{\lambda x}+\ldots +a_1\lambda e^{\lambda x}+a_0 e^{\lambda x}=0$\\
+$\rightarrow$ $e^{\lambda x}\underbrace{[\lambda^n +\ldots+a_1\lambda+a_0]}=0$\\
+$chp(\lambda)$: charakteristisches Polynom\\
+
+Falls $\lambda_i$ eine Nullstelle von $chp(\lambda)$ ist und gilt:
+\begin{itemize}
+ \item \textit{$\lambda_i$ ist einfache Nullstelle}\\
+  so ist $e^{\lambda_i x}$ eine linear unabh"angige L"osung von ~(\ref{homog_diffgl}).
+ \item \textit{$\lambda_i$ ist m-fache Nullstelle}\\
+  so sind die Funktionen $e^{\lambda_i t},t\cdotp e^{\lambda_i t},t^2\cdotp e^{\lambda_i t},\ldots,t^{m-1}\cdotp e^{\lambda_i t}$ linear unabh"angige L"osungen von ~(\ref{homog_diffgl}).
+ \item \textit{$\lambda_i$ ist komplexe Nullstelle}\\
+  wenn also $\lambda_i=\mu_i + i\nu_i, \nu_i\neq 0$ bzw. die L"osung $z(x)=e^{\lambda_i x}$ so bilden $Re(z)$ und $Im(z)$ zwei reelle unabh"angige L"osungen von ~(\ref{homog_diffgl}).\\
+  $Re(z)=e^{\mu_i x}\cos(\nu_i x)$\\
+  $Im(z)=e^{\mu_i x}\sin(\nu_i x)$\\
+\end{itemize}
+
+\subsubsection{Inhomogene DGL mit konstanten Koeffizienten}
+
+\begin{equation}
+ \label{inhomog_diffgl}
+ y^{(n)}+a_{n-1}y^{(n-1)}+\ldots+a_1y'+a_0y=K(t)
+\end{equation}
+
+\textbf{Satz} Sei $y_{part}(t)$ eine spezielle L"osung von ~(\ref{inhomog_diffgl}) und sei $y(t)=c_1y_1+\ldots+c_ny_n$ die allg. L"osung der homogenen Gleichung. Dann ist 
+$$y=y_{part}+c_1y_1+\ldots+c_ny_n$$
+die allg. L"osung der inhomogenen Gleichung ~(\ref{inhomog_diffgl}).\\
+
+\textbf{Suche von partikul"aren L"osungen}\\
+
+Wenn $K(t):=t^re^{\lambda t}$ bzw. allgemeiner $K(t):=q(t)e^{\lambda_0 t}$ mit einem Polynom $q(t)$ vom Grad r und $\lambda_0$ m-facher Nullstelle von $chp(\lambda)$, so erh"alt man die partikul"are L"osung durch den Ansatz:
+$$y_{part}(x):=(A_0+A_1 t+\ldots+A_r t^r)t^m e^{\lambda_0t}$$
+
+mit unbestimmten Koeffizienten $A_k$. Danach alle in ~(\ref{inhomog_diffgl}) vorkommenden Ableitungen ausrechnen und in ~(\ref{inhomog_diffgl}) einsetzen und $A_k$ durch Koeffizientenvergleich bestimmen.\\
+
+\textit{m"ogliche Ans"atze}
+
+\footnotesize
+\begin{tabular}{|c|c|c|}
+ \hline
+ $K(t)$&				Bedingung &			Ansatz f"ur $y_{part}(t)$\\ \hline
+ $t^r$& 				$0 \not\in L$ &			$A_0+\ldots+A_rt^r$\\ \hline
+ $t^r$&					$0 \in L$, m-fach &		$A_0t^m+\ldots+A_rt^{m+r}$\\ \hline
+ $b_0+\ldots+b_r t^r$&			$0 \not\in L$ &			$A_0+A_1t+\ldots+A_rt^r$\\ \hline
+ $e^{\lambda_0 t}$ &			$\lambda \not\in L$&		$Ae^{\lambda_0 t}$\\ \hline
+ $e^{\lambda_0 t}$ &			$\lambda \in L$, m-fach&	$at^me^{\lambda_0 t}$\\ \hline
+ $\cos(\omega t),\sin(\omega t)$ &	$\pm i\omega \not \in L$ &	$A\cos(\omega t)+B\sin(\omega t)$\\ \hline
+ $\cos(\omega t),\sin(\omega t)$ &	$\pm i\omega \in L$,1-fach &	$t(A\cos(\omega t)+B\sin(\omega t))$\\ \hline
+ $t^2e^{-t}$ &				$-1 \not \in L$ &		$(A_0+A_1t+A_2t^2)e^{-t}$\\ \hline
+\end{tabular}
+\normalsize\\
+
+\textit{Beispiel} Bestimme allgem. L"osung der DGL
+$$y''(x)+3y'(x)+2y(x)=\cos x$$
+
+\begin{enumerate}
+ \item Homogene L"osung: $y(x)=c_1 e^{-x}+c_2 e^{-2x}$
+ \item Inhomogene L"osung:\\
+  Ansatz (nach Tabelle):
+  \begin{eqnarray}
+   y &	=& a\cos x+ b\sin x\nonumber \\
+   y'&	=& -a\sin x + b\cos x \nonumber \\
+   y''&	=& -a\cos x - b\sin x \nonumber 
+  \end{eqnarray}
+  $y''+3y'+2y=(a+3b)\cos x + (b-3a)\sin x = \cos x$\\
+  $\Rightarrow a=\frac{1}{10}, b=\frac{3}{10}$\\
+  Allgem. L"os der DGL:\\
+  $y(x)=c_1e^{-x}+c_2e^{-2x}+\frac{1}{10}\cos x+\frac{3}{10}\sin x$
+\end{enumerate}
+
+
+\subsubsection{Eulersche Differentialgleichungen}
+
+Gesucht $y=y(r)$ so dass
+\begin{equation}
+ \label{euler_diffgl}
+ y^{(n)}+\frac{b_{n-1}}{r}y^{(n-1)}+\ldots+\frac{b_0}{r^n}=0
+\end{equation}
+
+Koeffizienten sind hier also nicht konstant. Auch hier gibt es einen Ansatz:
+$$y(r)=r^\alpha$$
+$$y'(r)=\alpha r^{\alpha-1},\:y^{(k)}=\alpha(\alpha -1)\cdotp\ldots\cdotp(\alpha -k+1)r^{\alpha - k}$$
+
+Das Indexpolynom lautet dann:
+$$inp(\alpha):=\alpha\ldots(\alpha-n+1)+\ldots+\alpha b_1+b_0=0$$
+
+Falls $\alpha_i$ eine Nullstelle von $inp(\alpha)$ ist und gilt:
+\begin{itemize}
+ \item \textit{$\alpha_i$ ist einfache Nullstelle}\\
+  so ist $r^{\alpha_i}$ eine linear unabh"angige L"osung von ~(\ref{euler_diffgl}).
+ \item \textit{$\alpha_i$ ist m-fache reelle Nullstelle}\\
+  so sind die Funktionen $r^{\alpha_i},r^{\alpha_i}\cdotp\ln r,\ldots,r^{\alpha_i}\cdotp(\ln r)^{m-1}$ linear unabh"angige L"osungen von ~(\ref{euler_diffgl}).
+ \item \textit{$\alpha_i$ ist einfach komplex konjugierte Nullstelle}\\
+  wenn also $\alpha_i=\mu_i + i\nu_i, \nu_i\neq 0$ so ersetze $r^{\alpha_i}, r^{\overline{\alpha_i}}$ durch $r^{\mu_i}\cos(\nu_i\ln r)$ und $r^{\mu_i}\sin(\nu_i \ln r)$ welche zwei reelle unabh"angige L"osungen von ~(\ref{euler_diffgl}) sind.\\
+ \item \textit{mehrfache komplex konjugierte Nullstelle}\\
+  so sind die rellen L"osugen der komplex konjugierten Nullstelle multipliziert mit $(\ln r)^k$ ebenfalls unabh"angige L"osugen von ~(\ref{euler_diffgl}).
+\end{itemize}
+
+Falls das Indexpolynom m-fache NS hat, dann gibt es folgende L"osungen:\\
+$r^{\alpha_1},(\ln r)\cdotp r^{\alpha_1},\ldots,(\ln r)^{m-1}r^{\alpha_1}$\\
+
+Falls $\alpha$ komplex $(r^{a+ib})$:\\
+Ersetze $r^\alpha, r^{\overline{\alpha}}$ durch $r^a\cos(b\ln r)$ und $r^a\sin(b \ln r)$
+
+\subsubsection{inhomogene DGL mit variablen Koeffizienten}
+
+\begin{equation}
+ \label{inhom_variab}
+ y''+p_0(t)y'+p_1(t)y=q(t)
+\end{equation}
+
+wobei $q(t)$ beliebig ist.\\
+
+\textit{Annahme}: die allgemeine L"osung der homogenen Gleichung sei bekannt, z.B. $p_0,p_1$ konst. oder Eulersche DGL.\\
+\textit{Ziel}: daraus eine spezielle L"osung der inhomogenen Gleichung finden.\\
+\textit{Ansatz}:
+$$y_0(t)=c_1(t)y_1(t)+c_2(t)y_2(t)$$
+mit $y_1,y_2$ lin. unabh. L"osungen der homogenen Gleichung von ~(\ref{inhom_variab})
+$$y_0=c_1y_1+c_2y_2$$
+$$y_0'=c_1y_1'+c_2y_2'+\underbrace{c_1'y_1+c_2'y2}_{\mbox{1. Bed = 0}}$$
+$$y_0''=c_1y_1''+c_2y_2''+c_1'y_1'+c_2'y_2'$$
+
+Diese Gleichung kann man wieder in die DGL einsetzen. Durch ausklammern von $c_1,c_2$ erh"alt man dann die 2.Bedingung.
+$$c_1'y_1'+c_2'y_2'=q(t)\quad \mbox{2. Bedingung}$$
+Mit diesen beiden Bedingungnen hat man ein Gleichungssystem aus dem man die unbekannten Funktionen bestimmen kann.
+
+\subsection{Anwendungen der $\int$-Rechnung auf Diff'Gl}
+
+\subsubsection{Variation der Konstante}
+
+\begin{equation}
+ \label{variation_konst}
+ y'=p(x)\cdotp y + q(x)
+\end{equation}
+
+\begin{enumerate}
+ \item homogene L"osung von ~(\ref{variation_konst}) finden\\
+  $y_{hom}(x)=Ce^{P(x)}$ wobei $P(x)$ die Stammfunktion von $p(x)$
+ \item inhomogene L"osung von ~(\ref{variation_konst}) finden\\
+  Daf"ur benutzt man den Ansatz: 
+  $$y_{inhom}(x)=c(x)\cdotp y_{hom}(x)$$
+  Man setzt also die homogene L"osung als ''Konstante'' einer unbekannten Funktion.\\
+  So erh"alt man schliesslich nach einsetzen in ~(\ref{variation_konst})
+  $$c'(x)\cdotp y_{hom}(x)=q(x)$$
+ \item Die Allgemeine L"osung lautet dann
+  $$y(x)=y_{hom}+y_{inhom}$$
+\end{enumerate}
+
+\subsubsection{Separtion (Trennung der Variablen)}
+
+Eine DGL 1. Ordnung der Form $\frac{dy}{dx}=g(x)\cdotp k(y)$ l"asst sich folgendermassen l"osen:
+\begin{enumerate}
+ \item Trennung der beiden Variablen
+  $$\frac{dy}{dx}=g(x)\cdotp k(y)\quad\Rightarrow\quad \frac{dy}{k(y)}=dx\cdotp g(x)$$
+ \item Integration auf beiden Seiten der Gleichung
+  $$\int\frac{dy}{k(y)}=\int dx\cdotp g(x)$$
+ \item nach y aufl"osen
+\end{enumerate}
+
+\subsubsection{Substitution}
+
+DGL 1.Ordnung k"onnen teilweise durch geschickte Substitution auf seperierbare zur"uckgef"uhrt, danach kann man die neu erhaltene DGL f"ur u l"osen und r"ucksubstituieren:
+
+\begin{itemize}
+ \item $y'=\Phi(\frac{y}{x})$\\
+  $u=\frac{y}{x}\quad\Rightarrow\quad u'(x)=\frac{\Phi(u)-u}{x}$
+ \item $y'=\Psi(x+y+c)$\\
+  $u=x+y\quad\Rightarrow\quad y=u-x\Rightarrow y'=u'-1=\Psi(u)$\\
+  Danach l"ose $\frac{du}{dx}=u'=\Psi(u)+1\Rightarrow \frac{du}{\Psi(u)+1}=dx$
+\end{itemize}
+
+\textit{Beispiel} L"ose $\frac{dy}{dx}=\frac{2x^3+y^3}{3xy^2}$\\
+Setze $u:=\frac{y}{x}.\Rightarrow y(x)=u(x)\cdotp x\Rightarrow y'=u'x+u$
+\begin{eqnarray}
+ y'&	=&	\frac{2}{3}\frac{x^2}{y^2}+\frac{1}{3}\frac{y}{x}\nonumber\\
+ u'x+u&	=&	\frac{2}{3}v^{-}+\frac{1}{3}\frac{y}{x}\nonumber\\
+ u'x&	=&	\frac{2}{3}(v^{-2}-v)\nonumber
+\end{eqnarray}
+
+So ist $v=1$ und damit $y=x$ eine konstante L"osung und f"ur nicht konstantes $v$ rechnet man mit Seperation der Variablen weiter:
+$$\frac{3v'}{v^{-2}-v}=2\frac{1}{x}$$
+$$...$$
+
+
+
+\section{Beispiele}
+
+\subsection{Differentialgleichungssystem}
+
+\begin{eqnarray*}
+	y_1' &	= &	y_1 - y_2 \\
+	y_2' &	= &	y_1 + y_2 \\
+\end{eqnarray*}
+
+Anfangsbedingungen: $y_1(0) = 1,\ y_2(0)=0$. Ein Integrationsschritt mit Heun mit $h=0.1$, berechne $y_1(0.1)$ und $y_2(0.1)$.\\
+
+Es ergibt sich also in Matrixschreibweise
+\begin{displaymath}
+	\mathbf{y}' = \underbrace{ \left (
+		\begin{array}{cc}
+			1 &	-1\\
+			1 &	1
+		\end{array}
+		\right )
+		}_{\mathbf{A}}
+		\mathbf{y}
+\end{displaymath}
+
+Heunschritt:
+
+\small
+
+\begin{eqnarray*}
+	\mathbf{y^*} &	= &	\mathbf{y_0} + h\cdotp \mathbf{A} \mathbf{y_0}\\
+	\mathbf{y^*} &	= &	\left (
+		\begin{array}{c}
+			1\\
+			0
+		\end{array}
+		\right ) + 0.1\cdotp\left (
+		\begin{array}{cc}
+			1 &	-1\\
+			1 &	1
+		\end{array} \right )
+		\cdotp \left (
+		\begin{array}{c}
+			1\\
+			0
+		\end{array}
+		\right )\\
+	 &	= &	\left (
+		\begin{array}{c}
+			1\\
+			0
+		\end{array}
+		\right )+
+		\left (
+		\begin{array}{c}
+			0.1\\
+			0.1
+		\end{array}
+		\right )\\
+	&	= & 
+		\left (
+		\begin{array}{c}
+			1.1\\
+			0.1
+		\end{array}
+		\right )
+\end{eqnarray*}
+
+\begin{eqnarray*}
+	\mathbf{y} &	= &	\mathbf{y_0} + \frac{h}{2} (\mathbf{A}\mathbf{y_0} + \mathbf{A}\mathbf{y^*})\\
+	\mathbf{y} &	= &	\left (
+		\begin{array}{c}
+			1 \\
+			0
+		\end{array}
+	\right ) + 0.05 \cdotp \left ( \left (
+		\begin{array}{cc}
+			1 &	-1\\
+			1 &	1
+		\end{array}
+		\right ) \cdotp \left (
+		\begin{array}{c}
+			1 \\
+			0
+		\end{array}
+		\right )
+		+
+		\left (
+		\begin{array}{cc}
+			1 &	-1\\
+			1 &	1
+		\end{array}
+		\right ) \mathbf{y^*} \right )\\
+	&	= & \left  (
+		\begin{array}{c}
+			1 \\
+			0
+		\end{array}
+		\right )
+		+ 0.05 \cdotp \left ( \left (
+		\begin{array}{c}
+			1 \\
+			1
+		\end{array}
+		\right ) + \left (
+		\begin{array}{c}
+			1 \\
+			1.2
+		\end{array}
+		\right ) \right )\\
+	&	= &
+		\left (
+		\begin{array}{c}
+			1 \\
+			0
+		\end{array}
+		\right )
+		+ 0.05 \cdotp \left (
+		\begin{array}{c}
+			2 \\
+			2.2
+		\end{array}
+		\right ) \\
+	&	= & \left (
+		\begin{array}{c}
+			1 \\
+			0
+		\end{array}
+		\right )
+		+  \left (
+		\begin{array}{c}
+			0.1 \\
+			0.11
+		\end{array}
+		\right ) \\
+	&	= &
+		\left (
+		\begin{array}{c}
+			1.1 \\
+			0.11
+		\end{array}
+		\right )
+\end{eqnarray*}
+
+\normalsize
+
+\subsection{Differentialgleichungssystem}
+
+Vektorwertige Funktion $\mathbf{z}(t)$ bestehend aus den beiden unbekannten Funktionen der Zeit $\mathbf{z}=[x(t),y(t)]^T$ ($g,F$ seien gegeben):
+\begin{displaymath}
+	\frac{d^2\mathbf{z}}{dt^2} = -g \frac{\mathbf{z}}{\parallel \mathbf{z} \parallel ^{3}} - F \frac{\mathbf{z}-\mathbf{u}}{\parallel \mathbf{z} -\mathbf{u} \parallel}
+\end{displaymath}
+
+Wir wollen ein System erster Ordnung, d.h der Form $\frac{dw}{dt}= f(t,w)$.
+
+\begin{eqnarray*}
+	\mathbf{w_1}(t) &	= &	\mathbf{z}(t)\\
+	\mathbf{w_2}(t) &	= &	\mathbf{z}'(t)
+\end{eqnarray*}
+
+\begin{displaymath}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{array}{rcccl}
+	\mathbf{w_1}' &		= &	\mathbf{z}' &	= &	\mathbf{w_2}\\
+	\mathbf{w_2}' &		= &	\mathbf{z}'' &	= &	- g \frac{\mathbf{z}}{\parallel \mathbf{z} \parallel^3} - F \frac{\mathbf{z}-\mathbf{u}}{\parallel \mathbf{z} - \mathbf{u} \parallel}\\
+	&			&	&		= &	- g \frac{\mathbf{w_1}}{\parallel \mathbf{w_1} \parallel^3} - F \frac{\mathbf{w_1}-\mathbf{u}}{\parallel \mathbf{w_1} - \mathbf{u} \parallel}
+	\end{array}
+	\renewcommand{\arraystretch}{1}
+\end{displaymath}
+
+\section{Bestimmen von Maschinengr"ossen}
+
+\small
+\begin{verbatim}
+ % epsilon
+ e = 1.0
+ while ((1.0+e) > 1.0)
+   e = e/2.0;
+ end
+ e = e*2.0;
+
+ % kleinste pos. norm.
+ a = 1.0;
+ while ((a+a*e) > a)
+   a = a/2.0;
+ end
+ a = a*2.0;
+
+ % kleinste pos. nicht-norm.
+ b = 1.0;
+ while ((b/2.0) > 0.0)
+   b = b/2.0;
+ end
+
+  % gr"osste
+ c = 2-e;
+ while ((c*2.0) ~= Inf)
+   c = c*2.0;
+ end
+\end{verbatim}
+\normalsize
+
+\section{Additionstheoreme}
+
+\small
+\begin{tabular}{l}
+ $\sin^2\varphi+\cos^2\varphi=1$\\
+ $\cos\varphi=\sin(\varphi+\pi/2)$\\
+ $\sin(-\varphi)=-\sin\varphi$\\
+ $\cos(-\varphi)=\cos\varphi$\\
+ $\sin(\alpha\pm\beta)=\sin\alpha\cos\beta\pm\cos\alpha\sin\beta$\\
+ $\cos(\alpha\pm\beta)=\cos\alpha\cos\beta\mp\sin\alpha\sin\beta$\\
+ $\sin(2\varphi)=2\sin\varphi\cos\varphi$\\
+ $\cos(2\varphi)=\cos^2\varphi-\sin^2\varphi=2\cos^2\varphi-1=1-2\sin^2\varphi$\\
+ $\sin(3\varphi)=3\sin\varphi-4\sin^3\varphi$\\
+ $\cos(3\varphi)=4\cos^3\varphi-3\cos\varphi$\\
+ $\sin^2(\frac{\varphi}{2})=\frac{1-\cos\varphi}{2}$\\
+ $\cos^2(\frac{\varphi}{2})=\frac{1+\cos\varphi}{2}$\\
+ $\tan(\alpha\pm\beta)=\frac{\tan\alpha\pm\tan\beta}{1\mp\tan\alpha\tan\beta}$\\
+ $\tan(2\varphi)=\frac{2\tan\varphi}{1-\tan^2\varphi}$\\
+ $\tan(3\varphi)=\frac{3\tan\varphi-\tan^3\varphi}{1-3\tan^2\varphi}$\\
+ $\tan^2(\frac{\varphi}{2})=\frac{1-\cos\varphi}{1+\cos\varphi}$\\
+ $\tan\frac{\varphi}{2}=\frac{1-\cos\varphi}{\sin\varphi}=\frac{\sin\varphi}{1+\cos\varphi}$
+\end{tabular}
+\normalsize
+
+\end{document}

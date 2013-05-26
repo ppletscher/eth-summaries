@@ -1,0 +1,1112 @@
+% Informatik 4 summary
+% written during my studies at ETH Zuerich
+% based on the lecture of Prof. Bertrand Meyer
+% Copyright (C) 2004  Patrick Pletscher
+                                                                                
+\documentclass[german, 10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+\usepackage[bf]{caption2}
+\usepackage{multirow}
+\usepackage[dvips]{graphicx}
+                                                                                
+% text below figures
+\renewcommand{\captionfont}{\small\itshape}
+                                                                                
+% theorems, definitions
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+                                                                                
+% dimensions of document
+\textwidth = 19 cm
+\textheight = 25 cm
+\oddsidemargin = -1.5 cm
+\evensidemargin = -1.5 cm
+\hoffset = 0.0 cm
+\marginparwidth = 0.0 cm
+\topmargin = -1.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0 cm
+
+% depth of toc
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+                                                                                
+% informations about the document
+\title{Informatik IV - Zusammenfassung}
+\author{Patrick Pletscher}
+
+\begin{document}
+
+\maketitle
+
+\section{Modularit"at, Wiederverwendbarkeit}
+
+\subsection{Modularit"at}
+
+Einige Prinzipien von Modularit"at:
+\begin{itemize}
+	\item Zerlegbarkeit
+	\item Zusammensetzbarkeit
+	\item Kontinuit"at
+	\item Information Hiding
+	\item Das ''Offen-Geschlossen'' Prinzip
+	\item Das ''Einzige Auswahl'' Prinzip
+\end{itemize}
+
+\subsubsection{Zerlegbarkeit}
+
+Komplexe Probleme in Teil-Probleme zerlegen. Also Aufspaltung der Arbeit. Ein Beispiel daf"ur ist die Top-Down-Design-Methode (dabei wird das Programm immer feiner und feiner spezifiziert, Baum!). Ein Gegenbeispiel w"are ein Allgemeines Initialisierungs-Modul.
+
+\subsubsection{Zusammensetzbarkeit}
+
+Erzeugung von Software-Elementen die frei untereinander zusammengesetzt werden k"onnen, um neue Software zu erzeugen.
+
+\subsubsection{Direktes Abbilden}
+
+Diese Methode ergibt ein Software-System dessen modulare Struktur kompatibel bleibt mit irgendeiner modularen Struktur, die beim modellieren der Problem-Dom"ane erdacht wird.
+
+\subsubsection{Prinzip der wenigen Schnittstellen}
+
+Jedes Modul redet mit so wenigen anderen Modulen wie m"oglich.
+
+\subsubsection{Prinzip der kleinen Schnittstellen}
+
+Wenn zwei Module kommunizieren, tauschen sie so wenig Information aus wie m"oglich.
+
+\subsubsection{Prinzip der expliziten Schnittstelle}
+
+Wenn zwei Module A und B kommunizieren, ist das aus dem Text von A oder B oder von beiden offensichtlich.\\
+
+Bsp. Modul A modifiziert Daten x und Modul B liest diese.
+
+\subsubsection{Kontinuit"at}
+
+Stellt sicher, dass kleine "Anderungen an der Spezifikation auch kleine "Anderungen an der Architektur ergeben.
+
+\subsubsection{Prinzip des einheitlichen Zugriffs (Uniform Access)}
+
+Funktionen, die von einem Modul verwaltet werden, sind f"ur Kunden in der selben Weise zugreifbar, egal ob sie mit Berechnung oder Speicherung implementiert sind.
+
+\subsubsection{Information Hiding}
+
+Jedes Modul sollte der externen Welt durch eine offizielle, "offentliche, ''public'' Schnittstelle bekannt sein.\\
+Die restlichen Eigenschaften des Moduls sind seine ''Geheimnisse''.
+
+\subsubsection{Das Offen-Geschlossen Prinzip}
+
+Offenes Modul: Kann erweitert werden.\\
+Geschlossenes Modul: F"ur Kunden verwendbar. Kann freigegeben, als Grundlinie (baseline) verwendet und (falls eine Programmeinheit) kompiliert werden.\\
+
+Ein Modul sollte offen \underline{und} geschlossen sein.
+
+\section{Abstrakte Datentypen (ADT)}
+
+\subsection{Argumente f"ur Objekte}
+
+\begin{itemize}
+	\item Wiederverwendbarkeit: Man muss ganze Datenstrukturen wiederverwenden, nicht nur Operationen.
+	\item Erweiterbarkeit, Kontinuit"at: Objekte bleiben im Zeitverlauf stabiler.
+\end{itemize}
+
+\begin{definition}[Objekt-Technologie]
+ Objekt-orientierte Software Konstrukion ist die Herangehensweise an das Strukturieren von Systemen, die die Architektur von Software Systemen auf den Typen der Objekte basiert, die sie manipulieren - nicht auf ''der'' Funktion die sie erreichen.
+\end{definition}
+
+Motto: Frage nicht zuerst was das System tut, frage worauf es etwas tut.
+
+\begin{definition}[Objekt-Technologie 2]
+	Objekt-orientierte Software Konstruktion ist die Konstruktion von Software Systemen als strukturierte Sammlungen von (m"oglicherweise partiellen) Implementierungen von abstrakten Daten-Typen.
+\end{definition}
+
+\subsection{Beschreibung von Objekten}
+
+Betrachte nicht ein einzelnes Objekt, sondern den Typ von Objekten mit "ahnlichen Eigenschaften. Definiere jeden Typ von Objekten nicht durch die physikalische Repr"asentation, sondern durch ihr Verhalten: die Dienste (Features) die sie der restlichen Welt anbieten.
+
+\subsection{Partielle Funktionen}
+
+\begin{definition}[Partielle Funktion]
+	Eine partielle Funktion, hier durch $\not \to$ identifiziert, ist eine Funktion die nicht f"ur alle m"oglichen Argumente definiert sein muss.
+\end{definition}
+
+F"ur partielle Funktionen benutzt man in Eiffel Vorbedingungen, hier z.Bsp. f"ur einen Stack:
+\begin{verbatim}
+	remove(s: STACK[G]) require not empty(s)
+	item (s: STACK[G]) require not empty(s)
+\end{verbatim}
+
+\subsection{Axiome}
+
+Man definiert Axiome f"ur die Funktionen des ADT, also z.Bsp.
+\begin{verbatim}
+ remove(pop(s, x)) = s
+\end{verbatim}
+
+\subsection{Ausreichende Komplettheit}
+
+Drei Formen von Funktionen in der Spezifikation eines ADT \texttt{T}:
+\begin{itemize}
+	\item Creators: $\texttt{OTHER} \to \texttt{T}$
+	\item Queries: $\texttt{T}\times\ldots \to \texttt{OTHER}$
+	\item Commands: $\texttt{T}\times\ldots \to \texttt{OTHER}$
+\end{itemize}
+
+Ausreichend komplette Spezifikation: ein ''Anfrage-Ausdruck'' der Form: $f(\ldots)$ wobei $f$ eine Anfrage ist, kann durch die Anwendung der Axiome in eine Form ohne \texttt{T} gebracht werden.
+
+\subsection{Implementierung eines ADT}
+
+Drei Komponenten:
+\begin{enumerate}
+	\item[(E1)] Die Spezifikation des ADT: Funktionen, Axiome, Vorbedingungen
+	\item[(E2)] Die Auswahl einer Repr"asentation
+	\item[(E3)] Eine Menge von Subprogrammen (Routinen) und Attributen, die jeweils eine der Funktionen der ADT Spezifikation (E1) mit der gew"ahlten Repr"asentation (E2) implementieren
+\end{enumerate}
+
+\section{Objekte und Klassen}
+
+Eine Klasse ist die Implementierung eines abstrakten Datentyps. Es ist gleichzeitig ein \textit{Modul} und ein \textit{Typ}.\\
+
+Eine Klasse wird durch eine Menge von \textit{Features} beschrieben. Features umfassen \textit{Attribute} (Speicherzellen von Instanzen der Klasse) und \textit{Routinen} (Operationen auf den Instanzen). Bei Routinen unterscheidet man zwischen \textit{Prozeduren} (beeinflusst die Instanz, kein R"uckgabewert) und \textit{Funktionen} (berechnet R"uckgabewert, normalerweise kein anderer Effekt).
+
+\begin{figure}[htb]
+ \begin{center}
+	\includegraphics[width=0.4\textwidth]{feature_cat}
+ \end{center}
+ \caption{Feature Kategorisierung}
+\end{figure}
+
+\subsection{Benutzung der Klasse beim Klienten}
+
+\begin{verbatim}
+ class GRAPHICS
+
+ feature
+   p,q: POINT
+
+   some_routine is
+     local
+     do
+       create p
+       create q
+       p.move(4.0,-2.0)
+     end
+ end
+\end{verbatim}
+
+\subsection{Shallow Clone vs Deep Clone}
+
+Bei shallow clone wird nur das Objekt selbst gecloned, nicht aber Attribute, welche wiederum auf andere Objekte zeigen. Bei deep\_clone werden diese Objekte (rekursiv) auch wieder kopiert.
+
+\section{Design by Contract}
+
+\subsection{Precondition/Postcondition}
+
+Es k"onnen Preconditions und Postconditions wie folgt definiert werden.
+
+\begin{verbatim}
+ require
+   key_not_present: not has(key)
+   -- ..
+ ensure
+   insertion_done: item(key) = new
+   -- ..
+\end{verbatim}
+
+\subsection{Weitere Assertions}
+
+\begin{description}
+	\item[check] Kann irgendwo im Code einer Methode benutzt werden um eine Eigenschaft zu pr"ufen.
+	\item[invariant (in loop)] F"ur Korrektheit einer Schlaufe, diese Eigenschaft muss am Ende jedes Schlaufendurchlaufs gelten.
+	\item[variant (in loop)] F"ur die Terminierung einer Schlaufe, Ausdruck muss ein Integer sein.
+\end{description}
+
+\subsection{Axiome/Invarianten}
+
+Invarianten k"onnen wie folgt f"ur die ganze Klasse nach \verb@feature@ definiert werden:
+
+\begin{verbatim}
+ invariant
+   not_under_minimum: balance >= Minimum_balance
+\end{verbatim}
+
+\subsection{Korrektheit einer Klasse}
+
+F"ur jede Erstellungsprozedur $cp$:
+\begin{displaymath}
+	\{Pre_{cp}\} \: \textsf{do}_{cp} \: \{ Post_{cp} \: \textsf{and} \: INV \}
+\end{displaymath}
+
+F"ur jede exportierte Routine $r$:
+\begin{displaymath}
+	\{INV \: \textsf{and} \: Pre_{r}\} \: \textsf{do}_{r} \: \{ Post_{r} \: \textsf{and} \: INV \}
+\end{displaymath}
+
+\section{Design by contract und Exception Handling}
+
+\subsection{Contracts und Invarianten}
+
+\subsubsection{Invarianten Verberbungs Regel}
+
+Die Invarianten einer Class beinhaltet automatisch auch die Invarianten ihrer Parents, verundet.
+
+\subsection{Assertion Redeklarations Regel}
+
+Wenn man eine Routine redeklariert, so kann die Precondition nur geschw"acht werden und die Postcondition nur verst"arkt.
+
+\subsection{Assertion Redeklarations Regel in Eiffel}
+
+Die redefinierte Version kann keine neuen \verb#require# oder \verb#ensure# beinhalten (die Assertions werden "ubernommen), oder
+\begin{verbatim}
+ require else new_pre
+ ensure then new_post
+\end{verbatim}
+
+Die resultierenden Assertions sind:
+\begin{verbatim}
+ original_precondition or new_pre
+ original_postcondition and new_post
+\end{verbatim}
+
+\subsection{Exception Handling}
+
+Zwei Konzepte falls der Contract gebrochen ist:
+\begin{description}
+	\item[Failure] Einer Routine, oder anderen Operation ist es unm"oglich den Contract zu erf"ullen.
+	\item[Exception] Ein ungew"unschtes Ereignis tritt auf w"ahrend der Ausf"uhrung einer Operation - als ein Resultat eines Failure, einer Operation welche von der Routine aufgerufen wurde.
+\end{description}
+
+In Eiffel gibt es ein Konstrukt \verb#rescue#, welches man f"ur das Exception Handling einer Routine benutzen kann. Dieser Block wird ausgef"uhrt, falls im \verb#do# Teil der Routine ein Fehler auftritt. Hier kann \verb#retry# benutzt werden um das Ganze nochmals zu versuchen.
+
+\section{Genericity}
+
+\subsection{Eine generische Klasse}
+
+\begin{verbatim}
+ class STACK[G]
+
+ feature
+   put (x: G) is ...
+   item: G is ...
+ end
+\end{verbatim}
+
+Um die Klasse zu benutzen:
+\begin{verbatim}
+ account_stack: STACK[ACCOUNT]
+\end{verbatim}
+
+\subsection{Typing im O-O Kontext}
+
+\begin{definition}
+	Eine objekt-orientierte Sprache ist statisch getypt genau dann wenn es m"oglich ist einen statischen Checker zu schreiben, welcher ein System akzeptiert, garantiert das zur Laufzeit f"ur eine Ausf"uhrung von einem Feature \verb#x.f#, das Objekt welches zu \verb#x# geh"ort (wenn es eines gibt) mindestens eine Feature \verb#f# hat.
+\end{definition}
+
+\section{Inheritance}
+
+\begin{verbatim}
+ class
+   RECTANGLE
+ inherit
+   POLYGON
+    redefine perimeter end
+ ..
+ feature
+   perimeter: REAL is
+   ..
+\end{verbatim}
+
+\subsection{Polymorphism und dynamic Binding}
+
+An Vorg"anger kann Nachfolger zugewiesen werden, aber nicht umgekehrt.
+
+\begin{verbatim}
+ p: POLYGON; r: RECTANGLE;
+
+ -- Permitted
+ p := r
+ -- Not permitted
+ r := p
+\end{verbatim}
+
+\begin{description}
+	\item[Redefinition] Eine Class kann vererbte Features "andern.
+	\item[Polymorphism] p kann verschiedene Formen haben zur Laufzeit.
+	\item[Dynamic binding] Effekt einer Funktion von p h"angt von der Laufzeit Form von p ab.
+\end{description}
+
+Um die Originale Version eines redefinierten Features zu benutzen:
+\begin{verbatim}
+ Precursor {WINDOW}
+ -- my new code here
+\end{verbatim}
+
+\subsection{Genericty}
+
+\subsubsection{Assignment attempt}
+
+\begin{verbatim}
+ x: A
+ ..
+ x ?= y
+\end{verbatim}
+
+Falls \verb#y# von einem Typ ist, der konform ist mit \verb#A#, so f"uhre ein normales Reference Assignment aus. Sonst ist \verb#x# void.
+
+\subsection{infix Operatoren}
+
+\begin{verbatim}
+ class
+   VECTOR[G]
+ feature
+   infix "+" (other: VECTOR[G]): VECTOR[G] is
+   ....
+\end{verbatim}
+
+\subsection{Erstellen mit einem spezifizierten Typ}
+
+\begin{verbatim}
+ a1: A
+ ..
+ create {B} a1.make(..)
+\end{verbatim}
+
+Erstellt \verb#a1#, aber mit Typ \verb#B#
+
+\subsection{Once Routinen}
+
+\begin{verbatim}
+ r is
+       once
+         --instructions
+       end
+\end{verbatim}
+
+So werden die Instruktionen nur ausgef"uhrt, f"ur den ersten Aufruf bei einem Client w"ahrend der Ausf"uhrung. Weitere Aufrufe returnen sofort. Falls es Funktionen sind, wird bei weiteren Aufrufen, das Resultat vom ersten Aufruf zur"uckgegeben.
+
+\subsection{Terminologie}
+
+\begin{description}
+	\item[Parent] Eine Klasse von der die gegebene Klasse vererbt.
+	\item[Child] Eine Klasse die von der gegebenen Klase vererbt.
+	\item[Heir] = Child
+	\item[Ancestor] Die Klasse selber oder ein direkter oder indirekter Parent davon.
+	\item[Proper ancestor] Ein direkter oder indirekter Parent der Klasse.
+	\item[Descendant] Die Klasse selber oder einer seiner direkten oder indirekten Kindern.
+	\item[Proper descendant] Ein direktes oder indirektes Kind der Klasse.
+	\item[Instance] Ein Objekt das nach der Form die durch die Klasse oder einer seiner proper descendants definiert ist, erstellt wurde.
+	\item[Direct instance] Ein Objekt, das nach der Form die durch die Klasse definiert ist, erstellt wurde.
+\end{description}
+
+\subsection{Multiple inheritance}
+
+\begin{verbatim}
+ class
+   COMPOSITE_FIGURE
+ inherit
+   FIGURE
+     redefine display, ... end
+   LIST[FIGURE]
+ feature
+   display is
+      do
+        from start until after loop
+           item.display
+           forth
+        end
+      end
+\end{verbatim}
+
+%\subsubsection{Namenkonflikte}
+
+%Um Methoden von vererbten Classes umzubennen:
+%\begin{verbatim}
+%class
+%  C
+%inherit
+%  A
+%    rename
+%     foo as fog
+%    end
+%  B
+%    rename
+%      foo as zoo
+%    end
+%feature
+%  ..
+%\end{verbatim}
+
+\subsection{Richtiges Benutzen von Inheritance}
+
+Zwei Relationen: Client, Inheritance
+
+\begin{description}
+	\item[Client] dr"uckt aus, dass Instanzen von B Informationen "uber Instanzen von A speichern muss.
+	\item[Inheritance] dr"uckt aus, dass jede Instanz von D als Instanz von C betrachtet werden kann; wenn C ein Ancestor von D ist.
+\end{description}
+
+Ausser f"ur polymorphe Benutzungen, wird Inheritance nie benutzt: Statt dass B von A vererbt, kann B immer ein Attribut vom Typ A beinhalten, ausser wenn ein Eintrag vom Typ A m"oglicherweise Werte vom Typ B repr"asentieren soll.
+
+\subsection{Contracts und Inheritance}
+
+Was passiert mit Klasseninvarianten und Pre-/Postconditions unter Vererbung?
+
+\begin{itemize}
+	\item Die \textit{Invarianten} einer Klasse beinhalten automatisch auch die Invarianten von all ihren Eltern welche ''verundet'' werden.
+	\item Die \textit{Preconditions} k"onnen nur behalten oder abgeschw"acht werden.\\
+		\verb#new_pre or else original_precondition#
+	\item Die \textit{Postconditions} k"onnen nur behalten oder verst"arkt werden.\\
+		\verb#original_postcondition and then new_post#
+\end{itemize}
+
+\subsection{Features verschmelzen}
+
+Falls es von den vererbten Klassen jeweils Features gibt, die in mehreren Klassen definiert sind, wobei aber alle ''Implementationen'' bis auf eine deferred sind, so wird die effektive Implementierung gew"ahlt. Sonst muss man sich mit folgenden Tricks behelfen.
+
+\subsubsection{Undefinieren eines Features}
+
+\begin{verbatim}
+ deferred class
+   B
+ inherit
+   A
+     undefine
+       f
+     end
+ feature
+   ..
+
+ end
+\end{verbatim}
+
+\subsubsection{Umbenennen eines Features}
+
+\begin{verbatim}
+ ..
+ inherit
+   A
+     rename
+       g as f
+     end
+\end{verbatim}
+
+\subsubsection{Repeated Inheritance Probleme}
+
+Angenommen eine Klasse ist das gemeinsame Child von zwei Klassen. Was passiert mit Features die zweimal von dem common ancestor (der beiden) vererbt wurde?
+
+\begin{itemize}
+	\item Features die nicht umbenannt wurden entlang dem Vererbungspfad werden gemeinsam benutzt.
+	\item Features die unter verschiedenen Namen vererbt wurden, werden repliziert.\\
+		So kann es aber zu Problemen durch dynamic binding und Polymorphismus kommen. Daf"ur wird \verb#select# benutzt.
+\end{itemize}
+
+\subsection{select}
+
+\small
+\begin{verbatim}
+ class
+   SWISS_US_TAXPAYER
+ inherit
+   SWISS_TAXPAYER
+     rename
+       address as swiss_address,
+       tax_id as swiss_tax_id,
+       ..
+     select
+       swiss_address,
+       swiss_tax_id,
+       ..
+     end
+   US_TAXPAYER
+     rename
+       address as us_address,
+       tax_id as us_tax_id,
+       ..
+\end{verbatim}
+\normalsize
+
+
+\subsection{Export Anpassung}
+
+\begin{verbatim}
+ class
+   B
+ inherit
+   A
+     export
+       {ANY} all
+       {NONE} h
+       {A,B,C,D} i,j,k
+     end
+ feature
+  ..
+\end{verbatim}
+
+\section{Agents}
+
+
+\subsection{Anwendungen von Agents}
+
+\begin{itemize}
+	\item Iteration
+	\item High-level contracts
+	\item Numerische Programmierung
+\end{itemize}
+
+\subsection{Offene und geschlossene Argumente}
+
+\begin{displaymath}
+	\textbf{agent } \mbox{your\_function}(\underbrace{?}_{\mbox{Open}},\ \underbrace{u,\ v}_{\mbox{Closed}})
+\end{displaymath}
+
+Closed: Wird zur Zeit der Definition des Agents gesetzt.\\
+Open: Wird bei jedem Aufruf des Agents gesetzt.
+
+\subsection{Beispiele}
+
+\subsubsection{Agent-Funktion ist in gleicher Klasse}
+
+\begin{verbatim}
+ ..
+ my_integer_list: LIST[INTEGER]
+ ..
+ is_positive(x: INTEGER):BOOLEAN is
+   do
+     Result := (x > 0)
+   end
+\end{verbatim}
+
+Um nun zu Testen, ob alle Zahlen in Liste positiv sind:
+
+\begin{verbatim}
+ all_positive :=
+  my_integer_list.for_all(agent is_positive)
+\end{verbatim}
+
+\subsubsection{Agent-Funktion ist in externer Klasse}
+
+\begin{verbatim}
+ ..
+ my_employee_list: LIST[EMPLOYEE]
+ ..
+ is_married: BOOLEAN
+\end{verbatim}
+
+Um nun zu Testen, ob alle Angestellten in der Liste verheiratet sind
+
+\small
+\begin{verbatim}
+ all_married :=
+  my_employee_list.for_all(agent {EMPLOYEE}.is_married)
+\end{verbatim}
+\normalsize
+
+\subsection{Potential der Agents f"ur Contracts}
+
+Agents k"onnen benutzt werden um generelle Eigenschaften, wie z.B. alle Elemente von 1 bis n haben sich nicht ge"andert auszudr"ucken.
+
+\subsection{Tuple Klasse}
+
+\verb#TUPLE[X, Y, ...]#\\
+
+\verb#TUPLE[A,B]# ist ein Child von \verb#TUPLE[A]# welches wiederum ein Child von \verb#TUPLE# ist. Es bedeutet also: Tuple von mindestens $n$ Argumenten.
+
+\subsubsection{Kernel library classes}
+
+\scriptsize
+\begin{verbatim}
+                    ROUTINE [BASE, ARGS -> TUPLE]
+                                 |
+                                 |
+                        -------------------
+                        |                 |
+ PROCEDURE [BASE, ARGS -> TUPLE]    FUNCTION[BASE, ARGS -> TUPLE, RES]
+\end{verbatim}
+\normalsize
+
+\subsubsection{Mathematisches Modell f"ur Tupel}
+
+\begin{itemize}
+	\item Erste Intuition: \verb#TUPLE[A, B, C]# repr"asentiert das kartesische Produkt $A \times B \times C$
+	\item Aber: $A \times B \times C$ kann nicht auf die Untermenge $A \times B$ abgebildet werden
+	\item Besseres Modell: \verb#TUPLE# stellt die Menge der partiellen Funktionen von $\mathbb{N}$ zur Menge der m"oglichen Werte, welche die Domain das Intervall $[1  \ldots n]$ beinhaltet, dar.
+\end{itemize}
+
+\subsubsection{Features der Routine Klasse}
+
+\begin{verbatim}
+ call(values: ARGS)
+ item(values: ARGS): RES -- In FUNCTION only
+\end{verbatim}
+
+\subsection{Argumente offen lassen}
+
+Nachfolgend finden sich Beispiele f"ur die Typen von Agents.
+
+\begin{verbatim}
+ a0: C; a1: T1; a2: T2; a3: T3;
+ 
+ u := agent a0.f(a1, a2, a3) 
+ -- hat Typ PROCEDURE[C, TUPLE]
+
+ -- Beispielaufruf
+ u.call([])
+
+ v := agent a0.f(a1, a2, ?)
+ -- hat Typ PROCEDURE[T3]
+
+ -- Beispielaufruf
+ y.call([a3])
+\end{verbatim}
+
+\subsection{Ziel offen lassen}
+
+\begin{verbatim}
+ r := agent {T0}.f(a1, a2, a3)
+ -- hat Typ PROCEDURE[T0, TUPLE[T0]]
+
+ -- Beispielaufruf
+ r.call([a0])
+\end{verbatim}
+
+\subsection{Iteratoren}
+
+In \verb#LIST[G]# findet sich:
+
+\begin{verbatim}
+ for_all(test: FUNCTION[ANY, TUPLE[G], BOOLEAN]) is
+    -- Is there no item in structure that doesn't
+    -- satisfy test?
+   do
+     ..
+   end
+\end{verbatim}
+
+\subsubsection{Weitere Iteratoren}
+
+\begin{verbatim}
+ for_all
+ there_exists
+ do_all
+ do_if
+ do_while
+ do_until
+\end{verbatim}
+
+\section{Event-driven programming}
+
+Es gibt Publishers, welche Events triggern und Subscribers welche die Events behandeln.
+
+\subsection{Event Library (EVENT\_TYPE)}
+
+
+\subsubsection{Publisher Seite}
+
+\begin{verbatim}
+ ..
+ -- Deklarierung
+ click: EVENT_TYPE[TUPLE[INTEGER, INTEGER]]
+ ..
+ -- Instanzierung
+ create click
+ ..
+ -- Jedes Mal wenn Event eintrifft
+ click.publish([x_coord, y_coord])
+\end{verbatim}
+
+\subsubsection{Subscriber Seite}
+
+\begin{verbatim}
+ click.subscribe(agent my_procedure)
+\end{verbatim}
+
+\section{Concurrent Programming}
+
+A simple, general and powerful concurrency and distribution model (SCOOP).
+
+\subsection{Was macht eine Applikation nebenl"aufig?}
+
+\begin{definition}[Prozessor]
+	Unabh"aniger Kontroll-Thread welcher sequentielle Ausf"uhrung von Instruktionen auf einem oder mehreren Objekten unterst"utzt.
+\end{definition}
+
+Kann implementiert sein als:
+\begin{itemize}
+	\item Computer CPU
+	\item Prozess
+	\item Thread
+	\item AppDomain (.NET)
+\end{itemize}
+
+Die Zuordnung von Prozessor zu Rechnerressourcen erfolgt durch Concurrency Control File.
+
+\subsection{Feature call}
+
+synchroner Aufruf:
+\begin{verbatim}
+ x: CLASS_X
+\end{verbatim}
+
+asynchroner Aufruf:
+\begin{verbatim}
+ x: seperate CLASS_X;
+\end{verbatim}
+
+Ziel eines separaten Aufruf muss ein formales Argument von umgebender Routine sein:
+\begin{verbatim}
+ store (b: seperate BUFFER[G]; value: G) is
+  -- Store value into b
+ do
+   b.put(value)
+ end
+\end{verbatim}
+
+Um exklusiven Zugriff auf ein seperates Objekt zu erhalten benutzt man es als Argument im Aufruf:
+\begin{verbatim}
+ buffer: seperate BUFFER[INTEGER]
+ create buffer
+ store(buffer,10)
+\end{verbatim}
+
+\subsection{Von Preconditions zu Wait Condition}
+
+\begin{verbatim}
+ store(b: separate BUFFER[G]; value: G) is
+ require
+  not b.is_full
+  value /= void
+ ..
+\end{verbatim}
+
+Wenn b separate ist, so wird die Precondition zu einer wait Condition. Es wird also gewartet, bis b Platz hat und erst dann wird weiter ''gearbeitet''.\\
+
+Der Client wartet nur, falls es n"otig, also falls z.B. ein Query auf ein separates Objekt ausgef"uhrt wird, bzw. erst wenn dieser Wert dann wirklich gebraucht wird.
+
+\section{Designprinzipien, Design f"ur Wiederverwendbarkeit}
+
+\begin{itemize}
+	\item Command / Query Seperation Prinzip
+	\item Systematische Namenskonventionen
+	\item Operanden / Optionen Seperations Prinzip
+\end{itemize}
+
+\subsection{Command / Query Seperations Prinzip}
+
+Ein Command tut etwas, aber gibt kein Resultat zur"uck. Ein Query gibt ein Resultat zur"uck, ver"andert den Zustand aber nicht. Ein Gegenbeispiel w"are das C Konsrukt \verb#getint()#.
+
+\subsubsection{Referential transparency}
+
+Eine Funktion gibt immer das selbe zur"uck, also falls $a=b$, so ist auch $f(a) = f(b)$.
+
+\begin{verbatim}
+ io.read_integer
+ n := io.last_integer
+\end{verbatim}
+
+\subsubsection{guter Stil: L"osen von $\mathbf{A}\mathbf{x} = \mathbf{b}$}
+
+\begin{verbatim}
+ A.try_to_solve(b)
+
+ if not A.singular then
+   x := A.solution
+ end
+\end{verbatim}
+
+\subsection{Generelle Prinzipien}
+
+\begin{itemize}
+	\item Konsistenz.\\
+		Wie kann man neue Designentscheidung mit bisherigen vereinen?\\
+		Wie mache ich Designentscheidung, so dass zuk"unftige Entscheidungen einfach damit kompatibel sind?
+	\item Benute Assertions.
+	\item Symmetrien bevorzugen. Z.B. before und after selbes Verhalten.
+	\item Limit-F"alle. Full oder Empty?
+\end{itemize}
+
+\subsection{Operanden und Optionen}
+
+Zwei m"ogliche Arten von Argumenten von Features:
+\begin{description}
+	\item[Operanden] Auf was Feature operiert.
+	\item[Optionen] Einstellungen, wie Feature operiert.\\
+		Sind meist erkennbar daran, dass Default-Werte Sinn machen. Die Optionen k"onnen sich im Verlauf der Entwicklung der Klasse "andern, Operanden sollten gleich bleiben.
+\end{description}
+
+Die Argumente eines Features sollten nur Operanden sein. Optionen sollten Default-Werte haben, und es sollte Prozeduren geben, mit denen man die einzelnen Optionen setzen kann, falls dies gew"unscht ist.
+
+\subsection{Grammatikalische Regeln}
+
+\begin{itemize}
+	\item Prozeduren: Verben, infinitiv.
+	\item Boolesche Queries: Adjektive, z.B. full oder is\_some\_property
+	\item Andere Queries: Nomen oder Adjektive
+	\item Keine Verben f"ur Queries.
+\end{itemize}
+
+\section{Software lifecyle Modelle}
+
+Prozess-Qualit"at
+\begin{itemize}
+	\item P"unktlichkeit
+	\item Kosteneffektiv
+\end{itemize}
+
+\subsection{Lifecyle Modelle}
+
+Lifecylce Modelle haben zum Ziel die Menge von Prozessen, welche bei der Produktion eines Softwaresystems involviert sind zu beschreiben und zu sequenzieren. Es gibt versch. Modelle und Standards, z.B. das Capability Maturity Model (CMM) wobei dies v.a. auf die Dokumentation ausgerichtet ist.
+
+\subsubsection{Wasserfall Modell}
+
+Jeweils Pfeile zur"uck und vor.
+
+\begin{enumerate}
+	\item Feasibility study
+	\item Requirements analysis
+	\item Specification
+	\item Global design
+	\item Detailed design
+	\item Implementation
+	\item Validation \& Verification
+	\item Distribution
+\end{enumerate}
+
+Probleme mit dem Wasserfall Modell:
+\begin{itemize}
+	\item Sp"ates Erscheinen von wirklichem Code.
+	\item Es fehlt der Support von Requirements "Anderungen und allgemeiner f"ur extendibility und reusability.
+	\item Es fehlt der Support von Maintance Aktivit"aten.
+	\item Sehr synchrones Modell.
+\end{itemize}
+
+\subsubsection{Seamless (= nahtlos) Development}
+
+Spezifikation (TRANSACTION, PLANE, CUSTOMER, ENGINE,...), Design (STATE, USER\_COMMAND,...), Implementation (HASH\_TABLE, LINKED\_LIST,...), Verification \& Validation (TEST\_DRIVER,...), Generalization (AIRCRAFT,...).
+
+\subsubsection{Cluster Model}
+
+Verschiedene Seamless Development (= Cluster $i$) beliebig parallel seriell oder verschoben entwickeln.\\
+
+Bottom-Up development: von den allgemeinsten clustern zu den Applikationsspezifischten. Flexibles schedulen von Clustern, Wasserfall vs. Trickle als Extrembeispiele.
+
+\section{Configuration Management}
+
+\begin{definition}
+	Configuration Management ist die eindeutige Identifizierung, kontrollierte Speicherung, "Anderungskontrolle, und Statusreporting von ausgew"ahlter zwischenzeitlicher produzierter Arbeit, Produkt Komponenten, und Produkte w"ahrend dem Leben eines Systems.
+\end{definition}
+
+Oder kurz: Configuration Management ist die Rolle der ZEIT in der Software Entwicklung.\\
+
+Ein System das Dokumente speichert und organisiert "uber einem Raum und Zeit wird als Repository bezeichnet.
+
+\subsection{Begriffe}
+
+\subsubsection{Versionisierung}
+
+Versionen geben eine eindeutige zeitabh"angige Identifikation von jedem Dokument.
+
+\subsubsection{Views}
+
+Man kann all die verschiedenen Dokumente zu einem bestimmten Zeitpunkt in der Vergangenheit anschauen, es wird dann von jedem Dokument das damals aktuellste genommen.
+
+\subsubsection{Head}
+
+Die aktuellste Version von jedem Dokument.
+
+\subsubsection{Branching}
+
+Erstellen von mehreren Versionen von einer existierenden Menge von Dokumenten wird als BRANCHING (oder FORKING) bezeichnet.
+
+\subsubsection{MERGING}
+
+Zusammenf"uhren von Versionen die unabh"angig "uber die Zeit entwickelt wurden.
+
+
+\subsection{Regression Testing}
+
+Testen von Features, die in \textit{"alteren Versionen schon funktionierten}, wobei man testet, ob sie in neueren Versionen der Software auch funktionieren. Regression Testing ist im Normalfall Teil des Commit, oder des Daily Build.
+
+
+\subsection{Bug-Tracking}
+
+Infrastruktur, die Bug-Reports festh"alt und managed in einem Projekt. Die Anzahl und Qualit"at der Bugs ist im Normalfall ein Kriterium f"ur das Release der Software.
+
+\section{Projektmanagement}
+
+\subsection{Grundlagen}
+
+\begin{definition}[Projekt]
+	Ein Projekt ist eine tempor"are Unternehmung unternommen um ein einmaliges Produkt oder Service zu erstellen.
+\end{definition}
+
+Operationen sind dagegen laufend und wiederholend.
+
+\begin{definition}[IT-Projekt]
+	Ein IT-Projekt ist ein Projekt um ein Produkt oder Service zu erstellen, bei welchem die Benutzung von Informationstechnologie die entscheidende Charakteristik ist.
+\end{definition}
+
+\begin{definition}[Projekt Management]
+	Projekt Management ist die Anwendung von Wissen, F"ahigkeiten, Tools, und Techniken so, dass die Projektaktivit"aten die Projektanforderungen treffen.
+\end{definition}
+
+\subsubsection{PM Wissensgebiete}
+
+\begin{itemize}
+	\item Projekt Integrations Management
+	\item Projekt Kosten Management
+	\item Projekt Kommunikations Management
+	\item Projekt Umfang Management
+	\item Projekt Qualit"ats Management
+	\item Projekt Risiken Management
+	\item Projekt Zeit Management
+	\item Projekt Human Resource Management
+	\item Projekt Zulieferer Management
+\end{itemize}
+
+\subsection{Integrations Management}
+
+Zusichern, dass verschiedene Elemente vom Projekt geeignet koordiniert sind. Ist Sache des Projekt Managers.
+
+\subsubsection{Triple Constraint}
+
+Zeit, Umfang und Kosten sind eng miteinander verkn"upft, wenn man eines "andert, so "andern sich auch die anderen. Wenn man also sparen will, so kann man dies nur unter Beschneidung der anderen beiden tun.\\
+
+Die Priorit"aten sind durch die Kunden definiert, der Job des PM ist es aber einen geeigneten Tradeoff zu suchen.
+
+\subsubsection{Mehr konkurrenzierende Objekte}
+
+Qualit"at, Zeit, Kundenzufriedenheit, Kosten, Risiken, Umfang.
+
+\subsubsection{Projekt Erfolg}
+
+\begin{definition}
+	Ein Projekt ist erfolgreich, wenn die spezifizierten Resultate in der geforderten Qualti"at und in der ausgemachten Zeit und Resourcen Limiten geliefert wird.
+\end{definition}
+
+\subsection{Projekt Lebenszyklus}
+
+Aufteilen von Projekten in Unterprojekte. Diese teilt man wiederum auf in Phasen.
+
+\subsubsection{Unterprojekte}
+
+Unterteilung folgt der Struktur des Produkts.
+
+\subsubsection{Fortschreitende Ausarbeitung}
+
+Charakteristiken von einem einmaligen Produkt oder Service m"ussen laufend ausgearbeitet werden.
+
+\subsubsection{Deliverables (= Ergebnis)}
+
+\begin{definition}
+	Irgendein messbares, greifbares und "uberpr"ufbares Ergebnis, Resultat oder Element welches produziert werden muss um ein Projekt oder ein Teil eines Projekts fertigzustellen.
+\end{definition}
+
+\subsubsection{Projekt Phasen}
+
+Eine Sammlung von logisch verkn"upften Projektaktivit"aten im allgemeinen gipfelnd in der Vollendung von einem grossen Deliverable.
+
+\subsubsection{Projektlebenszyklus}
+
+Der Einfluss der Aktion"are auf die Produktcharakteristiken und finale Kosten ist zu Projektbeginn am Gr"ossten und nimmt laufend ab. Die Kosten sind zu Beginn und Ende nicht so hoch wie dazwischen.
+
+\subsubsection{Von Projekten zu Operationen}
+
+\begin{itemize}
+	\item Ideen, Studien (geh"ort nicht zum Projekt)
+	\item Analysephase
+	\item Designphase
+	\item Implementationsphase
+	\item Testphase
+	\item Deployment (=Aufstellen) Phase
+	\item Operation, Produktion (geh"ort nicht zum Projekt)
+\end{itemize}
+
+\subsection{Projekt Management Life Cycle}
+
+Wie die Core Processes werden auch die Projekt Management Prozesse unterteilt, hier aber in sogenannte Gruppen.
+
+\begin{itemize}
+	\item Initiating Processes
+	\item Planning Processes
+	\item Controlling Processes
+	\item Executing Processes
+	\item Closing Processes
+\end{itemize}
+
+Diese Gruppen "uberlappen und sind nicht diskrete, einmalige Events.
+
+\section{Exception Handling in OO}
+
+\subsection{Exception Vokabular}
+
+\begin{itemize}
+	\item Raise, trigger oder wirf eine Exception
+	\item Handle, oder fange eine Exception
+\end{itemize}
+
+\subsection{In Java}
+
+\subsubsection{Raise}
+
+\begin{verbatim}
+ my_routine(..) throws my_exception {
+   ..
+   if abnormal_condition
+     throw my_exception;
+ }
+\end{verbatim}
+
+\subsubsection{Handle}
+
+\begin{verbatim}
+ try {
+   instruction_1;
+   instruction_2;
+   ..
+   instruction_n;
+ }
+ catch (Expected_exc_type e){
+   handling_code;
+ }
+ finally {
+  // for both
+ }
+\end{verbatim}
+
+\subsection{Exception handling}
+
+\begin{itemize}
+	\item Failure: Einer Routine oder anderen Operation ist es unm"oglich seinen Contract einzuhalten.
+	\item Exception: Ein nichtgew"unschtes Event tritt w"ahrend der Ausf"uhrung einer Routine ein, als ein Resultat eines Failure einer Operation welche von der Routine aufgerufen wird.
+\end{itemize}
+
+\subsection{Exception Korrektheit}
+
+\begin{displaymath}
+	\{ True \} rescue_r \{ INV \}
+\end{displaymath}
+
+\section{Quality Assurance}
+
+\subsection{Validation und Verifikation}
+
+Ein Software Element muss:
+\begin{itemize}
+	\item Die richtige Sache machen (Validation)
+	\item Die Sache richtig machen (Verifikation)
+\end{itemize}
+
+\subsection{Terminologie}
+
+Ein \textit{Error} im Softwarekonstruktionsprozess l"ost einen \textit{Fault} im Produkt aus, welches w"ahrend einer Operation ein \textit{Failure} der Programmausf"uhrung bedeutet.
+
+\subsection{Verifikationstechniken}
+
+Statisch (keine Ausf"uhrung) vs Dynamisch (Ausf"uhrung, aktuelle oder simulierte)
+
+\end{document}

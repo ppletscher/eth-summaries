@@ -1,0 +1,992 @@
+% W'keit/Statistik Zusammenfassung aus dem Informatikstudium an der ETH Zuerich
+% basierend auf der Vorlesung von Prof. Dr. Thorsten Rheinlaender und Prof. Dr.
+% Philipp Schoenbucher
+% Copyright (C) 2003  Patrick Pletscher
+
+%This program is free software; you can redistribute it and/or
+%modify it under the terms of the GNU General Public License
+%as published by the Free Software Foundation; either version 2
+%of the License, or (at your option) any later version.
+
+%This program is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
+
+%You should have received a copy of the GNU General Public License
+%along with this program; if not, write to the Free Software
+%Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\documentclass[10pt, a4paper, twocolumn]{scrartcl}
+
+\usepackage{german}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[pageanchor=false,colorlinks=true,urlcolor=black,hyperindex=false]{hyperref}
+
+\textwidth = 16.5 cm
+\textheight = 25 cm
+\oddsidemargin = 0.0 cm
+\evensidemargin = 0.0 cm
+\topmargin = 0.0 cm
+\headheight = 0.0 cm
+\headsep = 0.0 cm
+\parskip = 0 cm
+\parindent = 0.0cm
+
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\title{Wahrscheinlichkeitsrechnung und Statistik - Zusamenfassung}
+\author{Patrick Pletscher}
+\begin{document}
+
+\maketitle
+
+\section{Wahrscheinlichkeiten}
+
+\subsection{Ereignisraum}
+
+Der \textit{Ereignisraum $\Omega$} umfasst alle m"oglichen Ausg"ange eines Zufallsexpermiments.\\
+Ein \textit{Elementarereignis} $\Omega$ ist ein Element $\omega\:\in\:\Omega$\\
+Ein Ereignis A ist eine Teilmenge von $\Omega$, d.h. eine Kombination von Elementarereignissen $A \subset \Omega$\\
+
+$A^c$ (Komplement) ist das Ereignis, dass A nicht eintritt.\\
+
+$\mathcal{A}$ ist die Klasse der beobachteten Ereignisse. Falls $\Omega$ endlich ist, dann ist $\mathcal{A}$ die Menge aller Teilmengen  von $\Omega$, d.h. die Potenzmenge.
+
+\subsection{Das Wahrscheinlichkeitsmass}
+
+$P:\mathcal{A}\rightarrow[0,1]$\\
+P(A)$\doteq$ 'die Wahrscheinlichkeit, dass A eintritt'
+
+\subsubsection{Axiome der Wahrscheinlichkeitstheorie}
+\begin{description}
+ \item [A1] $0\leq P(A) \leq 1$ f"ur alle $A \subset \Omega$
+ \item [A2] $P(\Omega )=1$
+ \item [A3] Sei $A_1,A_2,\ldots$ eine Folge disjunkter Ereignisse, dann $P(\cup^\infty_{i=1})=\sum^\infty_{i=1}P(A_i)$
+\end{description}
+
+\subsubsection{Weitere Rechenregeln}
+
+\begin{description}
+ \item $P(A^c)=1-P(A)$
+ \item $P(\emptyset)=0$
+ \item $A \subset B \Rightarrow P(A)\leq P(B)$
+ \item $P(A \cup B)=P(A)+P(B)-P(A \cap B)$
+ \item $P(A\cup B)=1-(\bar{P(A)}+\bar{P(B)})$
+ \item und $\rightarrow$ Multiplikation
+\end{description}
+
+
+\subsection{Berechnung von W'keiten in endlichen R"aumen}
+
+$P(A)=\frac{|A|}{|\Omega|}$ 
+
+\subsubsection{Exkurs in die Kombinatorik}
+
+\textbf{Permutationen ohne Zur"ucklegen}
+
+Aus n Objekten sind $k \leq n$ herauszugreifen, wobei die Reihenfolge eine Rolle spielen soll.\\
+
+$\sharp$ M"ogl. $=\frac{n!}{(n-k)!}$\\\\
+
+\textbf{Permutationen mit Zur"ucklegen}
+
+Gegeben sind n Objekte. Wieviele Folgen der L"ange k k"onnen gebildet werden, falls jedes Objekt beliebig oft gew"ahlt werden darf.\\
+
+$\sharp$ M"ogl. $=n^k$\\\\
+
+\textbf{Kombinationen ohne Zur"ucklegen}
+
+Gegeben eine Menge mit n Elementen. Wieviele Teilmengen mit $k\leq n$ Elementen kann man daraus bilden?\\
+
+$\sharp$ M"ogl. $=\frac{n!}{(n-k)!k!}=\binom{n}{k}$\\\\
+
+Bsp: Lotto (6 aus 45)\\
+$A=\{6 Richtige\}=\binom{45}{6}$\\
+$B=\{4 Richtige\}=\binom{6}{4}\binom{39}{2}$
+
+\subsection{Bedingte W'keiten}
+
+Seien A,B Ereignisse, $P(A)>0$\\
+\textbf{Def.:} Die \textit{bedingte W'keit}, dass A gegeben B eintritt, ist\\
+$P(B|A)=\frac{P(A\cap B)}{P(A)}$\\\\
+
+\textbf{Multiplikationssatz}\\
+Sei $P(A) > 0$: Dann\\
+$P(A\cap B)=P(B|A)\cdotp P(A)$\\\\
+
+\textbf{Satz von der totalen W'keit}\\
+Gegeben seien Ereignisse $A_1,\ldots,A_n$ mit $P(A_i)>0$.\\
+\textbf{Def.:} Die $A_i$ bilden eine Zerlegung von $\Omega$, falls
+\begin{enumerate}
+ \item $A_i \cap A_j = \emptyset$ f"ur $i \neq j$, paarw. disj.
+ \item $\Omega = \bigcup\limits^n_{i=1}A_i$
+\end{enumerate}
+Dann gilt f"ur $B \subset \Omega$ dass\\
+$P(B)=\sum\limits^n_{i=1}P(B|A_i)\cdotp P(A_i)$\\\\
+
+\textbf{Satz von Bayes}\\
+$P(A|B)=\frac{P(A\cap B)}{P(B)}=\frac{P(B|A)\cdotp P(A)}{P(B|A)\cdotp P(A)+P(B|A^C)\cdotp P(A^C)}$\\\\
+
+\textbf{Allgemeine Formel von Bayes}\\
+$P(A_k|B)=\frac{P(B|A_k) P(A_k)}{\sum\limits^n_{i=1} P(B|A_i)P(A_i)}$
+
+\subsection{Unabh"angigkeit}
+
+Seien $A,B \subset \Omega$ zwei Ereignisse.\\
+\textbf{Def.} A und B sind \textit{unabh"angig}, falls $P(A\cap B)=P(A)P(B)$\\
+Falls $P(A)>0$:\\
+A,B unabh. $\Leftrightarrow P(B|A)=P(B)$\\
+Falls $P(B)>0$:\\
+A,B unabh. $\Leftrightarrow P(A|B)=P(A)$
+
+\subsubsection{Allgemeine Definition der Unabh"angigkeit}
+
+n Ereignisse $A_1,\ldots,A_n$ heissen \textit{unabh"angig}, falls f"ur \textit{jede} Wahl von je m Ereignissen\\
+$A_{k1},\ldots,A_{km},\{k_1,\ldots,k_m\}\subset\{1,\ldots,n\}$,\\
+stets gilt:\\
+$P(A_{k1}\cap\ldots\cap A_{km})=P(A_{k1})\cdotp \ldots \cdotp P(A_{km})$
+
+\section{Zufallsvariable}
+
+\subsection{Begriff der ZV}
+
+Es sei $\Omega$ ein Ereignisraum. Eine ZV auf $\Omega$ ist eine Funktion $\Omega \rightarrow \mathbb{R}$.\\
+Wir nennen eine ZV diskret, falls sie endliche oder abz"ahlbar viele Werte annimmt.
+
+\subsection{Wahrscheinlichkeit- und Verteilungsfunktion}
+
+{\bf Def.} Die W'keitsfunktion der diskreten ZV X ist die Funktion\\
+$p(x)=\left\{
+ \begin{array}{ll}
+  P(X=x)    	& $falls $ x \in \omega \\
+  0   		& $sonst$ 
+ \end{array}
+\right.$
+
+$\omega$: Wertebereich von X\\\\
+
+Verteilungsfunktion F: $F(x)=P(X\leq x)$\\
+F"ur diskrete ZV ist\\
+$F(x)=\sum p(x_i)$\\
+$x_i:x_i\in\omega,x_i\leq x$\\\\
+
+Die Verteilungsfunktion ist:
+\begin{itemize}
+ \item rechtsstetig
+ \item $\lim_{x\rightarrow -\infty}F(X)=0,\:\lim_{x\rightarrow +\infty}F(X)=1$
+\end{itemize}
+
+
+\subsection{Einige wichtige diskrete Verteilungen}
+
+\begin{enumerate}
+ \item Uniforme Verteilung (Gleichverteilung)\\
+  $\omega=\{x_1,\ldots,x_n\}$\\
+  $p(x_i)=P(X=x_i)=\frac{1}{n}$
+  Bsp: W"urfeln mit einem W"urfel
+ \item Bernoulli-Verteilung\\
+  X nimmt nur die Werte 0 und 1 an\\
+  $P(X=1)=p$\\
+  $P(X=0)=1-p$\\
+  $P(X)=p^x\cdotp(1-p)^{1-x}\:\:,x=0,1$\\
+  $X\sim Be(p)$
+ \item Binomialverteilung\\
+  X=''Anzahl Erfolge bei n Versuchen''\\
+  $p(k)=\binom{n}{k}p^k(1-p)^{n-k}$\\
+  $X\sim B(n,p)$\\
+  Approx. durch Poisson\\
+  Multinomialverteilung\\
+  \scriptsize $P[X_1=x_1,X_2=x_2,X_3=x_3]=\frac{n!}{x_1!x_2!x_3!}p_1^{x_1}p_2^{x_2}p_3^{x_3}$\normalsize
+ \item Die geometrische Verteilung\\
+  X=''Anzahl der Versuche, bis ein Erfolg eintritt''\\
+  $p(k)=P(X=k)=(1-p)^{k-1}p$
+ \item Die negativbinomiale Verteilung\\
+  X=''Anzahl Versuche, bis ich r-mal erfolgreich bin''\\
+  $P(X=k)=\binom{k-1}{r-1}p^r(1-p)^{k-r}$
+ \item Die hypergeometrische Verteilung\\
+  n Gegenst"ande in einer Urne, r vom Typ I und n-r vom Typ II, ich ziehe m davon (ohne Zur"ucklegen)
+  $P(X=k)=\frac{\binom{r}{k}\binom{n-r}{m-k}}{\binom{n}{m}}$\\
+  Bsp: Lotto, 6 aus 45, W'keit eines Vierers:\\
+  n=45, r=6, m=6, k=4
+ \item Die Poisson-Verteilung\\
+  X=''Anzahl Ereignisse in einem Zeitintervall(Anrufe, gedruckte Files)''\\
+  X ist Poisson-verteilt mit Parameter $\lambda$, falls\\
+  $P(X=k)=\frac{\lambda^k e^{-\lambda}}{k!}\:\:k=0,1,\ldots$\\
+  Wertebereich $W={1,\ldots,\infty}$\\
+  $\lambda=E[X]=n\cdotp p$
+\end{enumerate}
+
+\subsection{Stetige Zufallsvariablen}
+
+Sind ZV, die Werte in einem Intervall W annehmen k"onnen.\\
+z.B.: $W=\mathbb{R},\:W=\mathbb{R}^+,\:W=[0,1]$\\
+\textbf{Definition}\\
+Sei X eine ZV mit \textit{Verteilungsfunktion oder W'keitsfunktion} $F(x)=P[X\leq x]$.\\
+Falls es eine Funktion f(x) gibt, so dass $F(x)=\int^x_{-\infty}f(y)dy$ f"ur alle $x \in W$, dann heisst $f(x)$ die \textit{Dichte} von X.\\\\
+
+\textbf{Eigenschaften}
+\begin{itemize}
+ \item $f(x)\geq 0$ f"ur alle x
+ \item $f(x)$ ist stetig oder st"uckweise stetig
+ \item $\int\limits^{\infty}_{-\infty}f(x)dx=1$, weil $\lim\limits_{x\rightarrow\infty}F(x)=1$
+ \item $a<b:\:P[a<X\leq b]=P[X\leq b]-P[X\leq a]=F(b)-F(a)=\int\limits^b_a f(x)dx$
+ \item $P[X=a]=0$
+\end{itemize}
+
+\textbf{Satz}\\
+An allen Stellen, an denen $f(x)$ stetig ist, gilt:\\
+$F'(x)=f(x)$\\\\
+
+\textbf{Beispiele}
+\begin{enumerate}
+ \item Gleichverteilung (Uniform Distribution): $X\sim U(0,1)$\\
+  $f(x)=\left\{
+  \begin{array}{l}
+   1$ f"ur $ x \in [0,1] \\
+   0$ sonst$ 
+  \end{array}
+  \right.$\\
+  $F(x)=\left\{
+  \begin{array}{l}
+   0$ f"ur $ x < 0 \\
+   x$ f"ur $x\in[0,1]\\
+   1$ f"ur $x>1
+  \end{array}
+  \right.$
+ \item Exponentialverteilung $X\sim Exp(\lambda)$\\
+  $\lambda > 0$\\
+  $f(x)=\left\{
+  \begin{array}{l}
+   \lambda e^{-\lambda x}$ f"ur $ x>0\\
+   0$ sonst$ 
+  \end{array}
+  \right.$\\
+  $F(x)=\left\{
+  \begin{array}{l}
+   \int\limits^x_0 f(y)dy=\int\limits^x_0\lambda e^{-\lambda x}dy=1-e^{-\lambda x}$ f"ur $ x\geq0\\
+   0$ f"ur $x<0 
+  \end{array}
+  \right.$\\
+  Die Exp-Verteilung ist ged"achnislos.\\
+  Ein Ankunftsprozess, bei dem die Zeiten zwischen den Ank"unften Exponentiell-verteilt ist, heisst Poisson-Prozess. $\lambda$ heisst dann die (Ankunfts)Rate des Poisson-Prozess.
+  \item Die Normalverteilung / Gauss-Verteilung $X\sim N(\mu,\sigma^2)$\\
+   \begin{displaymath}
+    f(x)=\frac{1}{\sqrt{2\Pi}\sigma}exp\{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2\}
+   \end{displaymath}
+   $\mu=$ ''Mean'', Mittelwert, $-\infty < \mu < \infty$\\
+   $\sigma=$ Standardabweichung, $\sigma > 0$\\
+   $\sigma^2=$ Varianz\\
+   $F(x)=\int\limits^x_{-\infty}f(y)dy$: keine geschlossene Form, aber Tabellen\\
+   Standardisierte NV:\\
+   $\mu=0,\:\sigma=1$\\
+   Wenn $X\sim N(\mu,\sigma^2)$ dann ist $\frac{x-\mu}{\sigma}\sim N(0,1)$\\
+   $P[X\leq x']=P[\frac{x-\mu}{\sigma}\leq\frac{x'-\mu}{\sigma}]=\Phi(\frac{x'-\mu}{\sigma})$\\
+   $\Phi(-x)=1-\Phi$
+\end{enumerate}
+
+\subsection{Transformation von ZV}
+
+Sei X eine ZV mit Verteilungsfkt. $F_X(x)$ und Dichte $f_X(x)$.\\
+Gesucht: Verteilung und Dichte von $Y=g(X)$\\\\
+
+\textbf{Satz}\\
+Wenn $X \sim N(\mu,\sigma^2)$ und $Y=aX+b$, dann gilt $Y\sim N(a\mu+b,a^2\sigma^2)$\\\\
+
+{\bf Satz}\\
+Sei X stetig, mit Dichte $f_X(x)$, Verteilung $F_X(x)$. Sei $Y=g(X)$, mit g diff'bar, streng monoton steigend/fallend auf einem Intervall I, wobei $f_X(x)=0$ f"ur $x\notin I$ ($I=\mathbb{R}$ ist zugelassen).\\
+Dann ist die Dichte von Y\\
+$f_Y(y)=\left\{
+\begin{array}{l}
+ f_X(g^{-1}(y))\cdotp|\frac{d}{dy}g^{-1}(y)|\\
+ 0$ sonst$ 
+\end{array}
+\right.$\\
+wobei $g^{-1}$ die Umkehrfkt. von g und $y\in\{g(x)|x\in I\}$\\\\
+
+und die Verteilungsfkt. von Y ist\\
+$F_Y(y)=\left\{
+\begin{array}{l}
+ F_X(g^{-1}(y))$ f"ur g steigend$\\
+ 1-F_X(g^{-1}(y))$ f"ur g fallend$
+\end{array}
+\right.$\\
+
+$y\in\{g(x)|x\in I\}$\\\\
+
+\textbf{Lognormale Verteilung}\\
+$X\sim N(\mu,\sigma^2),\:Y=e^x$\\
+$g(x)=e^x,\:g^{-1}(y)=\ln y,\:I=\mathbb{R}$\\\\
+
+\textbf{Satz}\\
+Sei $U\sim U(0,1)$.\\
+Sei $F(x)$ eine stetige, streng monoton wachsende Verteilungsfunktion. Setze\\
+$X:=F^{-1}(U)$\\
+Dann gilt:\\
+$P[X\leq x]=F(x)$\\\\
+
+\textbf{Definition}
+\begin{itemize}
+ \item Der Wert $F^{-1}(p)$ (f"ur $p\in(0,1)$) heisst das p-Quantil der Verteilung F
+ \item $F^{-1}(0.5)$ heisst der Median der Verteilung F.
+\end{itemize}
+
+\section{Gemeinsame Verteilung mehrerer ZV}
+
+Seien $X_1,\ldots,X_n$ Zufallsvariablen.\\
+
+Dann ist $F(x_1,\ldots,x_n)=P[X_1\leq x_1,\ldots,X_n\leq x_n]$
+
+\subsection{Stetige ZV}
+
+Falls wir $F(x_1,\ldots,x_n)$ folgendermassen darstellen k"onnen $F(x_1,\ldots,x_n)=\int\limits^{x_1}_{-\infty}\ldots\int\limits^{x_n}_{-\infty}f(y_1,\ldots,y_n)dy_n\ldots dy_1$ dann heisst $f(x_1\ldots x_n)$ die Dichte von $(X_1\ldots X_n)$\\\\
+
+\textbf{Eigenschaften}
+\begin{itemize}
+ \item $P[(X_1\ldots X_n)\in A]=\iint\limits_A f(\vec{x})d\vec{x}=\int\ldots\int\limits_{(x_1\ldots x_n)\in A}f(x_1,\ldots,x_n)dx_1\ldots dx_1$
+ \item $\int\limits^\infty_{-\infty}\ldots\int\limits^\infty_{-\infty}f(x_1,\ldots,x_n)dx_n\ldots dx_1=1$\\
+ \item $f(x_1,\ldots,x_n=\frac{\partial^n}{\partial x_1\ldots \partial x_n}F(x_1 \ldots x_n)$
+\end{itemize}
+
+\subsection{Randverteilungen}
+
+Gegeben sei die gemeinsame Verteilung von X und Y:$F(x,y)$. Die Randverteilung von X ist:\\
+$F_X(x)=P[X\leq x]=P[X\leq x;\:Y\in(-\infty,\infty)]=\lim\limits_{y\rightarrow \infty}F(x,y)$\\\\
+
+Diskrete ZV: $Y\in\{y_1,y_2,\ldots\}$\\
+Die W'keitsfkt. der Randverteilung von X ist\\
+$p_X(x)=\sum\limits_j p(x,y_j)$\\\\
+
+Stetige ZV: Die Dichte der RV von X ist\\
+$f_X(x)= \frac{d}{dx}F_X(x)=\frac{d}{dx}\int\limits^x_{-\infty}[\int\limits^\infty_{-\infty}f(x',y')dy']dx'=\int\limits^\infty_{-\infty}f(x,y')dy'$\\\\
+
+\textit{Beispiel}\\
+$f(x,y)=\left\{
+\begin{array}{l}
+ 6(x-y)$ f"ur $ 0\leq y \leq x \leq 1\\
+ 0$ sonst$ 
+\end{array}
+\right.$\\
+
+$f_X(x)=\int\limits^x_0 f(x,y)dy$\\
+$f_Y(y)=\int\limits^1_y f(x,y)dx$
+
+
+\subsection{Unabh"angigkeit von ZV}
+
+Die ZV $X_1,\ldots,X_n$ sind unabh"angig, falls $F(x_1,\ldots,x_n)=F_{X_1}(x_1)\cdotp F_{X_2}(x_2)\cdotp\ldots\cdotp F_{X_n}(x_n)$ f"ur alle $(x_1 \ldots x_n)\in\mathbb{R}^n$
+
+\begin{enumerate}
+ \item Diskreter Fall: $(X_1\ldots X_n)$ unabh. $\Leftrightarrow p(x_1\ldots x_n)=P_{X_1}\cdotp\ldots\cdotp P_{X_n}(x_n)$
+ \item Stetiger Fall: $f(x_1\ldots x_n)=f_{X_1}(x_1)\cdotp\ldots\cdotp f_{X_n}(x_n)$
+\end{enumerate}
+
+X,Y unabh"angig $(F(x,y)=F_X(x)\cdotp F_Y(y))\Leftrightarrow f(x,y)=f_X(x)\cdotp f_Y(y)$
+
+
+\subsubsection{Wichtige Mehrdimensionale Verteilungen}
+
+\begin{enumerate}
+ \item die mehrdimensionale Normalverteilung (stetige Verteilung)\\
+  Dichte:\\
+  $f(x,y)=\frac{1}{2\Pi\sigma_X\sigma_Y\sqrt{1-\rho^2}}\cdotp \\ exp\{-\frac{1}{2(1-\rho^2)[(\frac{x-\mu_X}{\sigma_X})^2+(\frac{y-\mu_Y}{\sigma_Y})^2-\frac{2\rho(x-\mu_X)(y-\mu_Y)}{\sigma_X\sigma_Y}]}\}$\\
+  $-1<\rho<+1$ Korrelation zw. X und Y.\\
+  Randverteilung\\
+  $f_X(x)=\frac{1}{\sigma_X\sqrt{2\Pi}}exp(-\frac{1}{2}(\frac{x-\mu_X}{\sigma_X})^2)$\\
+  Unabh"angigkeit von X und Y, genau dann, wenn $\rho=0$
+ \item Die Multinomiale Verteilung (diskret)\\
+  Es werden n unabh"angige Experimente durchgef"uhrt. Es gibt jeweils r m"ogliche Ergebnisse mit W'keit $p_1,\ldots,p_r$. $\sum^n_{i=1}p_i=1$.\\
+  Sei $N_i$ die Anzahl der Ergebnisse ''i''.\\
+  Die Vtlg. von $[N_1,\ldots,N_r]$ heisst Multinomialvtlg.\\
+  $p(N_1=n_1,\ldots,N_r=n_r)=\binom{n}{n_1\cdots n_r}p_1^{n_1}\cdots p_r^{n_r}$\\
+  $\binom{n}{n_1\cdots n_r}=\frac{n!}{n_1!\cdots n_r!}$: Multinomialkoeffizient\\
+  RV von $N_i$:\\
+  $p_{N_i}(n_i)=P[N_i=n_i]=\binom{n}{n_i}p_i^{n_i}(1-p_i)^{n-n_i}$\\
+  $p(n_1\ldots n_r)\neq\prod\limits^r_{i=1}p_{N_i}(n_i)\Leftrightarrow$ keine Unabh.
+ \item Mehrdim. Verteilungen mit U(0,1)-RV\\
+  $F(x,y)=exp(-[(-\ln x)^\beta+(-\ln y)^\beta]^{\frac{1}{\beta}}$\\
+  $x,y\in]0,1],\beta\geq 1$\\
+  RV: $F_X(x)=F(x,y=1)=x$: U(0,1)-Vrtlg. (Y genauso)
+\end{enumerate}
+
+\subsection{Bedingte Verteilungen}
+
+\subsubsection{Diskrete ZV}
+
+X,Y ZV diskret mit gemeinsamer W'keitsfkt. p(x,y)\\
+Def. Die bedingte W'keitsfkt. von X unter der Bedingung, dass Y=y ist, ist $p_{X|Y}(x|y)=P[X=x|Y=y]=P[X=x,Y=y]/P[Y=y]$\\\\
+
+Bem:
+\begin{itemize}
+ \item $\sum\limits_i p_{X|Y}(x_i,y)=\frac{\sum\limits_i p(x_i,y)}{p_Y(y)}=1$
+ \item Wenn $p_{X|Y}(x|y)=p_X(x)$ f"ur alle x,y, dann sind X und Y unabh.
+\end{itemize}
+
+\subsubsection{Stetige ZV}
+
+Seien X,Y stetige ZV mit gem. Dichte $f(x,y)$\\
+Def. Die bedingte Dichte von Y, gegeben X=x, ist\\
+$f_{Y|X}(y|x)=\frac{f(x,y)}{f_X(x)}$, wenn $0<f_X(x)<\infty$ sont $f_{Y|X}(y|x)=0$\\\\
+
+Bem:
+\begin{itemize}
+ \item $\int\limits^\infty_{-\infty}f_{Y|X}(y|x)dy=1$
+ \item $f_{Y|X}(y|x)=f_Y(y)$ f"ur alle x,y $\Leftrightarrow$ X und Y sind unabh.
+\end{itemize}
+
+
+\subsection{Funktionen von ZV}
+
+X,Y ZV mit bekannter gem. Vtlg.\\
+
+Was ist die Vtlg. der Summe X+Y?\\
+\begin{enumerate}
+ \item Diskreter Fall\\
+  $Z=X+Y$\\
+  $p_Z(z)=\sum\limits_i p(x_i,z-x_i)$,\\
+  Falls X,Y unabh"angig:\\
+  $p_Z(z)=\sum\limits_i p_X(x_i)p_Y(z-x_i)$ (Faltung von X,Y)
+ \item stetiger Fall\\
+  X,Y Dichtefkt. f(x,y) sind gegeben. Z=X+Y\\
+  $f_Z(z)=\int\limits^{+\infty}_{-\infty} f(x,z-x)dx$\\
+  Falls X,Y unabh"angig:\\
+  $f_Z(z)=\int\limits^{+\infty}_{-\infty}f_X(x)f_Y(z-x)dx$
+\end{enumerate}
+
+
+\section{Erwartungswert}
+
+\subsection{Definition und Eigenschaften}
+
+\textbf{Diskrete ZV}\\
+X sei diskrete ZV mit W'keitsfunktion p(x). Dann ist der EW von X def. durch $E[X]=\sum\limits_i x_ip(x_i)$ falls die Reihe absolut konvergiert.
+
+\begin{enumerate}
+ \item Bernoulli Verteilung ($X\sim Be(p)$)\\
+  $E[X]=1\cdotp p + 0\cdotp(1-p)=p$
+ \item Geometrische Verteilung ($X\sim Nb(1,p)$)\\
+  $E[X]=\frac{1}{p}$
+ \item Poisson Verteilung ($X\sim P_{\lambda}(x)$)\\
+  $E[X]=\lambda\sum\limits^\infty_{k=1}\frac{e^{-\lambda}\lambda^k}{k!}$
+\end{enumerate}
+
+\textbf{Stetige ZV}\\
+X sei stetig verteilt mit Dichtefkt. $f_X$. Dann ist $E[X]=\int\limits^{+\infty}_{-\infty}x f_X(x)dx$, falls das Integral absolut konvergiert.
+
+\begin{enumerate}
+ \item Uniforme Verteilung ($X\sim U(0,1)$)\\
+  $E[X]=\int\limits^1_0 xdx=[\frac{1}{2}x^2]^1_0=\frac{1}{2}$
+ \item Normale Verteilung ($X \sim N(\mu,\sigma^2)$)\\
+  $E[X]=\mu$
+ \item Cauchy Verteilung\\
+  $f(x)=\frac{1}{\Pi}\frac{1}{1+x^2},\: -\infty<x<+\infty$\\
+  $E[X]=+\infty$
+\end{enumerate}
+
+\subsection{Funktionen von ZV}
+
+\textbf{Satz}\\
+Sei $Y=g(X)$.
+Falls X diskret mit W'keitsfkt. p(x) ist, dann ist $E[g(X)]=\sum\limits_i g(x_i)p_x(x_i)$, falls die Summe absolut konvergiert.\\
+Falls X stetig verteilt verteilt ist mit Dichtefkt. f, dann ist $E[g(X)]=\int\limits^{+\infty}_{-\infty}g(x)f(x)dx$ falls das Integral konvergiert.\\\\
+
+\textbf{Satz}\\
+Seien $X_1,\ldots,X_n,Y$ ZV mit $Y=g(X_1,\ldots,X_n)$. Falls $X_1,\ldots,X_n$ diskret sind mit $p(x_1,\ldots,x_n)$, dann $E[Y]=\sum\limits_{X_1}\ldots\sum\limits_{X_n}g(x_1,\ldots,x_n)p(x_1,\ldots,x_n)$\\
+stetiger Fall:\\
+$E[Y]=\int\limits^{+\infty}_{-\infty}g(x_1,\ldots,x_n)f(x_1,\ldots,x_n)dx_1\ldots dx_n$\\
+falls das Integral absolut konvergiert.\\\\
+
+\textbf{Korollar zum Satz}\\
+Seien X,Y unabh. ZV\\
+Dann $E[g(X)h(Y)]=E[g(X)]E[h(Y)]$
+
+\subsection{Linearkombinationen von ZV}
+
+\textbf{Satz}\\
+Der E'wert ist ein linearer Operator, d.h. $X_1,\ldots,X_n$ seien ZV mit E'werten $E[X_1],\ldots,E[X_n]$. Sei $Y=a_i+\sum\limits^{n}_{i=1}b_i X_i$. Dann ist $E[Y]=a_i+\sum\limits^{n}_{i=1}b_i E[X_i]$.
+
+
+\subsection{Varianz und Standardabweichung}
+
+\textbf{Definition}\\
+X sei eine ZV mit E'wert E[X]. Dann heisst $var(X)=E[(X-E[X])^2]$ die \textit{Varianz} von X (falls $var(X)<+\infty$). Es gilt aber auch $var(X)=E[X^2]-(E[X])^2$, was meist einfacher zu berechnen ist. Es gilt: $var(X)>0$!\\
+$\sigma(X)=\sqrt{var(X)}$ heisst \textit{Standardabweichung}.\\
+
+X diskret:\\
+$var(X)=\sum\limits_{i}(x_i-\mu)^2p(x_i),\:\mu=E[X]$\\
+
+X stetig:\\
+$var(X)=\int\limits^{+\infty}_{-\infty}(x-\mu)^2f(x)dx,\:\mu=E[X]$\\
+
+$E[X^2]=E[X]^2-var(X)$\\\\
+
+\textbf{Satz}\\
+Sei X eine ZV mit $var(X)<+\infty$, $a,b\in \mathbb{R}$. Dann ist $var(a+bX)=b^2 var(X)$\\
+
+\begin{enumerate}
+ \item Bernoulli-Verteilung $X\sim Be(p)$\\
+  $E[X]=p$\\
+  $var(X)=p(1-p)$
+ \item Binomial Verteilung $X\sim B(n,p)$\\
+  $E[X]=np$\\
+  $var(X)=np(1-p)$
+ \item Normalverteilung $X\sim N(\mu,\sigma)$\\
+  $E[X]=\mu$\\
+  $var(x)=\sigma^2$
+ \item Uniforme Verteilung $U\sim U(0,1)$\\
+  $E[X]=\frac{1}{2}$\\
+  $var(U)=\frac{1}{12}$
+ \item $X\sim Poisson(\mu)$\\
+  $E[X]=\mu$\\
+  $var(X)=\mu$
+ \item Geometrische Verteilung\\
+  $E[X]=\frac{1}{p}$\\
+  $var(X)=\frac{1-p}{p^2}$
+ \item Exponential Verteilung\\
+  $E[X]=\frac{1}{\lambda}$\\
+  $var(X)=\frac{1}{\lambda^2}$
+\end{enumerate}
+
+\textbf{Gamma Funktion}\\
+$\alpha > 0\:\:\Gamma(\alpha)=\int\limits^{\infty}_{0}u^{\alpha-1}e^{-u}du$\\
+$\alpha\in\mathbb{R}^{+}:\:\:\Gamma(\alpha)=(\alpha-1)!$\\
+$\alpha > 0: \:\: \Gamma(\alpha)=(\alpha-1)\Gamma(\alpha-1)$\\
+$\Gamma(\frac{1}{2})=\sqrt{\Pi}$, $\Gamma(\frac{3}{2})=\frac{1}{2}\sqrt{\Pi}$  
+
+
+\subsection{Kovarianz und Korrelation}
+
+$\mu_X = E[X],\:\mu_Y=E[Y]$\\
+$cov(X,Y)=E[(x-\mu_X)(Y-\mu_Y)]$\\
+$cov(X,Y)=E[XY]-\mu_X\mu_Y$\\
+
+$E[XY]=\iint xy f(x,y)dxdy$ falls gem. Dichtefkt.\\
+$E[XY]=E[X]\cdotp E[Y]$ falls unabh.\\
+
+\textbf{Rechenregeln}
+\begin{enumerate}
+ \item X,Y unabh. $\Rightarrow\: cov(X,Y)=0$\\
+  Die Umkehrung gilt aber nicht.
+ \item $cov(X,X)=var(X)$
+ \item $cov(aX,Y)=a\cdotp cov(X,Y)$
+ \item $cov(X+Y,Z)=cov(X,Z)+cov(Y,Z)$
+ \item $cov(X+Y,Z+W)=cov(X,Z)+cov(X,W)+cov(Y,Z)+cov(Y,W)$
+ \item $cov(X,a)=0$ f"ur $a\in\mathbb{R}$
+ \item $cov(a+\sum\limits^{n}_{i=1}b_i X_i,c+\sum\limits^{m}_{j=1}d_j Y_j)=\sum\limits^{n}_{i=1}\sum\limits^{m}_{j=1}b_i d_j cov(X_i,Y_j)$
+ \item $var(a+\sum\limits^{n}_{i=1}b_iX_i)=\sum\limits^{n}_{i=1}\sum\limits^{n}_{j=1}b_i b_j cov(X_i,X_j)$
+ \item $var(X+Y)=var(X)+var(Y)+2cov(X,Y)$
+ \item Falls $X_1,\ldots,X_n$ unabh.:\\
+  $var(\sum\limits^{n}_{i=1}X_i)=\sum\limits^{n}_{i=1}var(X_i)$\\
+  im Gegensatz dazu gilt immer: $E[\sum\limits^{n}_{i=1}x_i]=\sum\limits^{n}_{i=1}E[X_i]$
+\end{enumerate}
+
+X, Y seien ZV mit endlichen Varianzen. Dann heisst\\
+$P_{XY}=\rho(X,Y)=\frac{cov(X,Y)}{\sqrt{var(X) var(Y)}}$\\
+die \textit{Korrelation}.\\\\
+
+\textbf{Eigenschaften}
+\begin{itemize}
+ \item $\rho(X,Y) \in [-1,1]$
+ \item falls $\rho(X,Y)=\pm 1$ dann $P[Y=aX+b]=1$ f"ur $a,b \in \mathbb{R},b\neq 0$
+ \item $\rho(X,Y)\approx\pm 1\Rightarrow$ X und Y sind stark linear abh"angig
+ \item $\rho(X,Y)\approx 0\Rightarrow$ X und Y sind schwach linear abh"angig
+\end{itemize}
+
+
+\section{Grenzwerts"atze}
+
+Seien $X_1,\ldots,X_n$ unabh. ZV, mit $E[X_i]=\mu$ und $var(X_i)=\sigma^2<+\infty$.\\
+Dann gilt:\\
+$\lim\limits_{n\rightarrow\infty}P(\mid\bar{X}_n-\mu\mid\geq\epsilon)=0\:\:\forall\epsilon>0$
+
+
+\subsection{Zentraler Grenzwertsatz}
+
+$X_1,X_2,\ldots$ Folge identisch verteilter, unabh. ZV mit $E[X_i]=\mu,\: var(X_i)=\sigma^2<\infty$\\
+$s_n=\sum\limits^{n}_{i=1}x_i$; Standardisierung: $\frac{s_n-\mu n}{\sqrt{n}\sigma}$\\
+
+Standardisierung: $U=\frac{X-\mu}{\sigma}\sim N(0,1)$
+
+\subsubsection{Zentraler Grenzwertsatz}
+$\lim\limits_{n\rightarrow\infty}P(\frac{s_n-\mu n}{\sqrt{n}\sigma}\leq x)=\Phi(x)$, $\Phi$ ist die Vertfkt. der $N(0,1)$-Verteilung. Kann auch so geschrieben werden:\\
+$\lim\limits_{n\rightarrow\infty}P(\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\leq x)\sim N(0,1)$\\\\
+
+\textit{Beispiel} Gesucht ist x, so dass $P[\sum\limits^{120}_{i=1}I_i>x]=0.95$\\
+Aus dem ZGS folgt:\\
+$0.05=1-P[\sum\limits^{120}_{i=1}I_i>x]=P[\sum\limits^{120}_{i=1}I_i\leq x]=P[\frac{\sum\limits^{120}_{i=1}I_i-120E[I]}{\sqrt{120\:Var(I)}}\leq\frac{x-120E[I]}{\sqrt{120\:Var(I)}}]\approx\Phi(\frac{x-120E[I]}{\sqrt{120Var(I)}})$
+
+\subsubsection{Monte-Carlo-Integration}
+$j(f)=\int\limits^{1}_{0}f(x)dx$ sei numerisch zu berechnen\\
+Generiere unabh. auf $[0,1]$ gleichverteilte ZV. $U_1,\ldots,U_n$ und berechne $\bar{f(U)}=\frac{1}{n}\sum\limits^{n}_{i=1}f(u_i)$.\\
+Sei $var(f(U_i))$ endlich.\\
+Nach dem Gesetz der grossen Zahlen gilt:\\
+$\lim\limits_{n\rightarrow\infty}\frac{1}{n}\sum\limits^{n}_{i=1}f(U_i)=E[f(U_i)]=\int\limits^{1}_{0}dx$\\
+$E[g(x)]=\int\limits^\infty_{-\infty}g(x)\cdotp f_x(x)dx$, wobei $f_x(x)$ die Dichte von x ist.
+
+\subsection{Normalapproximation der Binomialverteilung}
+
+Falls gilt $np(1-p)>9$ so kann $B(n;p)$ durch $N(\mu=np;\sigma=\sqrt{np(1-p)})$ approximiert werden, sonst falls $np\leq 10$ und $n\geq 1500p$ durch $Poiss(\lambda=np)$.\\
+
+\textit{Beispiel}\\
+
+VB auf $\alpha$ Niveau f"ur Binomialvrtlg.\\
+$\frac{X-np}{\sqrt{np(1-p)}}\sim N(0,1)$\\
+$\Rightarrow \{X>\Phi^{-1}(1-\alpha)\cdotp\sqrt{n\hat{p}(1-\hat{p})}+n\hat{p}\}$
+
+
+\section{Statistik}
+
+\textbf{Definition}\\
+Eine \textit{Stichprobe} vom Umfang n ist eine Folge $X_1,\ldots,X_n$ von unabh., ident. verteilten ZV. Eine Statistik ist eine ZV $g(X_1,\ldots,X_n)$, wobei $g:\mathbb{R}^n\rightarrow \mathbb{R}$\\
+
+\subsection{empirischer Mittelwert und empirische Varianz}
+
+F"ur eine Stichprobe $X_1,\ldots,X_n,\:n\geq 2$
+
+$$\bar{X}=\frac{1}{n}\sum\limits^{n}_{i=1}X_i$$
+$$S^2=\frac{1}{n-1}\sum\limits^n_{i=1}(X_i-\bar{X})^2$$
+
+\textbf{Satz}\\
+Falls die $X_i$ EW $\mu$ und $var\: \sigma^2$ haben, so ist $E[\bar{X}]=\mu,\:var(\bar{X})=\frac{\sigma^2}{n}$. $\bar{X}$ ist eine ZV, $\mu$ eine Zahl. Man sagt, $\bar{X}$ ist ein Sch"atzer von $\mu$.\\
+
+\textbf{Satz}\\
+Falls die $X_i$ $N(\mu,\sigma^2)$-verteilt sind, so ist $\bar{X}$ $N(\mu,\frac{\sigma^2}{n})$-verteilt.\\
+
+\textbf{Satz}\\
+Sei $var(X_i)=\sigma^2$. Dann $E[S^2]=\sigma^2$. Man sagt, der Sch"atzer $S^2$ habe keinen Bias.
+
+\subsection{$\chi^2$ Verteilung}
+
+\textbf{Satz}\\
+Falls $X\sim N(0,1)$, dann ist $X^2\sim\Gamma(\frac{1}{2},\frac{1}{2})$. Diese Verteilung nennt man $\chi^2_1$-Verteilung. Lies: chi-Quadrat mit 1 Freiheitsgrad.\\
+
+\textbf{Satz}\\
+Seien $X_1,\ldots,X_n$ unabh. ident. verteilt, $X_i\sim\chi_1^2$. Dann ist $V=X_1+\ldots+X_n$ $\chi^2_n$-verteilt. $\chi^2_n$ ist eine $\Gamma(\frac{1}{2},\frac{1}{2})$-Verteilung. D.h., die Dichte ist\\
+$f(t)=\frac{1}{\Gamma(\frac{n}{2}2^{n/2}}t^{\frac{n}{2}-1}e^{-\frac{t}{2}}\:\:t\geq 0$\\
+Falls $V\sim \chi^2_n$, dann $E[V]=n,\:var(V)=2n$\\
+
+\textbf{Satz}\\
+Seien $X_1,\ldots,X_n$ eine Stichprobe von $N(\mu,\sigma^2)$-verteilten ZV. Dann ist $\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}$
+
+\subsection{t Verteilung}
+
+\textbf{Satz}\\
+Sei $X_1,\ldots,X_n$ eine Stichprobe aus einer $N(\mu,\sigma^2)$-Population. Dann ist $t=\frac{\bar{X}-\mu}{S/\sqrt{n}}\:t_{n-1}$ verteilt. Dichte der t-Verteilung: $f(x)=\frac{\Gamma(\frac{n+1}{2})}{\sqrt{\Pi n}\Gamma(\frac{1}{2})}\cdotp(1+\frac{x^2}{n})^{\frac{-n+1}{2}}$.
+
+\subsection{F Verteilung}
+
+U und V unabh. $\chi^2$ ZV mit m bzw. n Freiheitsgraden, so wird die Verteilung:
+
+$$W=\frac{U/m}{V/n}$$
+
+als F Verteilung mit m und n Freiheitsgraden bezeichnet, geschrieben $F_{m,n}$
+
+\section{Konfidenzintervalle ...}
+
+\subsection{... f"ur unbekannte Mittelwert $\mu$ einer Normalverteilung bei bekannter Varianz $\sigma^2$}
+
+Vertrauensniveau $(1-\alpha)$ w"ahlen (z.B. 0.95)
+
+\subsubsection{Eine Stichprobe}
+
+\begin{enumerate}
+ \item Verteilung ist gleich $Z=\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)$
+ \item Konfidenzintervall
+  \begin{enumerate}
+   \item \textit{zweiseitig}\\
+    $P[q_{\frac{\alpha}{2}}\leq\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\leq q_{1-\frac{\alpha}{2}}]=1-\alpha$\\
+    $\Rightarrow [\bar{X}- q_{1-\frac{\alpha}{2}}\cdotp\frac{\sigma}{\sqrt{n}}\leq\mu\leq\bar{X}+q_{\frac{\alpha}{2}}]$
+   \item \textit{nach oben}\\
+    $P[\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\leq q_{1-\alpha}]=1-\alpha$
+   \item \textit{nach unten}\\
+    $P[q_{\alpha}\leq\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}]=1-\alpha$
+  \end{enumerate}
+\end{enumerate}
+
+
+\subsubsection{Zwei Stichproben (Differenz der Mittelwerte)}
+
+gleich wie eine Stichprobe, aber mit folgender Verteilung:
+
+$$\frac{(\bar{X}-\bar{Y})-(\mu_X-\mu_Y)}{\sqrt{\frac{\sigma_X^2}{m}+\frac{\sigma_Y^2}{n}}}\sim N(0,1)$$
+
+\subsection{... f"ur unbekannten Mittelwert $\mu$ einer Normalverteilung bei unbekannter Varianz $\sigma^2$}
+
+Vertrauensniveau $(1-\alpha)$ w"ahlen (z.B. 0.95)
+
+\subsubsection{Eine Stichprobe}
+
+\begin{enumerate}
+ \item Verteilung ist gleich $T=\frac{\bar{X}-\mu}{S/\sqrt{n}}\sim t_{n-1}$
+ \item Konfidenzintervall
+  \begin{enumerate}
+   \item \textit{zweiseitig}\\
+    $P[t_{n-1,\frac{\alpha}{2}}\leq T \leq t_{n-1,1-\frac{\alpha}{2}}]=1-\alpha$\\
+    $\Rightarrow [\bar{X_n}-t_{n-1,1-\frac{\alpha}{2}}\cdotp\frac{S}{\sqrt{n}}\leq \mu \leq \bar{X_n}+t_{n-1,1-\frac{\alpha}{2}}\cdotp\frac{S}{\sqrt{n}}]$
+   \item \textit{nach oben}\\
+    $P[T \leq t_{n-1,1-\alpha}]=1-\alpha$
+   \item \textit{nach unten}\\
+    $P[t_{n-1,\alpha}\leq T]=1-\alpha$
+  \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Zwei Stichproben (Differenz der Mittelwerte)}
+
+gleich wie eine Stichprobe, aber mit folgender Verteilung:
+$$\frac{(\bar{X}-\bar{Y})-(\mu_X-\mu_Y)}{S_P\sqrt{\frac{1}{m}+\frac{1}{n}}}\sim t_{m+n-2}$$
+
+wobei $S_p$:
+$$S_p^2=\frac{(m-1)S_X^2+(n-1)S_Y^2}{m+n-2}$$
+die gepoolte Varianz ist\\
+
+falls m=n und Stichproben nicht unbedingt unabh.: $D_i=X_i-Y_i$\\
+$\frac{\bar{D}-(\mu_X-\mu_Y)}{S_D/\sqrt{n}}\sim t_{n-1}$
+
+\subsection{... f"ur unbekannte Varianz $\sigma^2$ einer Normalverteilung}
+
+Vertrauensniveau $(1-\alpha)$ w"ahlen (z.B. 0.95)
+
+\subsubsection{Eine Stichprobe}
+
+$$\frac{S^2}{\sigma^2}(n-1)\sim \chi^2_{n-1}$$
+
+\subsubsection{Zwei Stichproben}
+
+$$\frac{S_X^2/\sigma_X^2}{S_Y^2/\sigma_Y^2}\sim F_{(m-1,n-1)}$$
+
+Wobei m (n) Anz. Experimente f"ur ZV X (Y).
+
+\subsection{... f"ur unbekannten Parameter p einer Binomialverteilung}
+
+\begin{enumerate}
+ \item Verteilung ist gleich $Z=\frac{n\hat{p}-np}{\sqrt{n\hat{p}(1-\hat{p})}}\sim N(0,1)$, wobei $\hat{p}=\frac{k}{n}$ k= Anz. Erfolge bei n Versuchen.
+ \item Konfidenzintervall
+  $[\hat{p}-\frac{q_{1-\frac{\alpha}{2}}}{n}\sqrt{n\hat{p}(1-\hat{p})} \leq p \leq \hat{p}-\frac{q_{\frac{\alpha}{2}}}{n}\sqrt{n\hat{p}(1-\hat{p})}]$
+\end{enumerate}
+
+
+\section{Sch"atztheorie}
+
+Ein Sch"atzer ist \textit{erwartungstreu}, falls $E[\hat{\theta}]=\theta$.
+
+\subsection{Maximum Likelihood}
+
+Sei $X_1,\ldots,X_n$ eine Stichprobe des Umfangs n einer Dichte $f(x,\theta)$, dann ist die gemeinsame Dichte von $(X_1,\ldots,X_n)$ die Likelihood-Funktion.
+\begin{itemize}
+ \item X diskret:\\
+  $L(\Theta)=\prod\limits^n_{i=1}P(X_i=x_i)$
+ \item X stetig:\\
+  $L(\Theta)=\prod\limits^n_{i=1}f(x_i)$
+\end{itemize}
+
+W"ahle $\Theta$ so dass die Realisierungen $X_1,\ldots,X_n$ am wahrscheinlichsten sind. Um die Berechnung zu vereinfachen: logarithmiere, so ergibt sich aus dem Produkt eine Summe. $l(\Theta)=\log L(\Theta)$. Differenziere danach und setze gleich 0. $\frac{\partial}{\partial\Theta}l(\Theta)\stackrel{!}{=}0$. L"ose danach nach $\Theta \Rightarrow\:\hat{\Theta}_{ML}$
+
+
+\subsection{Momentenmethode}
+
+Berechne f"ur $X\sim F(\Theta)$:
+\begin{itemize}
+ \item $E[X]$ h"angt von $\Theta$ ab (da $f(x)$ oder $P(X=x_i)$ von $\Theta$ abh"angen).\\
+  $E[X]=\int^\infty_{-\infty}xf(x)dx$ oder $E[X]=\sum\limits_{i=1}^n x_iP(X=x_i)$
+ \item $\bar{X}=\frac{1}{n}\sum\limits^n_{i=1}X_i$
+\end{itemize}
+
+Danach setze $E[X]=\bar{X}$ und l"ose nach $\Theta\Rightarrow\:\hat{\Theta}_{MM}$\\
+
+p-tes Moment: Setze auch noch $E[X^2]=\bar{X^2}\ldots E[X^p]=\bar{X^p}\:\Rightarrow$ p-Gleichungen, l"ose nach $\Theta$
+
+\section{Testen von Hypothesen}
+
+\subsection{Neyman-Pearson Paradigma}
+
+\textbf{Nullhypothese $H_0$}:\\
+Die zu zeigende Aussage, meist also $\mu=\mu_0$\\
+
+\textbf{Alternative $H_A$}:\\
+Was gilt, falls $H_A$ nicht gilt:\\
+$\mu\neq\mu_0,\:\mu>\mu_0\:,\mu<\mu_0$\\
+
+\textbf{Fehler 1. Art ($\alpha$)}:\\
+Verwerfung von $H_0$, obwohl $H_0$ richtig. $\alpha=P(Fehler\:1.Art)$\\
+
+\textbf{Fehler 2. Art ($\beta$)}:\\
+Keine Ablehnung von $H_0$, obwohl $H_0$ falsch. $\beta=P(Fehler\:2.Art)$.\\
+
+\textbf{Macht}
+Macht = $1-\beta$. W'keit, dass $H_0$ verworfen wird, wenn es tats"achlich falsch ist.\\
+
+Man versucht $\alpha$ m"oglichst klein, und $1-\beta$ m"oglichst gross zu w"ahlen. Dazu wird $\alpha$ fixiert. Danach konstruiert man dazu einen Test mit m"oglichst grosser Macht.\\
+
+\textit{Beispiel} Macht, wenn $\mu_X,\sigma_X$ gleich wirklicher Mittelwert bzw. Varianz und $G$ die zuvor ausgerechnete Grenze des VB's ist:\\
+$Macht=1-P(Fehler\:2.\:Art)=1-P(X\leq G)=1-P(\frac{X-\mu_x}{\sigma_X}\leq\frac{G-\mu_x}{\sigma_x})=1-\Phi(\frac{G-\mu_x}{\sigma_x})$
+
+\subsection{Neyman-Pearson Lemma}
+
+Likelihood ratio = $\frac{f_0(x)}{f_A(x)}$\\
+$\rho_L=\left\{
+ \begin{array}{l}
+  $1 wenn $\frac{f_0(x)}{f_A(x)}<K_{\alpha}\\
+  $0 wenn $\frac{f_0(x)}{f_A(x)}>K_{\alpha}
+ \end{array}
+\right.$\\
+$K_{\alpha}$ muss so gew"ahlt sein, dass $E_0[\rho_L]=\alpha$\\
+
+Der Likelihood-Test $\rho_L$ ist der m"achtigste Test unter den Tests $\rho^*$ mit Signifikanzlevel $\alpha^*\leq \alpha$
+
+\subsection{Der t-Test}
+
+Mittelwert bei unbekanntem $\sigma$\\
+
+\textbf{Modellannahmen}:
+\begin{itemize}
+ \item $X_i \sim N(\mu,\sigma)$
+ \item $X_i$ unabh"angig
+ \item $\mu,\sigma$ unbekannt
+\end{itemize}
+
+Wir wollen testen, ob $\mu=\mu_0$ oder Alternative.\\\\
+
+\textbf{F"ur den t-Test gilt}:\\
+$T=\sqrt{n}\frac{\bar{X}-\mu_0}{S}$\\
+
+Unter $H_0$: $T\sim t_{n-1}$\\
+
+\textbf{Verwerfungsbereich}:
+\begin{itemize}
+ \item $H_A:\:\mu\neq\mu_0$\\
+  $VB=\{\mid T \mid \geq t_{n-1,1-\frac{\alpha}{2}}\}$
+ \item $H_A:\:\mu>\mu_0$\\
+  $VB=\{T > t_{n-1,1-\alpha}\}$
+ \item $H_A:\:\mu<\mu_0$\\
+  $VB=\{T < t_{n-1,\alpha}\}$
+\end{itemize}
+
+Falls $T$ bzw. $|T|$ in VB $\Rightarrow$ $H_0$ verwerfen, sonst $H_0$ beibehalten.
+
+
+\subsubsection{2-Stichproben t-Test}
+
+$T=\frac{(\bar{X}-\bar{Y})-(\mu_X-\mu_Y)}{S_P\sqrt{\frac{1}{m}+\frac{1}{n}}}\sim t_{m+n-2}$. Wobei $S_p^2=\frac{(m-1)S_X^2+(n-1)S_Y^2}{m+n-2}$ die gepoolte Varianz ist.\\
+
+\subsection{Der z-Test}
+
+Mittelwert bei bekanntem $\sigma$\\
+
+\textbf{Modellannahmen}:
+\begin{itemize}
+ \item $X_i \sim N(\mu,\sigma)$
+ \item $X_i$ unabh"angig
+ \item $\mu$ unbekannt, $\sigma$ bekannt
+\end{itemize}
+
+Wir wollen testen, ob $\mu=\mu_0$ oder Alternative.\\\\
+
+\textbf{Verteilung}:\\
+$\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)$\\
+
+\textbf{Verwerfungsbereich}:
+\begin{itemize}
+ \item $H_A:\:\mu\neq\mu_0$\\
+  $VB=\{|\frac{\bar{X}-\mu_0}{\sigma /\sqrt{n}}|>q_{1-\frac{\alpha}{2}}\}$
+ \item $H_A:\:\mu>\mu_0$\\
+  $VB=\{\frac{\bar{X}-\mu_0}{\sigma /\sqrt{n}}>q_{1-\alpha}\}$
+ \item $H_A:\:\mu<\mu_0$\\
+  $VB=\{\frac{\bar{X}-\mu_0}{\sigma /\sqrt{n}}<q_{\alpha}\}$
+\end{itemize}
+
+
+\subsection{Likelihood-Ratio Tests f"ur Multinomialverteilungen}
+
+m Zellen, n Beobachtungen $\Rightarrow$ Histogramm\\
+
+$-2\ln\Lambda=2\sum\limits^m_{i=1}x_i\ln(\frac{x_i}{E_i})$ ist $\chi^2$-verteilt mit $m-1-k$ Freiheitsgraden, wobei k die Anz. freier Parameter in $H_0$ ist.
+
+\subsubsection{$\chi^2$ Anpassungstest}
+
+\begin{itemize}
+ \item Modellannahme: $X \sim F$, F irgend eine Verteilungsfkt.
+ \item Nullhypothese $H_0:\:F=Pois(\lambda)$
+ \item Alternative $H_A:\:F\neq Pois(\lambda)$
+ \item Die Teststatistik ist gegeben durch die $\chi^2$ Teststatistik: man bildet die qudrierten Differenzen zwischen den beobachteten H"aufigkeiten ($Beob_i$) und den erwarteten H"aufigkeiten ($Erw_i$), man teilt durch die erwarteten H"aufigkeiten ($Erw_i$) und summiert "uber alle m"oglichen Klassen.\\
+  n= Anz. Klassen\\
+  $\chi^2=\sum\limits^n_{i=0}\frac{(Beob_i-Erw_i)^2}{Erw_i}$\\
+  Unter $H_0$ ist die Teststatistik $\chi^2$-verteilt mit $f$ Freiheitsgraden, wobei\\
+  f= Anz. Klassen - 1 - Anzahl gesch"atzter Parameter
+ \item Entscheidung:\\
+  VB=$\{\chi^2>\chi^2_{f;p}\}$
+\end{itemize}
+
+\subsubsection{Vorzeichen Test}
+
+
+\begin{tabular}{ll}
+ Modellannahme:&	$D_i$ unabh"angig mit Median $\tilde{m}$\\
+ Nullhypothese:&	$\tilde{m}=0$\\
+ Alternative:&		$\tilde{m}\neq 0$\\
+ Teststatistik:&	$T=\sum\limits^{n}_{i=1}1|_{\{D_i>0\}}$\\
+ Unter $H_0$:&		$T\sim Bin(n,p)$
+\end{tabular}\\
+
+\textit{Beispiel} f"ur $T=7$ und $n=10$\\
+$2 P[T\geq 7]=2\sum\limits^{10}_{i=1}P[T=i]=0.34$\\
+Da $0.34>0.05$ wird $H_0$ beibehalten auf 5\% Test
+
+\section{Methode der kleinsten Quadrate und lineare Regression}
+
+\textbf{Beobachtungen}:\\
+$\{(x_i,y_i)\mid i=1\ldots n\}$\\
+y = die abh"angige Variabel, ''zu erkl"arende Variabel''\\
+x = die unabh"angige Variabel, ''erkl"arende Variabel''\\
+
+\textbf{Ansatz}:\\
+Der Zusammenhang zw. x und y ist linear, d.h $y=\beta_0+\beta_1 x$\\
+
+Abweichung (Residuum) des i-ten Punktes:\\
+$e_i=y_i-(\beta_0+\beta_1 x_i)$\\
+
+\textbf{Ergebnis}:\\
+$\hat{\beta_0}=\frac{(\sum\limits^n_{i=1}x_i^2)(\sum\limits^n_{i=1}y_i)-(\sum\limits^n_{i=1}x_i)(\sum\limits^n_{i=1}x_iy_i)}{n\sum\limits^n_{i=1}x_i^2-(\sum\limits^n_{i=1}x_i)^2}$\\
+$\hat{\beta_1}=\frac{\sum\limits^n_{i=1}(x_i-\bar{X})(y_i-\bar{Y})}{\sum\limits^n_{i=1}(x_i-\bar{X})^2}$
+
+\subsection{Statistisches Modell}
+
+$y_i=\beta_0+\beta_1 x_i+e_i$\\
+$e_i$: Beobachtungsfehler\\
+
+\textbf{Voraussetzungen}:
+\begin{enumerate}
+ \item $e_i$ sind unabh"angig
+ \item $E[e_i]=0$
+ \item $var(e_i)=\sigma^2$
+ \item $x_i$ sind fest
+\end{enumerate}
+
+\textbf{Varianz}\\
+$var(\hat{\beta_0})=\frac{\sigma^2\sum\limits^n_{i=1}x_i^2}{n\sum\limits^n_{i=1}x_i^2-(\sum\limits^n_{i=1}x_i)^2}$\\
+$var(\hat{\beta_1})=\frac{n\sigma^2}{n\sum\limits^n_{i=1}x_i^2-(\sum\limits^n_{i=1}x_i)^2}=\frac{\sigma^2}{\sum\limits^n_{i=1}(x_i-\bar{X})^2}$\\
+
+
+\textbf{Korrelation}\\
+$cov(\hat{\beta_0},\hat{\beta_1})=\frac{-\sigma^2\sum\limits^n_{i=1}x_i}{n\sum\limits^n_{i=1}x_i^2-(\sum\limits^n_{i=1}x_i)^2}$\\
+
+\textbf{Bemerkungen}
+\begin{itemize}
+ \item $\hat{e_i}:=y_i-\hat{\beta_0}-\hat{\beta_1}x_i$\\
+ \item $S^2=\frac{\sum\limits^n_{i=1}(\hat{e_i})^2}{n-2}$ ist bias-freier Sch"atzer f"ur $\sigma^2$
+ \item Setze $S^2$ ein in Formel f"ur $var(\hat{\beta_0})$ bzw. $var(\hat{\beta_1})$ und erhalte: $s_{\hat{\beta_0}}^2$ bzw. $s_{\hat{\beta_1}}^2$.
+ \item Wenn $e_i$ normalverteilt sind, dann sind $\hat{\beta_0}$, $\hat{\beta_1}$ auch normalverteilt, und $\frac{\hat{\beta_0}-\beta_0}{s_{\hat{\beta_0}}}$ und $\frac{\hat{\beta_1}-\beta_1}{s_{\hat{\beta_1}}}$ sind t-verteilt mit n-2 Freiheitsgraden.
+\end{itemize}
+
+\subsubsection{Korrelation und Regression}
+
+$S_{XX}=\frac{1}{n}\sum\limits^n_{i=1}(x_i-\bar{X})^2$ ''Varianz von X''\\
+$S_{YY}=\frac{1}{n}\sum\limits^n_{i=1}(y_i-\bar{Y})^2$ ''Varianz von Y''\\
+$S_{XY}=\frac{1}{n}\sum\limits^n_{i=1}(x_i-\bar{Y})(y_i-\bar{Y})$ ''Kovarianz von X und Y''\\\\
+
+Der Korrelationskoeffizient von X und Y ist:\\
+$r=\frac{S_{XY}}{\sqrt{S_{XX}S_{YY}}}$
+
+
+\end{document}
